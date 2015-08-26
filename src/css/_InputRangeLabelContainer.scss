@@ -1,0 +1,8 @@
+.InputRange-labelContainer {
+  left: -50%;
+  position: relative;
+
+  .InputRange-label--max & {
+    left: 50%;
+  }
+}

@@ -1,0 +1,7 @@
+*.log
+.DS_Store
+/bower_components
+/build
+/coverage
+/example/build
+/node_modules

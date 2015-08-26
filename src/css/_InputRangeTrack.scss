@@ -1,0 +1,20 @@
+.InputRange-track {
+  background: $InputRange-track-background;
+  border-radius: $InputRange-track-height;
+  display: block;
+  height: $InputRange-track-height;
+  position: relative;
+  transition: $inputRange-track-transition;
+}
+
+.InputRange-track--container {
+  left: 0;
+  margin-top: -0.5 * $InputRange-track-height;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.InputRange-track--active {
+  background: $InputRange-track--active-background;
+}

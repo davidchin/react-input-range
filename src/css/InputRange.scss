@@ -1,0 +1,12 @@
+@import "InputRangeVariables";
+@import "InputRangeSlider";
+@import "InputRangeLabel";
+@import "InputRangeLabelContainer";
+@import "InputRangeTrack";
+
+.InputRange {
+  cursor: pointer;
+  height: $InputRange-slider-height;
+  position: relative;
+  width: 100%;
+}

@@ -1,0 +1,28 @@
+.InputRange-slider {
+  appearance: none;
+  background: $InputRange-slider-background;
+  border: $InputRange-slider-border;
+  border-radius: 100%;
+  cursor: pointer;
+  display: block;
+  height: $InputRange-slider-height;
+  margin-left: $InputRange-slider-width / -2;
+  margin-top: $InputRange-slider-height / -2 + $InputRange-track-height / -2;
+  outline: none;
+  position: absolute;
+  top: 50%;
+  transition: $InputRange-slider-transition;
+  width: $InputRange-slider-width;
+
+  &:active {
+    transform: $InputRange-slider-transform--active;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 5px transparentize($InputRange-primaryColor, 0.8);
+  }
+}
+
+.InputRange-sliderContainer {
+  transition: $InputRange-sliderContainer-transition;
+}
