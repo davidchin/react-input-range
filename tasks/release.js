@@ -2,14 +2,15 @@ import gulp from 'gulp';
 import gutil from 'gulp-util';
 import bump from 'gulp-bump';
 import prompt from 'gulp-prompt';
+import git from 'gulp-git';
 import semver from 'semver';
 import runSequence from 'run-sequence';
 import config from './config';
 
-let newVersion;
+let newVersion = config.version;
 
 gulp.task('release', (callback) => {
-  runSequence('releasePrompt', 'releaseBump', 'dist', callback);
+  runSequence('releasePrompt', 'dist', 'releaseBump', 'releaseTag', callback);
 });
 
 gulp.task('releasePrompt', () => {
@@ -33,10 +34,19 @@ gulp.task('releasePrompt', () => {
     ],
   };
 
-  return gulp.src(config.release.src, { read: false })
+  return gulp.src('./', { read: false })
     .pipe(prompt.prompt(promptConfig, (response) => {
       newVersion = semver.inc(config.version, response.releaseType);
     }));
+});
+
+gulp.task('releaseTag', () => {
+  const message = `Release v${newVersion}`;
+  const tag = `v${newVersion}`;
+
+  return gulp.src('./')
+    .pipe(git.commit(message, { args: '-a' }))
+    .pipe(git.tag(tag, message));
 });
 
 gulp.task('releaseBump', () => {

@@ -4,3 +4,8 @@ gulp.task('build', [
   'script',
   'style',
 ]);
+
+gulp.task('build:dist', [
+  'script:dist',
+  'style:dist',
+]);
