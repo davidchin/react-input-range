@@ -47,25 +47,23 @@ gulp.task('releasePrompt', () => {
     }));
 });
 
+gulp.task('releaseBump', () => {
+  return gulp.src(config.release.src)
+    .pipe(bump({ version: newVersion }))
+    .pipe(gulp.dest('./'))
+});
+
 gulp.task('releaseCommit', () => {
   const message = `Release v${newVersion}`;
 
   return gulp.src('./')
-    .pipe(git.commit(message, { args: '-a' }))
-    .pipe(gulp.dest('./'));
+    .pipe(git.add())
+    .pipe(git.commit(message));
 });
 
-gulp.task('releaseTag', () => {
+gulp.task('releaseTag', (callback) => {
   const message = `Release v${newVersion}`;
   const tag = `v${newVersion}`;
 
-  return gulp.src('./')
-    .pipe(git.tag(tag, message))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('releaseBump', () => {
-  return gulp.src(config.release.src)
-    .pipe(bump({ version: newVersion }))
-    .pipe(gulp.dest('./'));
+  git.tag(tag, message, callback);
 });
