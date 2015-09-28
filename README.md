@@ -2,6 +2,9 @@
 
 `InputRange` is a React component allowing users to input a numeric value within a predefined range. It can accept a single value, or a range of values (start/end). By default, basic styles are applied, but can be overridden depending on your design requirements.
 
+## Demo
+A CodePen demo is available [here](http://codepen.io/davidchin/full/GpNvqw/).
+
 ## Installation
 
 1. Install `react-input-range` using npm. `npm install react-input-range`

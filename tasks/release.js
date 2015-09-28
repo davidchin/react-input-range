@@ -10,7 +10,14 @@ import config from './config';
 let newVersion = config.version;
 
 gulp.task('release', (callback) => {
-  runSequence('releasePrompt', 'dist', 'releaseBump', 'releaseTag', callback);
+  runSequence(
+    'releasePrompt',
+    'dist',
+    'releaseBump',
+    'releaseCommit',
+    'releaseTag',
+    callback
+  );
 });
 
 gulp.task('releasePrompt', () => {
@@ -40,13 +47,21 @@ gulp.task('releasePrompt', () => {
     }));
 });
 
+gulp.task('releaseCommit', () => {
+  const message = `Release v${newVersion}`;
+
+  return gulp.src('./')
+    .pipe(git.commit(message, { args: '-a' }))
+    .pipe(gulp.dest('./'));
+});
+
 gulp.task('releaseTag', () => {
   const message = `Release v${newVersion}`;
   const tag = `v${newVersion}`;
 
   return gulp.src('./')
-    .pipe(git.commit(message, { args: '-a' }))
-    .pipe(git.tag(tag, message));
+    .pipe(git.tag(tag, message))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('releaseBump', () => {
