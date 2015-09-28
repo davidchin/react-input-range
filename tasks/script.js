@@ -5,6 +5,7 @@ import config from './config';
 import { compileScript } from './helpers/script-helper';
 
 gulp.task('script', [
+  'lint:task',
   'script:build',
   'script:example',
 ]);

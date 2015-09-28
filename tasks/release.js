@@ -50,7 +50,7 @@ gulp.task('releasePrompt', () => {
 gulp.task('releaseBump', () => {
   return gulp.src(config.release.src)
     .pipe(bump({ version: newVersion }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('releaseCommit', () => {
