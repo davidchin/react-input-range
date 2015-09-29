@@ -44,6 +44,9 @@ config.script = {
     entries: [
       config.example.src + '/example.js',
     ],
+    noParse: [
+      require.resolve(path.join(process.cwd(), config.build, config.name)),
+    ],
     output: 'example.js',
     dest: config.example.build,
     debug: true,
