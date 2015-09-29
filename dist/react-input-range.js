@@ -477,6 +477,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _InputRangeUtil = require('InputRangeUtil');
 
+_react2['default'].initializeTouchEvents(true);
+
 var InputRangeSlider = (function (_React$Component) {
   _inherits(InputRangeSlider, _React$Component);
 
@@ -487,7 +489,7 @@ var InputRangeSlider = (function (_React$Component) {
 
     this.state = {};
 
-    (0, _InputRangeUtil.autobind)(['handleClick', 'handleMouseDown', 'handleMouseUp', 'handleMouseMove', 'handleKeyDown'], this);
+    (0, _InputRangeUtil.autobind)(['handleClick', 'handleMouseDown', 'handleMouseUp', 'handleMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTouchMove', 'handleKeyDown'], this);
   }
 
   _createClass(InputRangeSlider, [{
@@ -514,6 +516,11 @@ var InputRangeSlider = (function (_React$Component) {
       this.setState({ style: style });
     }
   }, {
+    key: 'handleClick',
+    value: function handleClick(event) {
+      event.preventDefault();
+    }
+  }, {
     key: 'handleMouseDown',
     value: function handleMouseDown() {
       var document = this.document;
@@ -530,14 +537,34 @@ var InputRangeSlider = (function (_React$Component) {
       document.removeEventListener('mouseup', this.handleMouseUp);
     }
   }, {
-    key: 'handleClick',
-    value: function handleClick(event) {
-      event.preventDefault();
-    }
-  }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event) {
       this.props.onSliderMouseMove(this, event);
+    }
+  }, {
+    key: 'handleTouchStart',
+    value: function handleTouchStart(event) {
+      var document = this.document;
+
+      event.preventDefault();
+
+      document.addEventListener('touchmove', this.handleTouchMove);
+      document.addEventListener('touchend', this.handleTouchEnd);
+    }
+  }, {
+    key: 'handleTouchMove',
+    value: function handleTouchMove(event) {
+      this.props.onSliderMouseMove(this, event);
+    }
+  }, {
+    key: 'handleTouchEnd',
+    value: function handleTouchEnd() {
+      var document = this.document;
+
+      event.preventDefault();
+
+      document.removeEventListener('touchmove', this.handleTouchMove);
+      document.removeEventListener('touchend', this.handleTouchEnd);
     }
   }, {
     key: 'handleKeyDown',
@@ -572,6 +599,7 @@ var InputRangeSlider = (function (_React$Component) {
           onClick: this.handleClick,
           onKeyDown: this.handleKeyDown,
           onMouseDown: this.handleMouseDown,
+          onTouchStart: this.handleTouchStart,
           role: 'slider' })
       );
     }
@@ -627,6 +655,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _InputRangeUtil = require('InputRangeUtil');
 
+_react2['default'].initializeTouchEvents(true);
+
 var InputRangeTrack = (function (_React$Component) {
   _inherits(InputRangeTrack, _React$Component);
 
@@ -637,7 +667,7 @@ var InputRangeTrack = (function (_React$Component) {
 
     this.state = {};
 
-    (0, _InputRangeUtil.autobind)(['handleMouseDown'], this);
+    (0, _InputRangeUtil.autobind)(['handleMouseDown', 'handleTouchStart'], this);
   }
 
   _createClass(InputRangeTrack, [{
@@ -669,7 +699,10 @@ var InputRangeTrack = (function (_React$Component) {
     key: 'handleMouseDown',
     value: function handleMouseDown(event) {
       var trackClientRect = this.clientRect;
-      var clientX = event.clientX;
+
+      var _ref = event.touches ? event.touches[0] : event;
+
+      var clientX = _ref.clientX;
 
       var position = {
         x: clientX - trackClientRect.left,
@@ -677,6 +710,13 @@ var InputRangeTrack = (function (_React$Component) {
       };
 
       this.props.onTrackMouseDown(this, position);
+    }
+  }, {
+    key: 'handleTouchStart',
+    value: function handleTouchStart(event) {
+      event.preventDefault();
+
+      this.handleMouseDown(event);
     }
   }, {
     key: 'render',
@@ -687,6 +727,7 @@ var InputRangeTrack = (function (_React$Component) {
         'div',
         {
           onMouseDown: this.handleMouseDown,
+          onTouchStart: this.handleTouchStart,
           className: 'InputRange-track InputRange-track--container' },
         _react2['default'].createElement('div', {
           style: activeTrackStyle,
@@ -727,26 +768,8 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function assign(target) {
-  var sources = Array.prototype.slice.call(arguments, 1);
-
-  sources.forEach(function (source) {
-    if (!source) {
-      return;
-    }
-
-    var keys = Object.keys(source);
-
-    keys.forEach(function (key) {
-      target[key] = source[key];
-    });
-  });
-
-  return target;
-}
-
 function extend() {
-  return assign.apply(Object, arguments);
+  return Object.assign.apply(Object, arguments);
 }
 
 function captialize(string) {
@@ -859,8 +882,13 @@ var InputRangeValueTransformer = (function () {
     value: function positionFromEvent(event) {
       var trackClientRect = this.component.trackClientRect;
       var length = trackClientRect.width;
+
+      var _ref = event.touches ? event.touches[0] : event;
+
+      var clientX = _ref.clientX;
+
       var position = {
-        x: (0, _InputRangeUtil.clamp)(event.clientX - trackClientRect.left, 0, length),
+        x: (0, _InputRangeUtil.clamp)(clientX - trackClientRect.left, 0, length),
         y: 0
       };
 
