@@ -1,6 +1,9 @@
 import React from 'react';
 import { autobind, extend } from 'InputRangeUtil';
 
+// Enable touch
+React.initializeTouchEvents(true);
+
 class InputRangeTrack extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +14,7 @@ class InputRangeTrack extends React.Component {
     // Auto-bind
     autobind([
       'handleMouseDown',
+      'handleTouchStart',
     ], this);
   }
 
@@ -49,13 +53,19 @@ class InputRangeTrack extends React.Component {
   // Handlers
   handleMouseDown(event) {
     const trackClientRect = this.clientRect;
-    const { clientX } = event;
+    const { clientX } = event.touches ? event.touches[0] : event;
     const position = {
       x: clientX - trackClientRect.left,
       y: 0,
     };
 
     this.props.onTrackMouseDown(this, position);
+  }
+
+  handleTouchStart(event) {
+    event.preventDefault();
+
+    this.handleMouseDown(event);
   }
 
   // Render
@@ -65,6 +75,7 @@ class InputRangeTrack extends React.Component {
     return (
       <div
         onMouseDown={ this.handleMouseDown }
+        onTouchStart={ this.handleTouchStart }
         className="InputRange-track InputRange-track--container">
         <div
           style={ activeTrackStyle }

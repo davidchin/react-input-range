@@ -27,8 +27,9 @@ class InputRangeValueTransformer {
   positionFromEvent(event) {
     const trackClientRect = this.component.trackClientRect;
     const length = trackClientRect.width;
+    const { clientX } = event.touches ? event.touches[0] : event;
     const position = {
-      x: clamp(event.clientX - trackClientRect.left, 0, length),
+      x: clamp(clientX - trackClientRect.left, 0, length),
       y: 0,
     };
 

@@ -1,6 +1,9 @@
 import React from 'react';
 import { autobind, extend } from 'InputRangeUtil';
 
+// Enable touch
+React.initializeTouchEvents(true);
+
 class InputRangeSlider extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +17,9 @@ class InputRangeSlider extends React.Component {
       'handleMouseDown',
       'handleMouseUp',
       'handleMouseMove',
+      'handleTouchStart',
+      'handleTouchEnd',
+      'handleTouchMove',
       'handleKeyDown',
     ], this);
   }
@@ -49,6 +55,10 @@ class InputRangeSlider extends React.Component {
   }
 
   // Handlers
+  handleClick(event) {
+    event.preventDefault();
+  }
+
   handleMouseDown() {
     const document = this.document;
 
@@ -65,13 +75,30 @@ class InputRangeSlider extends React.Component {
     document.removeEventListener('mouseup', this.handleMouseUp);
   }
 
-  handleClick(event) {
-    event.preventDefault();
+  handleMouseMove(event) {
+    this.props.onSliderMouseMove(this, event);
   }
 
-  handleMouseMove(event) {
-    // Delegate
+  handleTouchStart(event) {
+    const document = this.document;
+
+    event.preventDefault();
+
+    document.addEventListener('touchmove', this.handleTouchMove);
+    document.addEventListener('touchend', this.handleTouchEnd);
+  }
+
+  handleTouchMove(event) {
     this.props.onSliderMouseMove(this, event);
+  }
+
+  handleTouchEnd() {
+    const document = this.document;
+
+    event.preventDefault();
+
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   handleKeyDown(event) {
@@ -101,6 +128,7 @@ class InputRangeSlider extends React.Component {
           onClick={ this.handleClick }
           onKeyDown={ this.handleKeyDown }
           onMouseDown={ this.handleMouseDown }
+          onTouchStart={ this.handleTouchStart }
           role="slider">
         </a>
       </span>

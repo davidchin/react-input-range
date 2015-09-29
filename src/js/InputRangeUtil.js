@@ -2,26 +2,8 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function assign(target) {
-  const sources = Array.prototype.slice.call(arguments, 1);
-
-  sources.forEach((source) => {
-    if (!source) {
-      return;
-    }
-
-    const keys = Object.keys(source);
-
-    keys.forEach((key) => {
-      target[key] = source[key];
-    });
-  });
-
-  return target;
-}
-
 function extend() {
-  return assign.apply(Object, arguments);
+  return Object.assign.apply(Object, arguments);
 }
 
 function captialize(string) {
