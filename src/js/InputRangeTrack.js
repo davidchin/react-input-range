@@ -1,15 +1,15 @@
 import React from 'react';
 import { autobind, extend } from 'InputRangeUtil';
 
-// Enable touch
-React.initializeTouchEvents(true);
-
 class InputRangeTrack extends React.Component {
   constructor(props) {
     super(props);
 
     // Initial state
     this.state = {};
+
+    // Enable touch
+    React.initializeTouchEvents(true);
 
     // Auto-bind
     autobind([
