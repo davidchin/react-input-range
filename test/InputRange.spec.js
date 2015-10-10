@@ -66,10 +66,66 @@ describe('InputRange', () => {
     });
   });
 
+  describe('shouldComponentUpdate', () => {
+    let nextProps;
+    let nextState;
+
+    beforeEach(() => {
+      nextProps = Object.assign({}, inputRange.props);
+      nextState = Object.assign({}, inputRange.state);
+    });
+
+    it('should return true if current min value has been changed', () => {
+      nextState.values = {
+        max: inputRange.state.values.max,
+        min: inputRange.state.values.min + 1,
+      };
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
+    });
+
+    it('should return true if current max value has been changed', () => {
+      nextState.values = {
+        max: inputRange.state.values.max + 1,
+        min: inputRange.state.values.min,
+      };
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
+    });
+
+    it('should return true if current value has been changed', () => {
+      nextState.value = inputRange.state.value + 1;
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
+    });
+
+    it('should return true if min value has been changed', () => {
+      nextProps.minValue = inputRange.props.minValue + 1;
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
+    });
+
+    it('should return true if max value has been changed', () => {
+      nextProps.maxValue = inputRange.props.maxValue + 1;
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
+    });
+
+    it('should return false if a non-essential value has been changed', () => {
+      nextState.random = Math.random();
+
+      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeFalsy();
+    });
+  });
+
   describe('componentWillUpdate', () => {
+    let nextProps;
+    let nextState;
     let onChange;
 
     beforeEach(() => {
+      nextProps = Object.assign({}, inputRange.props);
+      nextState = Object.assign({}, inputRange.state);
       onChange = jasmine.createSpy('onChange');
     });
 
@@ -81,7 +137,7 @@ describe('InputRange', () => {
         });
 
         it('should execute `onChange` callback with the changed values', () => {
-          inputRange.componentWillUpdate();
+          inputRange.componentWillUpdate(nextProps, nextState);
 
           expect(onChange).toHaveBeenCalledWith(inputRange, values);
         });
@@ -98,7 +154,7 @@ describe('InputRange', () => {
         });
 
         it('should execute `onChange` callback with the changed value', () => {
-          inputRange.componentWillUpdate();
+          inputRange.componentWillUpdate(nextProps, nextState);
 
           expect(onChange).toHaveBeenCalledWith(inputRange, value);
         });
@@ -107,7 +163,7 @@ describe('InputRange', () => {
 
     describe('if `onChange` callback is not provided', () => {
       it('should not execute `onChange` callback', () => {
-        inputRange.componentWillUpdate();
+        inputRange.componentWillUpdate(nextProps, nextState);
 
         expect(onChange).not.toHaveBeenCalled();
       });

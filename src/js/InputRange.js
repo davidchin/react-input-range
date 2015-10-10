@@ -87,12 +87,25 @@ class InputRange extends React.Component {
     this.setPositionsByProps(nextProps);
   }
 
-  componentWillUpdate() {
+  shouldComponentUpdate(nextProps, nextState) {
+    const currentProps = this.props;
+    const currentState = this.state;
+
+    return (
+      currentState.values.min !== nextState.values.min ||
+      currentState.values.max !== nextState.values.max ||
+      currentState.value !== nextState.value ||
+      currentProps.minValue !== nextProps.minValue ||
+      currentProps.maxValue !== nextProps.maxValue
+    );
+  }
+
+  componentWillUpdate(nextProps, nextState) {
     if (this.props.onChange) {
-      let results = this.state.values.max;
+      let results = nextState.values.max;
 
       if (this.isMultiValue) {
-        results = this.state.values;
+        results = nextState.values;
       }
 
       this.props.onChange(this, results);
