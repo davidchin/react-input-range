@@ -46,17 +46,25 @@ React.render(
 ```
 
 ### Options
-Property                | Type            | Description
-:-----------------------|:----------------|:----------------------------------
-ariaLabelledby          |string           |`aria-labelledby` attribute
-maxValue                |number           |Maximum value it can accept
-minValue                |number           |Minimum value it can accept
-name                    |string           |Name of `form` input
-onChange                |Function         |`onChange` callback
-step                    |number           |Increment/decrement value
-value                   |number           |Default value
-values                  |Array.\<number\> |Default range of values
+Property                | Type                    | Description
+:-----------------------|:------------------------|:----------------------------------
+ariaLabelledby          |string                   |`aria-labelledby` attribute
+maxValue                |number                   |Maximum value it can accept
+minValue                |number                   |Minimum value it can accept
+name                    |string                   |Name of `form` input
+onChange                |Function                 |`onChange` callback
+step                    |number                   |Increment/decrement value
+value                   |number                   |Default value
+values                  |Array.&lt;number&gt;     |Default range of values
 
 ## Development
 
-Run with `npm start`
+If you want to work on this project locally, you need to grab all its dependencies.
+```
+npm install && bundle install
+```
+
+After that, you should be able run
+```
+npm start
+```
