@@ -18,32 +18,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _InputRangeSlider = require('InputRangeSlider');
-
-var _InputRangeSlider2 = _interopRequireDefault(_InputRangeSlider);
-
-var _InputRangeTrack = require('InputRangeTrack');
-
-var _InputRangeTrack2 = _interopRequireDefault(_InputRangeTrack);
-
-var _InputRangeValueTransformer = require('InputRangeValueTransformer');
-
-var _InputRangeValueTransformer2 = _interopRequireDefault(_InputRangeValueTransformer);
-
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _InputRangeUtil = require('InputRangeUtil');
+var _Slider = require('./Slider');
 
-var _InputRangePropType = require('InputRangePropType');
+var _Slider2 = _interopRequireDefault(_Slider);
+
+var _Track = require('./Track');
+
+var _Track2 = _interopRequireDefault(_Track);
+
+var _ValueTransformer = require('./ValueTransformer');
+
+var _ValueTransformer2 = _interopRequireDefault(_ValueTransformer);
+
+var _util = require('./util');
+
+var _propTypes = require('./propTypes');
+
+var _defaultClassNames = require('./defaultClassNames');
+
+var _defaultClassNames2 = _interopRequireDefault(_defaultClassNames);
 
 function isNewStep(component, value, oldValue) {
   return Math.abs(value - oldValue) >= component.props.step;
 }
 
 function getKeyBySlider(component, slider) {
-  if (slider === component.refs.inputRangeSliderMin) {
+  if (slider === component.refs.sliderMin) {
     return 'min';
   }
 
@@ -52,8 +56,8 @@ function getKeyBySlider(component, slider) {
 
 function getKeyByPosition(component, position) {
   if (component.isMultiValue) {
-    var distanceToMin = (0, _InputRangeUtil.distanceTo)(position, component.state.positions.min);
-    var distanceToMax = (0, _InputRangeUtil.distanceTo)(position, component.state.positions.max);
+    var distanceToMin = (0, _util.distanceTo)(position, component.state.positions.min);
+    var distanceToMax = (0, _util.distanceTo)(position, component.state.positions.max);
 
     if (distanceToMin < distanceToMax) {
       return 'min';
@@ -100,10 +104,10 @@ var InputRange = (function (_React$Component) {
     };
 
     this.state = state;
-    this.valueTransformer = new _InputRangeValueTransformer2['default'](this);
+    this.valueTransformer = new _ValueTransformer2['default'](this);
     this.isMultiValue = this.props.hasOwnProperty('values');
 
-    (0, _InputRangeUtil.autobind)(['handleSliderMouseMove', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
+    (0, _util.autobind)(['handleSliderMouseMove', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
   }
 
   _createClass(InputRange, [{
@@ -117,13 +121,21 @@ var InputRange = (function (_React$Component) {
       this.setPositionsByProps(nextProps);
     }
   }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var currentProps = this.props;
+      var currentState = this.state;
+
+      return currentState.values.min !== nextState.values.min || currentState.values.max !== nextState.values.max || currentState.value !== nextState.value || currentProps.minValue !== nextProps.minValue || currentProps.maxValue !== nextProps.maxValue;
+    }
+  }, {
     key: 'componentWillUpdate',
-    value: function componentWillUpdate() {
+    value: function componentWillUpdate(nextProps, nextState) {
       if (this.props.onChange) {
-        var results = this.state.values.max;
+        var results = nextState.values.max;
 
         if (this.isMultiValue) {
-          results = this.state.values;
+          results = nextState.values;
         }
 
         this.props.onChange(this, results);
@@ -170,14 +182,14 @@ var InputRange = (function (_React$Component) {
     key: 'setPosition',
     value: function setPosition(slider, position) {
       var key = slider && slider.props.type || getKeyByPosition(this, position);
-      var positions = (0, _InputRangeUtil.extend)({}, this.state.positions, _defineProperty({}, key, position));
+      var positions = (0, _util.extend)({}, this.state.positions, _defineProperty({}, key, position));
 
       this.setPositions(positions);
     }
   }, {
     key: 'setPositionByValue',
     value: function setPositionByValue(slider, value) {
-      var validValue = (0, _InputRangeUtil.clamp)(value, this.props.minValue, this.props.maxValue);
+      var validValue = (0, _util.clamp)(value, this.props.minValue, this.props.maxValue);
       var position = this.valueTransformer.positionFromValue(validValue);
 
       this.setPosition(slider, position);
@@ -186,8 +198,8 @@ var InputRange = (function (_React$Component) {
     key: 'setPositionsByValues',
     value: function setPositionsByValues(values) {
       var validValues = {
-        min: (0, _InputRangeUtil.clamp)(values.min, this.props.minValue, this.props.maxValue),
-        max: (0, _InputRangeUtil.clamp)(values.max, this.props.minValue, this.props.maxValue)
+        min: (0, _util.clamp)(values.min, this.props.minValue, this.props.maxValue),
+        max: (0, _util.clamp)(values.max, this.props.minValue, this.props.maxValue)
       };
 
       var positions = {
@@ -203,7 +215,7 @@ var InputRange = (function (_React$Component) {
       if (this.isMultiValue) {
         this.setPositionsByValues(props.values);
       } else {
-        this.setPositionByValue(this.refs.inputRangeSliderMax, props.value);
+        this.setPositionByValue(this.refs.sliderMax, props.value);
       }
     }
   }, {
@@ -253,6 +265,7 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'renderSliders',
     value: function renderSliders() {
+      var classNames = this.props.classNames;
       var sliders = [];
       var keys = getKeys(this);
 
@@ -266,7 +279,7 @@ var InputRange = (function (_React$Component) {
 
           var value = this.state.values[key];
           var percentage = this.state.percentages[key];
-          var ref = 'inputRangeSlider' + (0, _InputRangeUtil.captialize)(key);
+          var ref = 'slider' + (0, _util.captialize)(key);
 
           var _props = this.props;
           var maxValue = _props.maxValue;
@@ -278,7 +291,8 @@ var InputRange = (function (_React$Component) {
             minValue = this.state.values.min;
           }
 
-          var slider = _react2['default'].createElement(_InputRangeSlider2['default'], {
+          var slider = _react2['default'].createElement(_Slider2['default'], {
+            classNames: classNames,
             key: key,
             maxValue: maxValue,
             minValue: minValue,
@@ -322,7 +336,7 @@ var InputRange = (function (_React$Component) {
         for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var key = _step2.value;
 
-          var _name = this.isMultiValue ? '' + this.props.name + (0, _InputRangeUtil.captialize)(key) : this.props.name;
+          var _name = this.isMultiValue ? '' + this.props.name + (0, _util.captialize)(key) : this.props.name;
 
           var input = _react2['default'].createElement('input', { type: 'hidden', name: _name });
         }
@@ -346,32 +360,35 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var classNames = this.props.classNames;
+
       return _react2['default'].createElement(
         'div',
-        { ref: 'inputRange', className: 'InputRange' },
+        { ref: 'inputRange', className: classNames.component },
         _react2['default'].createElement(
           'span',
-          { className: 'InputRange-label InputRange-label--min' },
+          { className: classNames.labelMin },
           _react2['default'].createElement(
             'span',
-            { className: 'InputRange-labelContainer' },
+            { className: classNames.labelContainer },
             this.props.minValue
           )
         ),
         _react2['default'].createElement(
-          _InputRangeTrack2['default'],
+          _Track2['default'],
           {
-            ref: 'inputRangeTrack',
+            classNames: classNames,
+            ref: 'track',
             percentages: this.state.percentages,
             onTrackMouseDown: this.handleTrackMouseDown },
           this.renderSliders()
         ),
         _react2['default'].createElement(
           'span',
-          { className: 'InputRange-label InputRange-label--max' },
+          { className: classNames.labelMax },
           _react2['default'].createElement(
             'span',
-            { className: 'InputRange-labelContainer' },
+            { className: classNames.labelContainer },
             this.props.maxValue
           )
         ),
@@ -381,7 +398,7 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'trackClientRect',
     get: function get() {
-      var track = this.refs.inputRangeTrack;
+      var track = this.refs.track;
 
       return track && track.clientRect;
     }
@@ -392,16 +409,18 @@ var InputRange = (function (_React$Component) {
 
 InputRange.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
-  maxValue: _InputRangePropType.maxMinValuePropType,
-  minValue: _InputRangePropType.maxMinValuePropType,
+  classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
+  maxValue: _propTypes.maxMinValuePropType,
+  minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
   onChange: _react2['default'].PropTypes.func,
   step: _react2['default'].PropTypes.number,
-  value: _InputRangePropType.maxMinValuePropType,
-  values: _InputRangePropType.maxMinValuePropType
+  value: _propTypes.maxMinValuePropType,
+  values: _propTypes.maxMinValuePropType
 };
 
 InputRange.defaultProps = {
+  classNames: _defaultClassNames2['default'],
   minValue: 0,
   maxValue: 10,
   value: 0,
@@ -412,48 +431,7 @@ exports['default'] = InputRange;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"InputRangePropType":2,"InputRangeSlider":3,"InputRangeTrack":4,"InputRangeUtil":5,"InputRangeValueTransformer":6}],2:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.maxMinValuePropType = maxMinValuePropType;
-
-var _InputRangeUtil = require('InputRangeUtil');
-
-function numberPredicate(value) {
-  return typeof value === 'number';
-}
-
-function maxMinValuePropType(props) {
-  var maxValue = props.maxValue;
-  var minValue = props.minValue;
-  var value = props.value;
-  var values = props.values;
-
-  if (!numberPredicate(value)) {
-    return new Error('`value` must be a number');
-  }
-
-  if (!value && !(0, _InputRangeUtil.objectOf)(values, numberPredicate)) {
-    return new Error('`values` must be an object of numbers');
-  }
-
-  if (minValue >= maxValue) {
-    return new Error('`minValue` must be smaller than `maxValue`');
-  }
-
-  if (maxValue <= minValue) {
-    return new Error('`maxValue` must be larger than `minValue`');
-  }
-
-  if (value < minValue || value > maxValue) {
-    return new Error('`value` must be within `minValue` and `maxValue`');
-  }
-}
-
-},{"InputRangeUtil":5}],3:[function(require,module,exports){
+},{"./Slider":2,"./Track":3,"./ValueTransformer":4,"./defaultClassNames":5,"./propTypes":6,"./util":7}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -475,24 +453,24 @@ var _react = (typeof window !== "undefined" ? window['React'] : typeof global !=
 
 var _react2 = _interopRequireDefault(_react);
 
-var _InputRangeUtil = require('InputRangeUtil');
+var _util = require('./util');
 
-_react2['default'].initializeTouchEvents(true);
+var Slider = (function (_React$Component) {
+  _inherits(Slider, _React$Component);
 
-var InputRangeSlider = (function (_React$Component) {
-  _inherits(InputRangeSlider, _React$Component);
+  function Slider(props) {
+    _classCallCheck(this, Slider);
 
-  function InputRangeSlider(props) {
-    _classCallCheck(this, InputRangeSlider);
-
-    _get(Object.getPrototypeOf(InputRangeSlider.prototype), 'constructor', this).call(this, props);
+    _get(Object.getPrototypeOf(Slider.prototype), 'constructor', this).call(this, props);
 
     this.state = {};
 
-    (0, _InputRangeUtil.autobind)(['handleClick', 'handleMouseDown', 'handleMouseUp', 'handleMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTouchMove', 'handleKeyDown'], this);
+    _react2['default'].initializeTouchEvents(true);
+
+    (0, _util.autobind)(['handleClick', 'handleMouseDown', 'handleMouseUp', 'handleMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTouchMove', 'handleKeyDown'], this);
   }
 
-  _createClass(InputRangeSlider, [{
+  _createClass(Slider, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.setPosition(this.props);
@@ -511,7 +489,7 @@ var InputRangeSlider = (function (_React$Component) {
         left: perc + '%'
       };
 
-      var style = (0, _InputRangeUtil.extend)({}, this.state.style, newStyle);
+      var style = (0, _util.extend)({}, this.state.style, newStyle);
 
       this.setState({ style: style });
     }
@@ -574,17 +552,18 @@ var InputRangeSlider = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var classNames = this.props.classNames;
       var style = this.state.style || {};
 
       return _react2['default'].createElement(
         'span',
-        { className: 'InputRange-sliderContainer', style: style },
+        { className: classNames.sliderContainer, style: style },
         _react2['default'].createElement(
           'span',
-          { className: 'InputRange-label InputRange-label--value' },
+          { className: classNames.labelValue },
           _react2['default'].createElement(
             'span',
-            { className: 'InputRange-labelContainer' },
+            { className: classNames.labelContainer },
             this.props.value
           )
         ),
@@ -593,7 +572,7 @@ var InputRangeSlider = (function (_React$Component) {
           'aria-valuemax': this.props.maxValue,
           'aria-valuemin': this.props.minValue,
           'aria-valuenow': this.props.value,
-          className: 'InputRange-slider',
+          className: classNames.slider,
           draggable: 'false',
           href: '#',
           onClick: this.handleClick,
@@ -613,11 +592,12 @@ var InputRangeSlider = (function (_React$Component) {
     }
   }]);
 
-  return InputRangeSlider;
+  return Slider;
 })(_react2['default'].Component);
 
-InputRangeSlider.propTypes = {
+Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
+  classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   maxValue: _react2['default'].PropTypes.number,
   minValue: _react2['default'].PropTypes.number,
   onSliderKeyDown: _react2['default'].PropTypes.func.isRequired,
@@ -627,11 +607,11 @@ InputRangeSlider.propTypes = {
   value: _react2['default'].PropTypes.number.isRequired
 };
 
-exports['default'] = InputRangeSlider;
+exports['default'] = Slider;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"InputRangeUtil":5}],4:[function(require,module,exports){
+},{"./util":7}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -653,24 +633,24 @@ var _react = (typeof window !== "undefined" ? window['React'] : typeof global !=
 
 var _react2 = _interopRequireDefault(_react);
 
-var _InputRangeUtil = require('InputRangeUtil');
+var _util = require('./util');
 
-_react2['default'].initializeTouchEvents(true);
+var Track = (function (_React$Component) {
+  _inherits(Track, _React$Component);
 
-var InputRangeTrack = (function (_React$Component) {
-  _inherits(InputRangeTrack, _React$Component);
+  function Track(props) {
+    _classCallCheck(this, Track);
 
-  function InputRangeTrack(props) {
-    _classCallCheck(this, InputRangeTrack);
-
-    _get(Object.getPrototypeOf(InputRangeTrack.prototype), 'constructor', this).call(this, props);
+    _get(Object.getPrototypeOf(Track.prototype), 'constructor', this).call(this, props);
 
     this.state = {};
 
-    (0, _InputRangeUtil.autobind)(['handleMouseDown', 'handleTouchStart'], this);
+    _react2['default'].initializeTouchEvents(true);
+
+    (0, _util.autobind)(['handleMouseDown', 'handleTouchStart'], this);
   }
 
-  _createClass(InputRangeTrack, [{
+  _createClass(Track, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.setActiveTrackWidth(this.props);
@@ -691,7 +671,7 @@ var InputRangeTrack = (function (_React$Component) {
         width: width
       };
 
-      var activeTrackStyle = (0, _InputRangeUtil.extend)({}, this.state.activeTrackStyle, newActiveTrackStyle);
+      var activeTrackStyle = (0, _util.extend)({}, this.state.activeTrackStyle, newActiveTrackStyle);
 
       this.setState({ activeTrackStyle: activeTrackStyle });
     }
@@ -722,16 +702,17 @@ var InputRangeTrack = (function (_React$Component) {
     key: 'render',
     value: function render() {
       var activeTrackStyle = this.state.activeTrackStyle || {};
+      var classNames = this.props.classNames;
 
       return _react2['default'].createElement(
         'div',
         {
           onMouseDown: this.handleMouseDown,
           onTouchStart: this.handleTouchStart,
-          className: 'InputRange-track InputRange-track--container' },
+          className: classNames.trackContainer },
         _react2['default'].createElement('div', {
           style: activeTrackStyle,
-          className: 'InputRange-track InputRange-track--active' }),
+          className: classNames.trackActive }),
         this.props.children
       );
     }
@@ -745,20 +726,171 @@ var InputRangeTrack = (function (_React$Component) {
     }
   }]);
 
-  return InputRangeTrack;
+  return Track;
 })(_react2['default'].Component);
 
-InputRangeTrack.propTypes = {
+Track.propTypes = {
   children: _react2['default'].PropTypes.node,
+  classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   onTrackMouseDown: _react2['default'].PropTypes.func.isRequired,
   percentages: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.number).isRequired
 };
 
-exports['default'] = InputRangeTrack;
+exports['default'] = Track;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"InputRangeUtil":5}],5:[function(require,module,exports){
+},{"./util":7}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _util = require('./util');
+
+var ValueTransformer = (function () {
+  function ValueTransformer(component) {
+    _classCallCheck(this, ValueTransformer);
+
+    this.component = component;
+  }
+
+  _createClass(ValueTransformer, [{
+    key: 'valueFromPosition',
+    value: function valueFromPosition(position) {
+      var sizePerc = this.percentageFromPosition(position);
+      var valueDiff = this.component.props.maxValue - this.component.props.minValue;
+      var value = this.component.props.minValue + valueDiff * sizePerc;
+
+      return value;
+    }
+  }, {
+    key: 'positionFromValue',
+    value: function positionFromValue(value) {
+      var length = this.component.trackClientRect.width;
+      var valuePerc = this.percentageFromValue(value);
+      var positionValue = valuePerc * length;
+
+      return {
+        x: positionValue,
+        y: 0
+      };
+    }
+  }, {
+    key: 'positionFromEvent',
+    value: function positionFromEvent(event) {
+      var trackClientRect = this.component.trackClientRect;
+      var length = trackClientRect.width;
+
+      var _ref = event.touches ? event.touches[0] : event;
+
+      var clientX = _ref.clientX;
+
+      var position = {
+        x: (0, _util.clamp)(clientX - trackClientRect.left, 0, length),
+        y: 0
+      };
+
+      return position;
+    }
+  }, {
+    key: 'percentageFromPosition',
+    value: function percentageFromPosition(position) {
+      var length = this.component.trackClientRect.width;
+      var sizePerc = position.x / length;
+
+      return sizePerc || 0;
+    }
+  }, {
+    key: 'percentageFromValue',
+    value: function percentageFromValue(value) {
+      var validValue = (0, _util.clamp)(value, this.component.props.minValue, this.component.props.maxValue);
+      var valueDiff = this.component.props.maxValue - this.component.props.minValue;
+      var valuePerc = (validValue - this.component.props.minValue) / valueDiff;
+
+      return valuePerc || 0;
+    }
+  }, {
+    key: 'stepValueFromValue',
+    value: function stepValueFromValue(value) {
+      return Math.round(value / this.component.props.step) * this.component.props.step;
+    }
+  }]);
+
+  return ValueTransformer;
+})();
+
+exports['default'] = ValueTransformer;
+module.exports = exports['default'];
+
+},{"./util":7}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var defaultClassNames = {
+  component: 'InputRange',
+  labelContainer: 'InputRange-labelContainer',
+  labelMax: 'InputRange-label InputRange-label--max',
+  labelMin: 'InputRange-label InputRange-label--min',
+  labelValue: 'InputRange-label InputRange-label--value',
+  slider: 'InputRange-slider',
+  sliderContainer: 'InputRange-sliderContainer',
+  trackActive: 'InputRange-track InputRange-track--active',
+  trackContainer: 'InputRange-track InputRange-track--container'
+};
+
+exports['default'] = defaultClassNames;
+module.exports = exports['default'];
+
+},{}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.maxMinValuePropType = maxMinValuePropType;
+
+var _util = require('./util');
+
+function numberPredicate(value) {
+  return typeof value === 'number';
+}
+
+function maxMinValuePropType(props) {
+  var maxValue = props.maxValue;
+  var minValue = props.minValue;
+  var value = props.value;
+  var values = props.values;
+
+  if (!numberPredicate(value)) {
+    return new Error('`value` must be a number');
+  }
+
+  if (!value && !(0, _util.objectOf)(values, numberPredicate)) {
+    return new Error('`values` must be an object of numbers');
+  }
+
+  if (minValue >= maxValue) {
+    return new Error('`minValue` must be smaller than `maxValue`');
+  }
+
+  if (maxValue <= minValue) {
+    return new Error('`maxValue` must be larger than `minValue`');
+  }
+
+  if (value < minValue || value > maxValue) {
+    return new Error('`value` must be within `minValue` and `maxValue`');
+  }
+}
+
+},{"./util":7}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -822,7 +954,7 @@ function autobind(methodNames, instance) {
   });
 }
 
-var InputRangeUtil = {
+var util = {
   arrayOf: arrayOf,
   autobind: autobind,
   captialize: captialize,
@@ -833,96 +965,24 @@ var InputRangeUtil = {
   objectOf: objectOf
 };
 
-exports['default'] = InputRangeUtil;
+exports['default'] = util;
 module.exports = exports['default'];
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _InputRange = require('./InputRange');
 
-var _InputRangeUtil = require('InputRangeUtil');
+var _InputRange2 = _interopRequireDefault(_InputRange);
 
-var InputRangeValueTransformer = (function () {
-  function InputRangeValueTransformer(component) {
-    _classCallCheck(this, InputRangeValueTransformer);
-
-    this.component = component;
-  }
-
-  _createClass(InputRangeValueTransformer, [{
-    key: 'valueFromPosition',
-    value: function valueFromPosition(position) {
-      var sizePerc = this.percentageFromPosition(position);
-      var valueDiff = this.component.props.maxValue - this.component.props.minValue;
-      var value = this.component.props.minValue + valueDiff * sizePerc;
-
-      return value;
-    }
-  }, {
-    key: 'positionFromValue',
-    value: function positionFromValue(value) {
-      var length = this.component.trackClientRect.width;
-      var valuePerc = this.percentageFromValue(value);
-      var positionValue = valuePerc * length;
-
-      return {
-        x: positionValue,
-        y: 0
-      };
-    }
-  }, {
-    key: 'positionFromEvent',
-    value: function positionFromEvent(event) {
-      var trackClientRect = this.component.trackClientRect;
-      var length = trackClientRect.width;
-
-      var _ref = event.touches ? event.touches[0] : event;
-
-      var clientX = _ref.clientX;
-
-      var position = {
-        x: (0, _InputRangeUtil.clamp)(clientX - trackClientRect.left, 0, length),
-        y: 0
-      };
-
-      return position;
-    }
-  }, {
-    key: 'percentageFromPosition',
-    value: function percentageFromPosition(position) {
-      var length = this.component.trackClientRect.width;
-      var sizePerc = position.x / length;
-
-      return sizePerc || 0;
-    }
-  }, {
-    key: 'percentageFromValue',
-    value: function percentageFromValue(value) {
-      var validValue = (0, _InputRangeUtil.clamp)(value, this.component.props.minValue, this.component.props.maxValue);
-      var valueDiff = this.component.props.maxValue - this.component.props.minValue;
-      var valuePerc = (validValue - this.component.props.minValue) / valueDiff;
-
-      return valuePerc || 0;
-    }
-  }, {
-    key: 'stepValueFromValue',
-    value: function stepValueFromValue(value) {
-      return Math.round(value / this.component.props.step) * this.component.props.step;
-    }
-  }]);
-
-  return InputRangeValueTransformer;
-})();
-
-exports['default'] = InputRangeValueTransformer;
+exports['default'] = _InputRange2['default'];
 module.exports = exports['default'];
 
-},{"InputRangeUtil":5}]},{},[1])(1)
+},{"./InputRange":1}]},{},[8])(8)
 });
