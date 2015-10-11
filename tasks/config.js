@@ -216,7 +216,10 @@ config.test = {
 
 // Release config
 config.release = {
-  src: pkgPath,
+  src: [
+    pkgPath,
+    'bower.json',
+  ],
 };
 
 export default config;
