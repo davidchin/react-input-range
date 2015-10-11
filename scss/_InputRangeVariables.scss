@@ -8,9 +8,9 @@ $InputRange-slider-background: $InputRange-primaryColor !default;
 $InputRange-slider-border: 1px solid $InputRange-primaryColor !default;
 $InputRange-slider-height: 1rem !default;
 $InputRange-slider-width: 1rem !default;
-$InputRange-slider-transition: transform 0.3s ease, box-shadow 0.3s ease;
+$InputRange-slider-transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
 $InputRange-slider-transform--active: scale(1.3) !default;
-$InputRange-sliderContainer-transition: left 0.3s ease;
+$InputRange-sliderContainer-transition: left 0.3s ease-out;
 
 // InputRange-label
 $InputRange-label-color: $InputRange-neutralColor !default;
@@ -19,4 +19,4 @@ $InputRange-label-color: $InputRange-neutralColor !default;
 $InputRange-track--active-background: $InputRange-primaryColor !default;
 $InputRange-track-background: $InputRange-neutralLightColor !default;
 $InputRange-track-height: 0.3rem !default;
-$inputRange-track-transition: left 0.3s ease, width 0.3s ease;
+$inputRange-track-transition: left 0.3s ease-out, width 0.3s ease-out;
