@@ -1,0 +1,45 @@
+{
+  "name": "react-input-range",
+  "main": [
+    "dist/react-input-range.js",
+    "dist/react-input-range.css"
+  ],
+  "version": "0.2.3",
+  "description": "React component for inputting numeric values within a range",
+  "homepage": "https://github.com/davidchin/react-input-range",
+  "authors": [
+    "davidchin <davidchin.yf@gmail.com>"
+  ],
+  "keywords": [
+    "react",
+    "react-component",
+    "range-slider",
+    "input-range",
+    "range",
+    "slider",
+    "form",
+    "input"
+  ],
+  "license": "MIT",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node",
+    "es6"
+  ],
+  "ignore": [
+    "**/.*",
+    "build",
+    "example",
+    "Gemfile*",
+    "gulpfile.babel.js",
+    "karma.conf.js",
+    "lib",
+    "node_modules",
+    "package.json",
+    "scss",
+    "src",
+    "tasks",
+    "test"
+  ]
+}
