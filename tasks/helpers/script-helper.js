@@ -30,6 +30,12 @@ function compileScript(watch, opts) {
     bundler.external(opts.external);
   }
 
+  if (browserifyOpts.noParse) {
+    browserifyOpts.noParse = _.map(browserifyOpts.noParse, (path) => {
+      return require.resolve(path);
+    });
+  }
+
   if (watch) {
     bundler = watchify(bundler);
 
