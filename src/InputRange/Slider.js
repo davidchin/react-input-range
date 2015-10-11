@@ -1,7 +1,7 @@
 import React from 'react';
-import { autobind, extend } from 'InputRangeUtil';
+import { autobind, extend } from './util';
 
-class InputRangeSlider extends React.Component {
+class Slider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -137,7 +137,7 @@ class InputRangeSlider extends React.Component {
   }
 }
 
-InputRangeSlider.propTypes = {
+Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   maxValue: React.PropTypes.number,
@@ -149,4 +149,4 @@ InputRangeSlider.propTypes = {
   value: React.PropTypes.number.isRequired,
 };
 
-export default InputRangeSlider;
+export default Slider;

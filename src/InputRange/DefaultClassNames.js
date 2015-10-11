@@ -1,4 +1,4 @@
-const InputRangeDefaultClassNames = {
+const defaultClassNames = {
   component: 'InputRange',
   labelContainer: 'InputRange-labelContainer',
   labelMax: 'InputRange-label InputRange-label--max',
@@ -10,4 +10,4 @@ const InputRangeDefaultClassNames = {
   trackContainer: 'InputRange-track InputRange-track--container',
 };
 
-export default InputRangeDefaultClassNames;
+export default defaultClassNames;

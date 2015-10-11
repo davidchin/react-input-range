@@ -1,7 +1,7 @@
 import React from 'react';
-import { autobind, extend } from 'InputRangeUtil';
+import { autobind, extend } from './util';
 
-class InputRangeTrack extends React.Component {
+class Track extends React.Component {
   constructor(props) {
     super(props);
 
@@ -88,11 +88,11 @@ class InputRangeTrack extends React.Component {
   }
 }
 
-InputRangeTrack.propTypes = {
+Track.propTypes = {
   children: React.PropTypes.node,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   onTrackMouseDown: React.PropTypes.func.isRequired,
   percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
 };
 
-export default InputRangeTrack;
+export default Track;

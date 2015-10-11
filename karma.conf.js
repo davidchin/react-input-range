@@ -7,7 +7,7 @@ module.exports = function(config) {
     files: [
       'node_modules/react/dist/react.js',
       'node_modules/babelify/polyfill.js',
-      'src/js/**/*.js',
+      'src/**/*.js',
       'test/**/*.js'
     ],
 
@@ -15,7 +15,7 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      'src/js/**/*.js': ['browserify'],
+      'src/**/*.js': ['browserify'],
       'test/**/*.js': ['browserify'],
       'node_modules/babelify/polyfill.js': ['browserify']
     },
@@ -31,7 +31,7 @@ module.exports = function(config) {
       extensions: ['.js', '.jsx'],
       transform: ['babelify'],
       paths: [
-        'src/js'
+        'src'
       ]
     },
 

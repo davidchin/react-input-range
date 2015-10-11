@@ -22,6 +22,10 @@ gulp.task('clean:style', (callback) => {
   del(config.clean.style.src, callback);
 });
 
+gulp.task('clean:lib', (callback) => {
+  del(config.clean.lib.src, callback);
+});
+
 gulp.task('clean:style:example', (callback) => {
   del(config.clean.example.style.src, callback);
 });

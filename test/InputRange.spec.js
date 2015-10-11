@@ -448,7 +448,7 @@ describe('InputRange', () => {
       inputRange.isMultiValue = false;
       inputRange.setPositionsByProps(props);
 
-      expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.inputRangeSliderMax, props.value);
+      expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.value);
     });
 
     it('should set the position of all sliders if it accepts multiple values', () => {
@@ -472,7 +472,7 @@ describe('InputRange', () => {
     });
 
     it('should increment slider value by the step amount', () => {
-      const slider = inputRange.refs.inputRangeSliderMin;
+      const slider = inputRange.refs.sliderMin;
 
       inputRange.incrementValue(slider);
 
@@ -486,7 +486,7 @@ describe('InputRange', () => {
     });
 
     it('should decrement slider value by the step amount', () => {
-      const slider = inputRange.refs.inputRangeSliderMin;
+      const slider = inputRange.refs.sliderMin;
 
       inputRange.decrementValue(slider);
 
@@ -500,7 +500,7 @@ describe('InputRange', () => {
     });
 
     it('should set the position of a slider according to mouse event', () => {
-      const slider = inputRange.refs.inputRangeSliderMax;
+      const slider = inputRange.refs.sliderMax;
       const event = {
         clientX: 100,
         clientY: 200,
@@ -519,7 +519,7 @@ describe('InputRange', () => {
       });
 
       it('should decrement value', () => {
-        const slider = inputRange.refs.inputRangeSliderMax;
+        const slider = inputRange.refs.sliderMax;
         const event = {
           keyCode: 37,
         };
@@ -536,7 +536,7 @@ describe('InputRange', () => {
       });
 
       it('should increment value', () => {
-        const slider = inputRange.refs.inputRangeSliderMax;
+        const slider = inputRange.refs.sliderMax;
         const event = {
           keyCode: 39,
         };

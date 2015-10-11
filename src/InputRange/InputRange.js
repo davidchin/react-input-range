@@ -1,10 +1,10 @@
-import InputRangeDefaultClassNames from 'InputRangeDefaultClassNames';
-import InputRangeSlider from 'InputRangeSlider';
-import InputRangeTrack from 'InputRangeTrack';
-import InputRangeValueTransformer from 'InputRangeValueTransformer';
 import React from 'react';
-import { autobind, captialize, clamp, distanceTo, extend } from 'InputRangeUtil';
-import { maxMinValuePropType } from 'InputRangePropTypes';
+import Slider from './Slider';
+import Track from './Track';
+import ValueTransformer from './ValueTransformer';
+import { autobind, captialize, clamp, distanceTo, extend } from './util';
+import { maxMinValuePropType } from './propTypes';
+import defaultClassNames from './defaultClassNames';
 
 // Helpers
 function isNewStep(component, value, oldValue) {
@@ -12,7 +12,7 @@ function isNewStep(component, value, oldValue) {
 }
 
 function getKeyBySlider(component, slider) {
-  if (slider === component.refs.inputRangeSliderMin) {
+  if (slider === component.refs.sliderMin) {
     return 'min';
   }
 
@@ -68,7 +68,7 @@ class InputRange extends React.Component {
     };
 
     this.state = state;
-    this.valueTransformer = new InputRangeValueTransformer(this);
+    this.valueTransformer = new ValueTransformer(this);
     this.isMultiValue = this.props.hasOwnProperty('values');
 
     // Auto-bind
@@ -115,7 +115,7 @@ class InputRange extends React.Component {
 
   // Getters / Setters
   get trackClientRect() {
-    const track = this.refs.inputRangeTrack;
+    const track = this.refs.track;
 
     return track && track.clientRect;
   }
@@ -192,7 +192,7 @@ class InputRange extends React.Component {
     if (this.isMultiValue) {
       this.setPositionsByValues(props.values);
     } else {
-      this.setPositionByValue(this.refs.inputRangeSliderMax, props.value);
+      this.setPositionByValue(this.refs.sliderMax, props.value);
     }
   }
 
@@ -245,7 +245,7 @@ class InputRange extends React.Component {
     for (const key of keys) {
       const value = this.state.values[key];
       const percentage = this.state.percentages[key];
-      const ref = `inputRangeSlider${captialize(key)}`;
+      const ref = `slider${captialize(key)}`;
 
       let { maxValue, minValue } = this.props;
 
@@ -256,7 +256,7 @@ class InputRange extends React.Component {
       }
 
       const slider = (
-        <InputRangeSlider
+        <Slider
           classNames={ classNames }
           key={ key }
           maxValue={ maxValue }
@@ -301,14 +301,14 @@ class InputRange extends React.Component {
           </span>
         </span>
 
-        <InputRangeTrack
+        <Track
           classNames={ classNames }
-          ref="inputRangeTrack"
+          ref="track"
           percentages={ this.state.percentages }
           onTrackMouseDown={ this.handleTrackMouseDown }>
 
           { this.renderSliders() }
-        </InputRangeTrack>
+        </Track>
 
         <span className={ classNames.labelMax }>
           <span className={ classNames.labelContainer }>
@@ -335,7 +335,7 @@ InputRange.propTypes = {
 };
 
 InputRange.defaultProps = {
-  classNames: InputRangeDefaultClassNames,
+  classNames: defaultClassNames,
   minValue: 0,
   maxValue: 10,
   value: 0,

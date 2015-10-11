@@ -2,7 +2,6 @@
 import './tasks/build';
 import './tasks/clean';
 import './tasks/connect';
-import './tasks/dist';
 import './tasks/default';
 import './tasks/lint';
 import './tasks/release';

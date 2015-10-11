@@ -10,12 +10,15 @@ const config = {
   version: pkg.version,
   moduleName: 'InputRange',
   src: 'src',
+  scss: 'scss',
   build: 'build',
   dist: 'dist',
+  lib: 'lib',
   test: 'test',
   tasks: 'tasks',
   example: {
-    src: 'example/src',
+    js: 'example/js',
+    scss: 'example/scss',
     build: 'example/build',
   },
 };
@@ -24,10 +27,10 @@ const config = {
 config.script = {
   build: {
     paths: [
-      config.src + '/js',
+      config.src,
     ],
     entries: [
-      config.src + '/js/' + config.moduleName + '.js',
+      config.src + '/' + config.moduleName,
     ],
     external: 'react',
     output: pkg.name + '.js',
@@ -35,17 +38,22 @@ config.script = {
     dest: config.build,
   },
 
+  lib: {
+    src: config.src + '/**/*.js',
+    dest: config.lib,
+  },
+
   example: {
     paths: [
       config.build,
-      config.src + '/js',
-      config.example.src,
+      config.src,
+      config.example.js,
     ],
     entries: [
-      config.example.src + '/example.js',
+      config.example.js + '/example.js',
     ],
     noParse: [
-      path.join(process.cwd(), config.build, config.name),
+      path.join(process.cwd(), config.build, config.name + '.js'),
     ],
     output: 'example.js',
     dest: config.example.build,
@@ -64,12 +72,12 @@ config.script = {
 // Style config
 config.style = {
   build: {
-    src: config.src + '/css/**/*.scss',
+    src: config.scss + '/**/*.scss',
     output: pkg.name + '.css',
     dest: config.build,
     sass: {
       includePaths: [
-        config.src,
+        config.scss,
       ],
     },
   },
@@ -83,14 +91,14 @@ config.style = {
   },
 
   example: {
-    src: config.example.src + '/**/*.scss',
+    src: config.example.scss + '/**/*.scss',
     output: 'example.css',
     dest: config.example.build,
     sass: {
       includePaths: [
         config.build,
-        config.src,
-        config.example.src,
+        config.scss,
+        config.example.scss,
       ],
     },
   },
@@ -101,6 +109,12 @@ config.clean = {
   script: {
     src: [
       config.build + '/**/*.js*',
+    ],
+  },
+
+  lib: {
+    src: [
+      config.lib + '/**/*',
     ],
   },
 
@@ -158,7 +172,7 @@ config.watch = {
   script: {
     src: [
       config.src + '/**/*.js',
-      config.example.src + '/**/*.js',
+      config.example.js + '/**/*.js',
       config.test + '/**/*.js',
     ],
     build: config.script.build,
@@ -186,7 +200,7 @@ config.lint = {
   },
 
   style: {
-    src: config.src + '/**/*.scss',
+    src: config.scss + '/**/*.scss',
     bundleExec: true,
   },
 };

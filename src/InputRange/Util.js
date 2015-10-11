@@ -56,7 +56,7 @@ function autobind(methodNames, instance) {
   });
 }
 
-const InputRangeUtil = {
+const util = {
   arrayOf,
   autobind,
   captialize,
@@ -67,4 +67,4 @@ const InputRangeUtil = {
   objectOf,
 };
 
-export default InputRangeUtil;
+export default util;

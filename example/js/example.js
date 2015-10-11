@@ -1,5 +1,5 @@
 import React from 'react';
-import InputRange from 'react-input-range';
+import InputRange from 'InputRange';
 
 const values = {
   min: 2,

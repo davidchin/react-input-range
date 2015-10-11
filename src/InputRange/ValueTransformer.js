@@ -1,6 +1,6 @@
-import { clamp } from 'InputRangeUtil';
+import { clamp } from './util';
 
-class InputRangeValueTransformer {
+class ValueTransformer {
   constructor(component) {
     this.component = component;
   }
@@ -56,4 +56,4 @@ class InputRangeValueTransformer {
   }
 }
 
-export default InputRangeValueTransformer;
+export default ValueTransformer;

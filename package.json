@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/davidchin/react-input-range.git"
   },
-  "main": "dist/react-input-range.js",
+  "main": "lib/InputRange/index.js",
   "author": "David Chin",
   "license": "MIT",
   "devDependencies": {
@@ -31,7 +31,7 @@
     "eslint-config-airbnb": "0.0.7",
     "eslint-plugin-react": "^3.1.0",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.1.0",
+    "gulp-babel": "^5.2.1",
     "gulp-bump": "^1.0.0",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^2.2.0",
@@ -74,13 +74,18 @@
   },
   "files": [
     "dist/",
+    "lib/",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "scss/"
   ],
   "scripts": {
     "build": "gulp build",
+    "build:dist": "gulp build:dist",
+    "build:lib": "gulp build:lib",
     "release": "gulp release",
     "start": "gulp run",
-    "test": "gulp test"
+    "test": "gulp test",
+    "prepublish": "npm run build:lib"
   }
 }

@@ -12,7 +12,7 @@ let newVersion = config.version;
 gulp.task('release', (callback) => {
   runSequence(
     'releasePrompt',
-    'dist',
+    'build:dist',
     'releaseBump',
     'releaseCommit',
     'releaseTag',

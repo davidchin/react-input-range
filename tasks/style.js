@@ -26,7 +26,7 @@ gulp.task('style:build', ['lint:style', 'clean:style'], () => {
     .pipe(gulp.dest(config.style.build.dest));
 });
 
-gulp.task('style:dist', ['style:build'], () => {
+gulp.task('style:dist', ['style:build', 'clean:style:dist'], () => {
   return gulp.src(config.style.dist.src)
     .pipe(gulp.dest(config.style.dist.dest))
     .pipe(minifyCss())

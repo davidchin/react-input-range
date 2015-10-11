@@ -9,3 +9,7 @@ gulp.task('build:dist', [
   'script:dist',
   'style:dist',
 ]);
+
+gulp.task('build:lib', [
+  'script:lib',
+]);

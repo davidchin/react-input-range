@@ -1,4 +1,4 @@
-import { objectOf } from 'InputRangeUtil';
+import { objectOf } from './util';
 
 function numberPredicate(value) {
   return typeof value === 'number';
