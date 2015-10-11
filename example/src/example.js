@@ -3,7 +3,7 @@ import InputRange from 'react-input-range';
 
 const values = {
   min: 2,
-  max: 10
+  max: 10,
 };
 
 function onChange(component, values) {

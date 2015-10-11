@@ -20,6 +20,22 @@ describe('InputRange', () => {
     removeComponent(inputRange);
   });
 
+  describe('initialize', () => {
+    it('should set default class names for its sub-components and itself', () => {
+      expect(inputRange.props.classNames).toEqual({
+        component: 'InputRange',
+        labelContainer: 'InputRange-labelContainer',
+        labelMax: 'InputRange-label InputRange-label--max',
+        labelMin: 'InputRange-label InputRange-label--min',
+        labelValue: 'InputRange-label InputRange-label--value',
+        slider: 'InputRange-slider',
+        sliderContainer: 'InputRange-sliderContainer',
+        trackActive: 'InputRange-track InputRange-track--active',
+        trackContainer: 'InputRange-track InputRange-track--container',
+      });
+    });
+  });
+
   describe('componentDidMount', () => {
     beforeEach(() => {
       spyOn(inputRange, 'setPositionsByProps');
@@ -27,6 +43,7 @@ describe('InputRange', () => {
 
     it('should set the initial position for slider', () => {
       const props = {
+        classNames: jasmine.any(Object),
         maxValue: 20,
         minValue: 0,
         values: {

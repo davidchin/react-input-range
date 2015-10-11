@@ -107,12 +107,13 @@ class InputRangeSlider extends React.Component {
 
   // Render
   render() {
+    const classNames = this.props.classNames;
     const style = this.state.style || {};
 
     return (
-      <span className="InputRange-sliderContainer" style={ style }>
-        <span className="InputRange-label InputRange-label--value">
-          <span className="InputRange-labelContainer">
+      <span className={ classNames.sliderContainer } style={ style }>
+        <span className={ classNames.labelValue }>
+          <span className={ classNames.labelContainer }>
             { this.props.value }
           </span>
         </span>
@@ -122,7 +123,7 @@ class InputRangeSlider extends React.Component {
           aria-valuemax={ this.props.maxValue }
           aria-valuemin={ this.props.minValue }
           aria-valuenow={ this.props.value }
-          className="InputRange-slider"
+          className={ classNames.slider }
           draggable="false"
           href="#"
           onClick={ this.handleClick }
@@ -138,6 +139,7 @@ class InputRangeSlider extends React.Component {
 
 InputRangeSlider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
+  classNames: React.PropTypes.objectOf(React.PropTypes.string),
   maxValue: React.PropTypes.number,
   minValue: React.PropTypes.number,
   onSliderKeyDown: React.PropTypes.func.isRequired,

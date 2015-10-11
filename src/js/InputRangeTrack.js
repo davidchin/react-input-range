@@ -71,15 +71,16 @@ class InputRangeTrack extends React.Component {
   // Render
   render() {
     const activeTrackStyle = this.state.activeTrackStyle || {};
+    const classNames = this.props.classNames;
 
     return (
       <div
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }
-        className="InputRange-track InputRange-track--container">
+        className={ classNames.trackContainer }>
         <div
           style={ activeTrackStyle }
-          className="InputRange-track InputRange-track--active">
+          className={ classNames.trackActive }>
         </div>
         { this.props.children }
       </div>
@@ -89,6 +90,7 @@ class InputRangeTrack extends React.Component {
 
 InputRangeTrack.propTypes = {
   children: React.PropTypes.node,
+  classNames: React.PropTypes.objectOf(React.PropTypes.string),
   onTrackMouseDown: React.PropTypes.func.isRequired,
   percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
 };

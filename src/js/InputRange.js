@@ -1,9 +1,10 @@
+import InputRangeDefaultClassNames from 'InputRangeDefaultClassNames';
 import InputRangeSlider from 'InputRangeSlider';
 import InputRangeTrack from 'InputRangeTrack';
 import InputRangeValueTransformer from 'InputRangeValueTransformer';
 import React from 'react';
 import { autobind, captialize, clamp, distanceTo, extend } from 'InputRangeUtil';
-import { maxMinValuePropType } from 'InputRangePropType';
+import { maxMinValuePropType } from 'InputRangePropTypes';
 
 // Helpers
 function isNewStep(component, value, oldValue) {
@@ -237,6 +238,7 @@ class InputRange extends React.Component {
 
   // Render
   renderSliders() {
+    const classNames = this.props.classNames;
     const sliders = [];
     const keys = getKeys(this);
 
@@ -255,6 +257,7 @@ class InputRange extends React.Component {
 
       const slider = (
         <InputRangeSlider
+          classNames={ classNames }
           key={ key }
           maxValue={ maxValue }
           minValue={ minValue }
@@ -288,15 +291,18 @@ class InputRange extends React.Component {
   }
 
   render() {
+    const classNames = this.props.classNames;
+
     return (
-      <div ref="inputRange" className="InputRange">
-        <span className="InputRange-label InputRange-label--min">
-          <span className="InputRange-labelContainer">
+      <div ref="inputRange" className={ classNames.component }>
+        <span className={ classNames.labelMin }>
+          <span className={ classNames.labelContainer }>
             { this.props.minValue }
           </span>
         </span>
 
         <InputRangeTrack
+          classNames={ classNames }
           ref="inputRangeTrack"
           percentages={ this.state.percentages }
           onTrackMouseDown={ this.handleTrackMouseDown }>
@@ -304,8 +310,8 @@ class InputRange extends React.Component {
           { this.renderSliders() }
         </InputRangeTrack>
 
-        <span className="InputRange-label InputRange-label--max">
-          <span className="InputRange-labelContainer">
+        <span className={ classNames.labelMax }>
+          <span className={ classNames.labelContainer }>
             { this.props.maxValue }
           </span>
         </span>
@@ -318,6 +324,7 @@ class InputRange extends React.Component {
 
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
+  classNames: React.PropTypes.objectOf(React.PropTypes.string),
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
@@ -328,6 +335,7 @@ InputRange.propTypes = {
 };
 
 InputRange.defaultProps = {
+  classNames: InputRangeDefaultClassNames,
   minValue: 0,
   maxValue: 10,
   value: 0,

@@ -49,6 +49,7 @@ React.render(
 Property                | Type                    | Description
 :-----------------------|:------------------------|:----------------------------------
 ariaLabelledby          |string                   |`aria-labelledby` attribute
+classNames              |Object.&lt;string&gt;    |CSS class names
 maxValue                |number                   |Maximum value it can accept
 minValue                |number                   |Minimum value it can accept
 name                    |string                   |Name of `form` input
