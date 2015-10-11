@@ -72,13 +72,6 @@
   "browserify-shim": {
     "react": "global:React"
   },
-  "files": [
-    "dist/",
-    "lib/",
-    "LICENSE",
-    "README.md",
-    "scss/"
-  ],
   "scripts": {
     "build": "gulp build",
     "build:dist": "gulp build:dist",

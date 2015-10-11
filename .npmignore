@@ -1,0 +1,11 @@
+**/.*
+bower.json
+build
+example
+Gemfile*
+gulpfile.babel.js
+karma.conf.js
+node_modules
+src
+tasks
+test
