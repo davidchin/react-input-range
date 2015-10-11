@@ -8,8 +8,8 @@ A CodePen demo is available [here](http://codepen.io/davidchin/full/GpNvqw/).
 ## Installation
 
 1. Install `react-input-range` using npm. `npm install react-input-range`
-2. Import `react-input-range.css` to apply the default styling.
-3. Import `react-input-range.js` to use `InputRange` component.
+2. Import `react-input-range` to use `InputRange` component.
+3. Optionally, import `react-input-range.css` if you want to apply the default styling.
 4. Depending on your browser support requirement, `babel-core/polyfill` or `core-js/es6` polyfill might be needed.
 
 ## Usage
@@ -60,7 +60,7 @@ values                  |Array.&lt;number&gt;     |Default range of values
 
 ## Development
 
-If you want to work on this project locally, you need to grab all its dependencies.
+If you want to work on this project locally, you need to grab all of its dependencies.
 ```
 npm install && bundle install
 ```
@@ -69,3 +69,5 @@ After that, you should be able run
 ```
 npm start
 ```
+
+Contributions are welcome. :)
