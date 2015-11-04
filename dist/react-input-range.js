@@ -129,13 +129,13 @@ var InputRange = (function (_React$Component) {
       return currentState.values.min !== nextState.values.min || currentState.values.max !== nextState.values.max || currentState.value !== nextState.value || currentProps.minValue !== nextProps.minValue || currentProps.maxValue !== nextProps.maxValue;
     }
   }, {
-    key: 'componentWillUpdate',
-    value: function componentWillUpdate(nextProps, nextState) {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
       if (this.props.onChange) {
-        var results = nextState.values.max;
+        var results = this.state.values.max;
 
         if (this.isMultiValue) {
-          results = nextState.values;
+          results = this.state.values;
         }
 
         this.props.onChange(this, results);
