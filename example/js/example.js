@@ -1,16 +1,7 @@
 import React from 'react';
-import InputRange from 'InputRange';
-
-const values = {
-  min: 2,
-  max: 10,
-};
-
-function onChange(component, values) {
-  console.log(values);
-}
+import App from 'App';
 
 React.render(
-  <InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />,
-  document.getElementById('input-range')
+  <App />,
+  document.getElementById('app')
 );

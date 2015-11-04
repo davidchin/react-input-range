@@ -135,13 +135,11 @@ describe('InputRange', () => {
     });
   });
 
-  describe('componentWillUpdate', () => {
-    let nextProps;
+  describe('componentDidUpdate', () => {
     let nextState;
     let onChange;
 
     beforeEach(() => {
-      nextProps = Object.assign({}, inputRange.props);
       nextState = Object.assign({}, inputRange.state);
       onChange = jasmine.createSpy('onChange');
     });
@@ -154,7 +152,8 @@ describe('InputRange', () => {
         });
 
         it('should execute `onChange` callback with the changed values', () => {
-          inputRange.componentWillUpdate(nextProps, nextState);
+          inputRange.state = nextState;
+          inputRange.componentDidUpdate();
 
           expect(onChange).toHaveBeenCalledWith(inputRange, values);
         });
@@ -171,7 +170,8 @@ describe('InputRange', () => {
         });
 
         it('should execute `onChange` callback with the changed value', () => {
-          inputRange.componentWillUpdate(nextProps, nextState);
+          inputRange.state = nextState;
+          inputRange.componentDidUpdate();
 
           expect(onChange).toHaveBeenCalledWith(inputRange, value);
         });
@@ -180,7 +180,8 @@ describe('InputRange', () => {
 
     describe('if `onChange` callback is not provided', () => {
       it('should not execute `onChange` callback', () => {
-        inputRange.componentWillUpdate(nextProps, nextState);
+        inputRange.state = nextState;
+        inputRange.componentDidUpdate();
 
         expect(onChange).not.toHaveBeenCalled();
       });
