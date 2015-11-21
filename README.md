@@ -71,13 +71,15 @@ Property                | Type                    | Description
 :-----------------------|:------------------------|:----------------------------------
 ariaLabelledby          |string                   |`aria-labelledby` attribute
 classNames              |Object.&lt;string&gt;    |CSS class names
+defaultValue            |number                   |Default value
+defaultValues           |Object                   |Default values
 maxValue                |number                   |Maximum value it can accept
 minValue                |number                   |Minimum value it can accept
 name                    |string                   |Name of `form` input
 onChange                |Function                 |`onChange` callback
 step                    |number                   |Increment/decrement value
-value                   |number                   |Default value
-values                  |Array.&lt;number&gt;     |Default range of values
+value                   |number                   |Current value
+values                  |Object                   |Current range of values
 
 ## Development
 

@@ -9,13 +9,21 @@ export function maxMinValuePropType(props) {
   const minValue = props.minValue;
   const value = props.value;
   const values = props.values;
+  const defaultValue = props.defaultValue;
+  const defaultValues = props.defaultValues;
 
-  if (!numberPredicate(value)) {
-    return new Error('`value` must be a number');
+  if (!values &&
+      !defaultValues &&
+      !numberPredicate(value) &&
+      !numberPredicate(defaultValue)) {
+    return new Error('`value` or `defaultValue` must be a number');
   }
 
-  if (!value && !objectOf(values, numberPredicate)) {
-    return new Error('`values` must be an object of numbers');
+  if (!value &&
+      !defaultValue &&
+      !objectOf(values, numberPredicate) &&
+      !objectOf(defaultValues, numberPredicate)) {
+    return new Error('`values` or `defaultValues` must be an object of numbers');
   }
 
   if (minValue >= maxValue) {

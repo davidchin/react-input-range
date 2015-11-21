@@ -2,7 +2,7 @@ import React from 'react';
 import Slider from './Slider';
 import Track from './Track';
 import ValueTransformer from './ValueTransformer';
-import { autobind, captialize, clamp, distanceTo, extend } from './util';
+import { autobind, captialize, clamp, distanceTo, extend, isEmpty, isNumber, omit } from './util';
 import { maxMinValuePropType } from './propTypes';
 import defaultClassNames from './defaultClassNames';
 
@@ -53,6 +53,7 @@ class InputRange extends React.Component {
 
     // Initial state
     const state = {
+      didChange: false,
       percentages: {
         min: 0,
         max: 0,
@@ -69,7 +70,8 @@ class InputRange extends React.Component {
 
     this.state = state;
     this.valueTransformer = new ValueTransformer(this);
-    this.isMultiValue = this.props.hasOwnProperty('values');
+    this.isMultiValue = this.props.hasOwnProperty('defaultValues') ||
+                        this.props.hasOwnProperty('values');
 
     // Auto-bind
     autobind([
@@ -85,24 +87,27 @@ class InputRange extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setPositionsByProps(nextProps);
+    const props = omit(nextProps, ['defaultValue', 'defaultValues']);
+
+    this.setPositionsByProps(props);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const currentProps = this.props;
     const currentState = this.state;
-
-    return (
+    const shouldUpdate = (
       currentState.values.min !== nextState.values.min ||
       currentState.values.max !== nextState.values.max ||
       currentState.value !== nextState.value ||
       currentProps.minValue !== nextProps.minValue ||
       currentProps.maxValue !== nextProps.maxValue
     );
+
+    return shouldUpdate;
   }
 
   componentDidUpdate() {
-    if (this.props.onChange) {
+    if (this.props.onChange && this.state.didChange) {
       let results = this.state.values.max;
 
       if (this.isMultiValue) {
@@ -111,6 +116,10 @@ class InputRange extends React.Component {
 
       this.props.onChange(this, results);
     }
+
+    this.setState({
+      didChange: true,
+    });
   }
 
   // Getters / Setters
@@ -168,6 +177,10 @@ class InputRange extends React.Component {
   }
 
   setPositionByValue(slider, value) {
+    if (!isNumber(value)) {
+      return;
+    }
+
     const validValue = clamp(value, this.props.minValue, this.props.maxValue);
     const position = this.valueTransformer.positionFromValue(validValue);
 
@@ -175,6 +188,10 @@ class InputRange extends React.Component {
   }
 
   setPositionsByValues(values) {
+    if (!values || !isNumber(values.min) || !isNumber(values.max)) {
+      return;
+    }
+
     const validValues = {
       min: clamp(values.min, this.props.minValue, this.props.maxValue),
       max: clamp(values.max, this.props.minValue, this.props.maxValue),
@@ -190,9 +207,13 @@ class InputRange extends React.Component {
 
   setPositionsByProps(props) {
     if (this.isMultiValue) {
-      this.setPositionsByValues(props.values);
+      const values = !isEmpty(props.values) ? props.values : props.defaultValues;
+
+      this.setPositionsByValues(values);
     } else {
-      this.setPositionByValue(this.refs.sliderMax, props.value);
+      const value = isNumber(props.value) ? props.value : props.defaultValue;
+
+      this.setPositionByValue(this.refs.sliderMax, value);
     }
   }
 
@@ -325,6 +346,8 @@ class InputRange extends React.Component {
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
+  defaultValue: maxMinValuePropType,
+  defaultValues: maxMinValuePropType,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
@@ -338,7 +361,6 @@ InputRange.defaultProps = {
   classNames: defaultClassNames,
   minValue: 0,
   maxValue: 10,
-  value: 0,
   step: 1,
 };
 

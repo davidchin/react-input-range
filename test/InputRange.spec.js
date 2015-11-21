@@ -1,5 +1,6 @@
 import React from 'react';
 import InputRange from 'InputRange';
+import _ from 'lodash';
 import { removeComponent, renderComponent } from './TestUtil';
 
 let inputRange;
@@ -50,7 +51,6 @@ describe('InputRange', () => {
           min: 2,
           max: 10,
         },
-        value: 0,
         step: 1,
       };
 
@@ -65,7 +65,7 @@ describe('InputRange', () => {
       spyOn(inputRange, 'setPositionsByProps');
     });
 
-    it('should set the initial position for slider', () => {
+    it('should set the current position for slider', () => {
       const newProps = {
         maxValue: 20,
         minValue: 0,
@@ -73,13 +73,17 @@ describe('InputRange', () => {
           min: 5,
           max: 8,
         },
+        defaultValues: {
+          min: 1,
+          max: 10,
+        },
         value: 0,
         step: 1,
       };
 
       inputRange.componentWillReceiveProps(newProps);
 
-      expect(inputRange.setPositionsByProps).toHaveBeenCalledWith(newProps);
+      expect(inputRange.setPositionsByProps).toHaveBeenCalledWith(_.omit(newProps, 'defaultValues'));
     });
   });
 
@@ -140,40 +144,58 @@ describe('InputRange', () => {
     let onChange;
 
     beforeEach(() => {
-      nextState = Object.assign({}, inputRange.state);
       onChange = jasmine.createSpy('onChange');
     });
 
     describe('if `onChange` callback is provided', () => {
-      describe('if multiple values is provided', () => {
+      describe('if it is an initial change', () => {
         beforeEach(() => {
           removeComponent(inputRange);
           inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
+          nextState = Object.assign({}, inputRange.state, { didChange: false });
         });
 
-        it('should execute `onChange` callback with the changed values', () => {
+        it('should not execute `onChange` callback', () => {
           inputRange.state = nextState;
           inputRange.componentDidUpdate();
 
-          expect(onChange).toHaveBeenCalledWith(inputRange, values);
+          expect(onChange).not.toHaveBeenCalledWith(inputRange, values);
         });
       });
 
-      describe('if multiple values is provided', () => {
-        let value;
+      describe('if it is not an initial change', () => {
+        describe('if multiple values is provided', () => {
+          beforeEach(() => {
+            removeComponent(inputRange);
+            inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
+            nextState = Object.assign({}, inputRange.state, { didChange: true });
+          });
 
-        beforeEach(() => {
-          value = 1;
+          it('should execute `onChange` callback with the changed values', () => {
+            inputRange.state = nextState;
+            inputRange.componentDidUpdate();
 
-          removeComponent(inputRange);
-          inputRange = renderComponent(<InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />);
+            expect(onChange).toHaveBeenCalledWith(inputRange, values);
+          });
         });
 
-        it('should execute `onChange` callback with the changed value', () => {
-          inputRange.state = nextState;
-          inputRange.componentDidUpdate();
+        describe('if single value is provided', () => {
+          let value;
 
-          expect(onChange).toHaveBeenCalledWith(inputRange, value);
+          beforeEach(() => {
+            value = 1;
+
+            removeComponent(inputRange);
+            inputRange = renderComponent(<InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />);
+            nextState = Object.assign({}, inputRange.state, { didChange: true });
+          });
+
+          it('should execute `onChange` callback with the changed value', () => {
+            inputRange.state = nextState;
+            inputRange.componentDidUpdate();
+
+            expect(onChange).toHaveBeenCalledWith(inputRange, value);
+          });
         });
       });
     });
@@ -441,29 +463,62 @@ describe('InputRange', () => {
       spyOn(inputRange, 'setPositionByValue');
     });
 
-    it('should set the position of max slider if it only accepts single value', () => {
-      const props = {
-        value: 1,
-      };
+    describe('if it only accepts single value', () => {
+      beforeEach(() => {
+        inputRange.isMultiValue = false;
+      });
 
-      inputRange.isMultiValue = false;
-      inputRange.setPositionsByProps(props);
+      it('should set the position of max slider', () => {
+        const props = {
+          value: 1,
+        };
 
-      expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.value);
+        inputRange.setPositionsByProps(props);
+
+        expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.value);
+      });
+
+      it('should set the position of max slider using default value if current value is undefined', () => {
+        const props = {
+          defaultValue: 6,
+        };
+
+        inputRange.setPositionsByProps(props);
+
+        expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.defaultValue);
+      });
     });
 
-    it('should set the position of all sliders if it accepts multiple values', () => {
-      const props = {
-        values: {
-          min: 2,
-          max: 12,
-        },
-      };
+    describe('if it only accepts multiple values', () => {
+      beforeEach(() => {
+        inputRange.isMultiValue = true;
+      });
 
-      inputRange.isMultiValue = true;
-      inputRange.setPositionsByProps(props);
+      it('should set the position of all sliders', () => {
+        const props = {
+          values: {
+            min: 2,
+            max: 12,
+          },
+        };
 
-      expect(inputRange.setPositionsByValues).toHaveBeenCalledWith(props.values);
+        inputRange.setPositionsByProps(props);
+
+        expect(inputRange.setPositionsByValues).toHaveBeenCalledWith(props.values);
+      });
+
+      it('should set the position of all sliders using default values if current values are undefined', () => {
+        const props = {
+          defaultValues: {
+            min: 6,
+            max: 10,
+          },
+        };
+
+        inputRange.setPositionsByProps(props);
+
+        expect(inputRange.setPositionsByValues).toHaveBeenCalledWith(props.defaultValues);
+      });
     });
   });
 

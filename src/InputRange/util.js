@@ -6,6 +6,23 @@ function extend() {
   return Object.assign.apply(Object, arguments);
 }
 
+function includes(array, value) {
+  return array.indexOf(value) > -1;
+}
+
+function omit(obj, omitKeys) {
+  const keys = Object.keys(obj);
+  const outputObj = {};
+
+  keys.forEach((key) => {
+    if (!includes(omitKeys, key)) {
+      outputObj[key] = obj[key];
+    }
+  });
+
+  return outputObj;
+}
+
 function captialize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -16,6 +33,18 @@ function distanceTo(pointA, pointB) {
 
 function isNumber(number) {
   return typeof number === 'number';
+}
+
+function isEmpty(obj) {
+  if (!obj) {
+    return true;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.length === 0;
+  }
+
+  return Object.keys(obj).length === 0;
 }
 
 function arrayOf(array, predicate) {
@@ -63,8 +92,10 @@ const util = {
   clamp,
   distanceTo,
   extend,
+  isEmpty,
   isNumber,
   objectOf,
+  omit,
 };
 
 export default util;
