@@ -19,30 +19,51 @@ If accepting a range of values:
 import React from 'react';
 import InputRange from 'react-input-range';
 
-const values = {
-  min: 2,
-  max: 10
-};
+class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-function onChange(component, values) {
-  console.log(values);
+    this.state = {
+      values: {
+        min: 2,
+        max: 10,
+      },
+    };
+  }
+
+  handleValuesChange(component, values) {
+    this.setState({
+      values: values,
+    });
+  }
+
+  render() {
+    return (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        values={this.state.values}
+        onChange={this.handleValuesChange.bind(this)}
+      />
+    );
+  }
 }
 
 React.render(
-  <InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />,
-  document.getElementById('input-range')
+  <App />,
+  document.getElementById('app')
 );
 ```
 
-If accepting a single value:
+If accepting a single value, use `value` prop instead of `values`, i.e.:
 
 ```{js}
-const value = 10;
-
-React.render(
-  <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />,
-  document.getElementById('input-range')
-);
+<InputRange
+  maxValue={20}
+  minValue={0}
+  value={this.state.value}
+  onChange={this.handleValueChange.bind(this)}
+/>
 ```
 
 ### Options
