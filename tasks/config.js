@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
+const cwd = process.cwd();
 const pkgPath = path.resolve('package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath));
 
@@ -53,7 +54,7 @@ config.script = {
       config.example.js + '/example.js',
     ],
     noParse: [
-      path.join(process.cwd(), config.build, config.name + '.js'),
+      path.join(cwd, config.build, config.name + '.js'),
     ],
     output: 'example.js',
     dest: config.example.build,
@@ -208,9 +209,12 @@ config.lint = {
 // Test config
 config.test = {
   unit: {
-    configFile: process.cwd() + '/karma.conf.js',
+    configFile: cwd + '/karma.conf.js',
     autoWatch: false,
     singleRun: true,
+  },
+  watch: {
+    configFile: cwd + '/karma.conf.js',
   },
 };
 

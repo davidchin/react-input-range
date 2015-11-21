@@ -7,19 +7,26 @@ import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import _ from 'lodash';
 
-function bundleScript(bundler, output, dest) {
+function bundleScript(bundler, output, dest, cb) {
   function onError(error) {
     gutil.log(gutil.colors.red('Browserify Error' + error));
   }
 
+  function onEnd() {
+    if (cb) {
+      cb();
+    }
+  }
+
   return bundler.bundle()
     .on('error', onError)
+    .on('end', onEnd)
     .pipe(source(output))
     .pipe(buffer())
     .pipe(gulp.dest(dest));
 }
 
-function compileScript(watch, opts) {
+function compileScript(watch, opts, cb) {
   const acceptedOpts = _.pick(opts, 'paths', 'entries', 'noParse', 'debug', 'standalone');
   const browserifyOpts = _.defaults({}, acceptedOpts, watchify.args);
   const babelifyOpts = { comments: false };
@@ -44,11 +51,11 @@ function compileScript(watch, opts) {
     bundler.on('update', () => {
       gutil.log('Bundling ' + gutil.colors.green(opts.output));
 
-      bundleScript(bundler, opts.output, opts.dest);
+      return bundleScript(bundler, opts.output, opts.dest, cb);
     });
   }
 
-  return bundleScript(bundler, opts.output, opts.dest);
+  return bundleScript(bundler, opts.output, opts.dest, cb);
 }
 
 const scriptHelper = {
