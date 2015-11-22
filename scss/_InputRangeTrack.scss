@@ -5,6 +5,10 @@
   height: $InputRange-track-height;
   position: relative;
   transition: $inputRange-track-transition;
+
+  .InputRange.is-disabled & {
+    background: $InputRange-track--is-disabled-background;
+  }
 }
 
 .InputRange-track--container {

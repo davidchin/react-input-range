@@ -64,6 +64,13 @@ class App extends React.Component {
           minValue={0}
           defaultValue={defaultValue}
         />
+
+        <InputRange
+          maxValue={20}
+          minValue={0}
+          disabled={true}
+          defaultValue={defaultValue}
+        />
       </form>
     );
   }

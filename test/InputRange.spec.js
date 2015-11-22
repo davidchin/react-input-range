@@ -45,6 +45,7 @@ describe('InputRange', () => {
     it('should set the initial position for slider', () => {
       const props = {
         classNames: jasmine.any(Object),
+        disabled: false,
         maxValue: 20,
         minValue: 0,
         values: {
@@ -551,74 +552,111 @@ describe('InputRange', () => {
   });
 
   describe('handleSliderMouseMove', () => {
+    let slider;
+    let event;
+
     beforeEach(() => {
       spyOn(inputRange, 'setPosition');
-    });
 
-    it('should set the position of a slider according to mouse event', () => {
-      const slider = inputRange.refs.sliderMax;
-      const event = {
+      slider = inputRange.refs.sliderMax;
+      event = {
         clientX: 100,
         clientY: 200,
       };
+    });
 
+    it('should set the position of a slider according to mouse event', () => {
       inputRange.handleSliderMouseMove(slider, event);
 
       expect(inputRange.setPosition).toHaveBeenCalledWith(slider, { x: 92, y: 0 });
     });
+
+    it('should not set the position of a slider if disabled', () => {
+      inputRange.props.disabled = true;
+      inputRange.handleSliderMouseMove(slider, event);
+
+      expect(inputRange.setPosition).not.toHaveBeenCalled();
+    });
   });
 
   describe('handleSliderKeyDown', () => {
+    let slider;
+    let event;
+
     describe('when pressing left arrow key', () => {
       beforeEach(() => {
         spyOn(inputRange, 'decrementValue');
+
+        slider = inputRange.refs.sliderMax;
+        event = {
+          keyCode: 37,
+        };
       });
 
       it('should decrement value', () => {
-        const slider = inputRange.refs.sliderMax;
-        const event = {
-          keyCode: 37,
-        };
-
         inputRange.handleSliderKeyDown(slider, event);
 
         expect(inputRange.decrementValue).toHaveBeenCalledWith(slider);
+      });
+
+      it('should not decrement value if disabled', () => {
+        inputRange.props.disabled = true;
+        inputRange.handleSliderKeyDown(slider, event);
+
+        expect(inputRange.decrementValue).not.toHaveBeenCalled();
       });
     });
 
     describe('when pressing right arrow key', () => {
       beforeEach(() => {
         spyOn(inputRange, 'incrementValue');
+
+        slider = inputRange.refs.sliderMax;
+        event = {
+          keyCode: 39,
+        };
       });
 
       it('should increment value', () => {
-        const slider = inputRange.refs.sliderMax;
-        const event = {
-          keyCode: 39,
-        };
-
         inputRange.handleSliderKeyDown(slider, event);
 
         expect(inputRange.incrementValue).toHaveBeenCalledWith(slider);
+      });
+
+      it('should not increment value if disabled', () => {
+        inputRange.props.disabled = true;
+        inputRange.handleSliderKeyDown(slider, event);
+
+        expect(inputRange.incrementValue).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('handleTrackMouseDown', () => {
+    let track;
+    let position;
+
     beforeEach(() => {
       spyOn(inputRange, 'setPosition');
-    });
 
-    it('should set a new position based on the position of mouse click', () => {
-      const track = {};
-      const position = {
+      track = {};
+      position = {
         x: 100,
         y: 0,
       };
+    });
 
+    it('should set a new position based on the position of mouse click', () => {
       inputRange.handleTrackMouseDown(track, position);
 
       expect(inputRange.setPosition).toHaveBeenCalledWith(null, position);
+    });
+
+    it('should not set a new position if disabled', () => {
+      inputRange.props.disabled = true;
+      inputRange.handleTrackMouseDown(track, position);
+
+      expect(inputRange.setPosition).not.toHaveBeenCalled();
     });
   });
 });

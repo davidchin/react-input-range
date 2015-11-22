@@ -15,11 +15,18 @@
   width: $InputRange-slider-width;
 
   &:active {
-    transform: $InputRange-slider-transform--active;
+    transform: $InputRange-slider--active-transform;
   }
 
   &:focus {
-    box-shadow: 0 0 0 5px transparentize($InputRange-primaryColor, 0.8);
+    box-shadow: 0 0 0 5px transparentize($InputRange-slider-background, 0.8);
+  }
+
+  .InputRange.is-disabled & {
+    background: $InputRange-slider--is-disabled-background;
+    border: $InputRange-slider--is-disabled-border;
+    box-shadow: none;
+    transform: none;
   }
 }
 

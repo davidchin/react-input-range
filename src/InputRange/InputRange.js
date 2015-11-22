@@ -233,12 +233,20 @@ class InputRange extends React.Component {
 
   // Handlers
   handleSliderMouseMove(slider, event) {
+    if (this.props.disabled) {
+      return;
+    }
+
     const position = this.valueTransformer.positionFromEvent(event);
 
     this.setPosition(slider, position);
   }
 
   handleSliderKeyDown(slider, event) {
+    if (this.props.disabled) {
+      return;
+    }
+
     switch (event.keyCode) {
     case KeyCode.LEFT_ARROW:
       this.decrementValue(slider);
@@ -254,6 +262,10 @@ class InputRange extends React.Component {
   }
 
   handleTrackMouseDown(track, position) {
+    if (this.props.disabled) {
+      return;
+    }
+
     this.setPosition(null, position);
   }
 
@@ -313,9 +325,17 @@ class InputRange extends React.Component {
 
   render() {
     const classNames = this.props.classNames;
+    let componentClassName = classNames.component;
+
+    if (this.props.disabled) {
+      componentClassName = `${componentClassName} is-disabled`;
+    }
 
     return (
-      <div ref="inputRange" className={ classNames.component }>
+      <div
+        aria-disabled={ this.props.disabled }
+        ref="inputRange"
+        className={ componentClassName }>
         <span className={ classNames.labelMin }>
           <span className={ classNames.labelContainer }>
             { this.props.minValue }
@@ -348,6 +368,7 @@ InputRange.propTypes = {
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
   defaultValues: maxMinValuePropType,
+  disabled: React.PropTypes.bool,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
@@ -359,6 +380,7 @@ InputRange.propTypes = {
 
 InputRange.defaultProps = {
   classNames: defaultClassNames,
+  disabled: false,
   minValue: 0,
   maxValue: 10,
   step: 1,

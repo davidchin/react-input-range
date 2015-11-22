@@ -73,6 +73,7 @@ ariaLabelledby          |string                   |`aria-labelledby` attribute
 classNames              |Object.&lt;string&gt;    |CSS class names
 defaultValue            |number                   |Default value
 defaultValues           |Object                   |Default values
+disabled                |boolean                  |Disabled or not
 maxValue                |number                   |Maximum value it can accept
 minValue                |number                   |Minimum value it can accept
 name                    |string                   |Name of `form` input
