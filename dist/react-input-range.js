@@ -89,6 +89,7 @@ var InputRange = (function (_React$Component) {
     _get(Object.getPrototypeOf(InputRange.prototype), 'constructor', this).call(this, props);
 
     var state = {
+      didChange: false,
       percentages: {
         min: 0,
         max: 0
@@ -105,7 +106,7 @@ var InputRange = (function (_React$Component) {
 
     this.state = state;
     this.valueTransformer = new _ValueTransformer2['default'](this);
-    this.isMultiValue = this.props.hasOwnProperty('values');
+    this.isMultiValue = this.props.hasOwnProperty('defaultValues') || this.props.hasOwnProperty('values');
 
     (0, _util.autobind)(['handleSliderMouseMove', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
   }
@@ -118,20 +119,23 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      this.setPositionsByProps(nextProps);
+      var props = (0, _util.omit)(nextProps, ['defaultValue', 'defaultValues']);
+
+      this.setPositionsByProps(props);
     }
   }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
       var currentProps = this.props;
       var currentState = this.state;
+      var shouldUpdate = currentState.values.min !== nextState.values.min || currentState.values.max !== nextState.values.max || currentState.value !== nextState.value || currentProps.minValue !== nextProps.minValue || currentProps.maxValue !== nextProps.maxValue;
 
-      return currentState.values.min !== nextState.values.min || currentState.values.max !== nextState.values.max || currentState.value !== nextState.value || currentProps.minValue !== nextProps.minValue || currentProps.maxValue !== nextProps.maxValue;
+      return shouldUpdate;
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
-      if (this.props.onChange) {
+      if (this.props.onChange && this.state.didChange) {
         var results = this.state.values.max;
 
         if (this.isMultiValue) {
@@ -140,6 +144,10 @@ var InputRange = (function (_React$Component) {
 
         this.props.onChange(this, results);
       }
+
+      this.setState({
+        didChange: true
+      });
     }
   }, {
     key: 'setPositions',
@@ -189,6 +197,10 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'setPositionByValue',
     value: function setPositionByValue(slider, value) {
+      if (!(0, _util.isNumber)(value)) {
+        return;
+      }
+
       var validValue = (0, _util.clamp)(value, this.props.minValue, this.props.maxValue);
       var position = this.valueTransformer.positionFromValue(validValue);
 
@@ -197,6 +209,10 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'setPositionsByValues',
     value: function setPositionsByValues(values) {
+      if (!values || !(0, _util.isNumber)(values.min) || !(0, _util.isNumber)(values.max)) {
+        return;
+      }
+
       var validValues = {
         min: (0, _util.clamp)(values.min, this.props.minValue, this.props.maxValue),
         max: (0, _util.clamp)(values.max, this.props.minValue, this.props.maxValue)
@@ -213,9 +229,13 @@ var InputRange = (function (_React$Component) {
     key: 'setPositionsByProps',
     value: function setPositionsByProps(props) {
       if (this.isMultiValue) {
-        this.setPositionsByValues(props.values);
+        var values = !(0, _util.isEmpty)(props.values) ? props.values : props.defaultValues;
+
+        this.setPositionsByValues(values);
       } else {
-        this.setPositionByValue(this.refs.sliderMax, props.value);
+        var value = (0, _util.isNumber)(props.value) ? props.value : props.defaultValue;
+
+        this.setPositionByValue(this.refs.sliderMax, value);
       }
     }
   }, {
@@ -237,6 +257,10 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleSliderMouseMove',
     value: function handleSliderMouseMove(slider, event) {
+      if (this.props.disabled) {
+        return;
+      }
+
       var position = this.valueTransformer.positionFromEvent(event);
 
       this.setPosition(slider, position);
@@ -244,6 +268,10 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleSliderKeyDown',
     value: function handleSliderKeyDown(slider, event) {
+      if (this.props.disabled) {
+        return;
+      }
+
       switch (event.keyCode) {
         case KeyCode.LEFT_ARROW:
           this.decrementValue(slider);
@@ -260,6 +288,10 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleTrackMouseDown',
     value: function handleTrackMouseDown(track, position) {
+      if (this.props.disabled) {
+        return;
+      }
+
       this.setPosition(null, position);
     }
   }, {
@@ -361,10 +393,18 @@ var InputRange = (function (_React$Component) {
     key: 'render',
     value: function render() {
       var classNames = this.props.classNames;
+      var componentClassName = classNames.component;
+
+      if (this.props.disabled) {
+        componentClassName = componentClassName + ' is-disabled';
+      }
 
       return _react2['default'].createElement(
         'div',
-        { ref: 'inputRange', className: classNames.component },
+        {
+          'aria-disabled': this.props.disabled,
+          ref: 'inputRange',
+          className: componentClassName },
         _react2['default'].createElement(
           'span',
           { className: classNames.labelMin },
@@ -410,6 +450,9 @@ var InputRange = (function (_React$Component) {
 InputRange.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
+  defaultValue: _propTypes.maxMinValuePropType,
+  defaultValues: _propTypes.maxMinValuePropType,
+  disabled: _react2['default'].PropTypes.bool,
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
@@ -421,9 +464,9 @@ InputRange.propTypes = {
 
 InputRange.defaultProps = {
   classNames: _defaultClassNames2['default'],
+  disabled: false,
   minValue: 0,
   maxValue: 10,
-  value: 0,
   step: 1
 };
 
@@ -868,13 +911,15 @@ function maxMinValuePropType(props) {
   var minValue = props.minValue;
   var value = props.value;
   var values = props.values;
+  var defaultValue = props.defaultValue;
+  var defaultValues = props.defaultValues;
 
-  if (!numberPredicate(value)) {
-    return new Error('`value` must be a number');
+  if (!values && !defaultValues && !numberPredicate(value) && !numberPredicate(defaultValue)) {
+    return new Error('`value` or `defaultValue` must be a number');
   }
 
-  if (!value && !(0, _util.objectOf)(values, numberPredicate)) {
-    return new Error('`values` must be an object of numbers');
+  if (!value && !defaultValue && !(0, _util.objectOf)(values, numberPredicate) && !(0, _util.objectOf)(defaultValues, numberPredicate)) {
+    return new Error('`values` or `defaultValues` must be an object of numbers');
   }
 
   if (minValue >= maxValue) {
@@ -904,6 +949,23 @@ function extend() {
   return Object.assign.apply(Object, arguments);
 }
 
+function includes(array, value) {
+  return array.indexOf(value) > -1;
+}
+
+function omit(obj, omitKeys) {
+  var keys = Object.keys(obj);
+  var outputObj = {};
+
+  keys.forEach(function (key) {
+    if (!includes(omitKeys, key)) {
+      outputObj[key] = obj[key];
+    }
+  });
+
+  return outputObj;
+}
+
 function captialize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -914,6 +976,18 @@ function distanceTo(pointA, pointB) {
 
 function isNumber(number) {
   return typeof number === 'number';
+}
+
+function isEmpty(obj) {
+  if (!obj) {
+    return true;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.length === 0;
+  }
+
+  return Object.keys(obj).length === 0;
 }
 
 function arrayOf(array, predicate) {
@@ -961,8 +1035,10 @@ var util = {
   clamp: clamp,
   distanceTo: distanceTo,
   extend: extend,
+  isEmpty: isEmpty,
   isNumber: isNumber,
-  objectOf: objectOf
+  objectOf: objectOf,
+  omit: omit
 };
 
 exports['default'] = util;

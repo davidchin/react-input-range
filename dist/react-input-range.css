@@ -21,6 +21,12 @@
             transform: scale(1.3); }
   .InputRange-slider:focus {
     box-shadow: 0 0 0 5px rgba(63, 81, 181, 0.2); }
+  .InputRange.is-disabled .InputRange-slider {
+    background: #cccccc;
+    border: 1px solid #cccccc;
+    box-shadow: none;
+    -webkit-transform: none;
+            transform: none; }
 
 .InputRange-sliderContainer {
   transition: left 0.3s ease-out; }
@@ -58,6 +64,8 @@
   height: 0.3rem;
   position: relative;
   transition: left 0.3s ease-out, width 0.3s ease-out; }
+  .InputRange.is-disabled .InputRange-track {
+    background: #eeeeee; }
 
 .InputRange-track--container {
   left: 0;
