@@ -8,9 +8,6 @@ class Track extends React.Component {
     // Initial state
     this.state = {};
 
-    // Enable touch
-    React.initializeTouchEvents(true);
-
     // Auto-bind
     autobind([
       'handleMouseDown',
@@ -29,7 +26,7 @@ class Track extends React.Component {
 
   // Getters / Setters
   get clientRect() {
-    const track = React.findDOMNode(this);
+    const { track } = this.refs;
     const clientRect = track.getClientRects()[0];
 
     return clientRect;
@@ -75,9 +72,10 @@ class Track extends React.Component {
 
     return (
       <div
+        className={ classNames.trackContainer }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }
-        className={ classNames.trackContainer }>
+        ref="track">
         <div
           style={ activeTrackStyle }
           className={ classNames.trackActive }>

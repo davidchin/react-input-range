@@ -1,7 +1,7 @@
 import React from 'react';
 import InputRange from 'InputRange';
 import _ from 'lodash';
-import { removeComponent, renderComponent } from './TestUtil';
+import { renderComponent } from './TestUtil';
 
 let inputRange;
 
@@ -15,10 +15,6 @@ describe('InputRange', () => {
     };
 
     inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} />);
-  });
-
-  afterEach(() => {
-    removeComponent(inputRange);
   });
 
   describe('initialize', () => {
@@ -151,7 +147,6 @@ describe('InputRange', () => {
     describe('if `onChange` callback is provided', () => {
       describe('if it is an initial change', () => {
         beforeEach(() => {
-          removeComponent(inputRange);
           inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
           nextState = Object.assign({}, inputRange.state, { didChange: false });
         });
@@ -167,7 +162,6 @@ describe('InputRange', () => {
       describe('if it is not an initial change', () => {
         describe('if multiple values is provided', () => {
           beforeEach(() => {
-            removeComponent(inputRange);
             inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
             nextState = Object.assign({}, inputRange.state, { didChange: true });
           });
@@ -186,7 +180,6 @@ describe('InputRange', () => {
           beforeEach(() => {
             value = 1;
 
-            removeComponent(inputRange);
             inputRange = renderComponent(<InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />);
             nextState = Object.assign({}, inputRange.state, { didChange: true });
           });
@@ -572,7 +565,8 @@ describe('InputRange', () => {
     });
 
     it('should not set the position of a slider if disabled', () => {
-      inputRange.props.disabled = true;
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0}/>);
+      spyOn(inputRange, 'setPosition');
       inputRange.handleSliderMouseMove(slider, event);
 
       expect(inputRange.setPosition).not.toHaveBeenCalled();
@@ -600,7 +594,8 @@ describe('InputRange', () => {
       });
 
       it('should not decrement value if disabled', () => {
-        inputRange.props.disabled = true;
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
+        spyOn(inputRange, 'decrementValue');
         inputRange.handleSliderKeyDown(slider, event);
 
         expect(inputRange.decrementValue).not.toHaveBeenCalled();
@@ -624,7 +619,8 @@ describe('InputRange', () => {
       });
 
       it('should not increment value if disabled', () => {
-        inputRange.props.disabled = true;
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
+        spyOn(inputRange, 'incrementValue');
         inputRange.handleSliderKeyDown(slider, event);
 
         expect(inputRange.incrementValue).not.toHaveBeenCalled();
@@ -653,7 +649,8 @@ describe('InputRange', () => {
     });
 
     it('should not set a new position if disabled', () => {
-      inputRange.props.disabled = true;
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
+      spyOn(inputRange, 'setPosition');
       inputRange.handleTrackMouseDown(track, position);
 
       expect(inputRange.setPosition).not.toHaveBeenCalled();

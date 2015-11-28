@@ -8,9 +8,6 @@ class Slider extends React.Component {
     // Initial state
     this.state = {};
 
-    // Enable touch
-    React.initializeTouchEvents(true);
-
     // Auto-bind
     autobind([
       'handleClick',
@@ -35,8 +32,8 @@ class Slider extends React.Component {
 
   // Getters / Setters
   get document() {
-    const element = React.findDOMNode(this);
-    const document = element.ownerDocument;
+    const { slider } = this.refs;
+    const document = slider.ownerDocument;
 
     return document;
   }
@@ -111,7 +108,10 @@ class Slider extends React.Component {
     const style = this.state.style || {};
 
     return (
-      <span className={ classNames.sliderContainer } style={ style }>
+      <span
+        className={ classNames.sliderContainer }
+        ref="slider"
+        style={ style }>
         <span className={ classNames.labelValue }>
           <span className={ classNames.labelContainer }>
             { this.props.value }

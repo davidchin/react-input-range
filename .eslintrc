@@ -11,6 +11,8 @@ rules:
   semi:
     - 2
     - always
+  react/no-did-update-set-state:
+    - 0
   react/sort-comp:
     - 2
     - order

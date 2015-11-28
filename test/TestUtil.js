@@ -1,25 +1,20 @@
-import React from 'react';
-
-function removeComponent(component) {
-  const domNode = React.findDOMNode(component);
-
-  if (!domNode) {
-    return;
-  }
-
-  React.unmountComponentAtNode(domNode);
-}
+import ReactDOM from 'react-dom';
 
 function renderComponent(jsx) {
-  const domNode = document.createElement('div');
+  let container = document.getElementById('container');
 
-  document.body.appendChild(domNode);
+  if (container) {
+    ReactDOM.unmountComponentAtNode(container);
+  } else {
+    container = document.createElement('div');
+    container.id = 'container';
+    document.body.appendChild(container);
+  }
 
-  return React.render(jsx, domNode);
+  return ReactDOM.render(jsx, container);
 }
 
 const TestUtil = {
-  removeComponent,
   renderComponent,
 };
 

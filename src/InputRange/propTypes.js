@@ -1,4 +1,4 @@
-import { objectOf } from './util';
+import { isNumber, objectOf } from './util';
 
 function numberPredicate(value) {
   return typeof value === 'number';
@@ -19,8 +19,8 @@ export function maxMinValuePropType(props) {
     return new Error('`value` or `defaultValue` must be a number');
   }
 
-  if (!value &&
-      !defaultValue &&
+  if (!isNumber(value) &&
+      !isNumber(defaultValue) &&
       !objectOf(values, numberPredicate) &&
       !objectOf(defaultValues, numberPredicate)) {
     return new Error('`values` or `defaultValues` must be an object of numbers');

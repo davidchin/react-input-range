@@ -6,6 +6,7 @@ module.exports = function(config) {
 
     files: [
       'node_modules/react/dist/react.js',
+      'node_modules/react-dom/dist/react-dom.js',
       'node_modules/lodash/index.js',
       'node_modules/babelify/polyfill.js',
       'src/**/*.js',
