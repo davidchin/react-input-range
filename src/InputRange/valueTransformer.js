@@ -18,10 +18,10 @@ function valueFromPosition(inputRange, position) {
 
 function valuesFromProps(inputRange, { props } = inputRange) {
   if (inputRange.isMultiValue) {
-    let values = props.values;
+    let values = props.value;
 
     if (isEmpty(values) || !objectOf(values, isNumber)) {
-      values = props.defaultValues;
+      values = props.defaultValue;
     }
 
     return Object.create(values);

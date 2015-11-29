@@ -19,7 +19,7 @@ describe('InputRange', () => {
 
     onChange = jasmine.createSpy('onChange');
     inputRange = renderComponent(
-      <InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />
+      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} />
     );
   });
 

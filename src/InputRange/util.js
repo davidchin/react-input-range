@@ -40,6 +40,10 @@ function isNumber(number) {
   return typeof number === 'number';
 }
 
+function isObject(object) {
+  return object !== null && typeof object === 'object';
+}
+
 function isEmpty(obj) {
   if (!obj) {
     return true;
@@ -67,7 +71,7 @@ function arrayOf(array, predicate) {
 }
 
 function objectOf(object, predicate, keys) {
-  if (typeof object !== 'object') {
+  if (!isObject(object)) {
     return false;
   }
 
@@ -100,6 +104,7 @@ const util = {
   extend,
   isEmpty,
   isNumber,
+  isObject,
   length,
   objectOf,
   omit,

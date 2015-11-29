@@ -4,7 +4,7 @@ import Track from './Track';
 import Label from './Label';
 import defaultClassNames from './defaultClassNames';
 import valueTransformer from './valueTransformer';
-import { autobind, captialize, distanceTo, length } from './util';
+import { autobind, captialize, distanceTo, isObject, length } from './util';
 import { maxMinValuePropType } from './propTypes';
 
 // Constants
@@ -167,8 +167,8 @@ class InputRange extends React.Component {
   }
 
   get isMultiValue() {
-    return this.props.hasOwnProperty('defaultValues') ||
-           this.props.hasOwnProperty('values');
+    return isObject(this.props.value) ||
+           isObject(this.props.defaultValue);
   }
 
   // Methods
@@ -315,7 +315,6 @@ InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
-  defaultValues: maxMinValuePropType,
   disabled: React.PropTypes.bool,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
@@ -323,15 +322,16 @@ InputRange.propTypes = {
   onChange: React.PropTypes.func.isRequired,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
-  values: maxMinValuePropType,
 };
 
 InputRange.defaultProps = {
   classNames: defaultClassNames,
+  defaultValue: 0,
   disabled: false,
-  minValue: 0,
   maxValue: 10,
+  minValue: 0,
   step: 1,
+  value: null,
 };
 
 export default InputRange;

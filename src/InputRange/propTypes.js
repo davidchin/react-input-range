@@ -5,22 +5,19 @@ function maxMinValuePropType(props) {
   const maxValue = props.maxValue;
   const minValue = props.minValue;
   const value = props.value;
-  const values = props.values;
   const defaultValue = props.defaultValue;
-  const defaultValues = props.defaultValues;
+  const isValueNumber = isNumber(value);
+  const isDefaultValueNumber = isNumber(defaultValue);
+  const isValueNumberObject = objectOf(value, isNumber);
+  const isDefaultValueNumberObject = objectOf(defaultValue, isNumber);
 
-  if (!values &&
-      !defaultValues &&
-      !isNumber(value) &&
-      !isNumber(defaultValue)) {
-    return new Error('`value` or `defaultValue` must be a number');
+  if (value === undefined) {
+    return new Error('`value` must be defined');
   }
 
-  if (!isNumber(value) &&
-      !isNumber(defaultValue) &&
-      !objectOf(values, isNumber) &&
-      !objectOf(defaultValues, isNumber)) {
-    return new Error('`values` or `defaultValues` must be an object of numbers');
+  if (!isValueNumber && !isDefaultValueNumber &&
+      !isValueNumberObject && !isDefaultValueNumberObject) {
+    return new Error('`value` or `defaultValue` must be a number or an array');
   }
 
   if (minValue >= maxValue) {
