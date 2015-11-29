@@ -10,10 +10,10 @@ gulp.task('watch', [
 ]);
 
 gulp.task('watch:script', () => {
+  compileScript(true, config.watch.script.example);
   compileScript(true, config.watch.script.build, () => {
     gulp.start('lint:script');
   });
-  compileScript(true, config.watch.script.example);
 });
 
 gulp.task('watch:style', () => {

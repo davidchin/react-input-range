@@ -1,3 +1,4 @@
+// Functions
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -29,6 +30,10 @@ function captialize(string) {
 
 function distanceTo(pointA, pointB) {
   return Math.sqrt(Math.pow(pointB.x - pointA.x, 2) + Math.pow(pointB.y - pointA.y, 2));
+}
+
+function length(numA, numB) {
+  return Math.abs(numA - numB);
 }
 
 function isNumber(number) {
@@ -85,6 +90,7 @@ function autobind(methodNames, instance) {
   });
 }
 
+// Module
 const util = {
   arrayOf,
   autobind,
@@ -94,6 +100,7 @@ const util = {
   extend,
   isEmpty,
   isNumber,
+  length,
   objectOf,
   omit,
 };

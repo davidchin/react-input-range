@@ -1,27 +1,30 @@
 import React from 'react';
-import { autobind, extend } from './util';
+import { autobind } from './util';
 
+// Functions
+function getActiveTrackStyle(track) {
+  const { props } = track;
+  const width = `${(props.percentages.max - props.percentages.min) * 100}%`;
+  const left = `${props.percentages.min * 100}%`;
+
+  const activeTrackStyle = {
+    left,
+    width,
+  };
+
+  return activeTrackStyle;
+}
+
+// Class
 class Track extends React.Component {
   constructor(props) {
     super(props);
-
-    // Initial state
-    this.state = {};
 
     // Auto-bind
     autobind([
       'handleMouseDown',
       'handleTouchStart',
     ], this);
-  }
-
-  // Life cycle
-  componentDidMount() {
-    this.setActiveTrackWidth(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setActiveTrackWidth(nextProps);
   }
 
   // Getters / Setters
@@ -33,19 +36,6 @@ class Track extends React.Component {
   }
 
   // Methods
-  setActiveTrackWidth(props) {
-    const width = `${(props.percentages.max - props.percentages.min) * 100}%`;
-    const left = `${props.percentages.min * 100}%`;
-
-    const newActiveTrackStyle = {
-      left,
-      width,
-    };
-
-    const activeTrackStyle = extend({}, this.state.activeTrackStyle, newActiveTrackStyle);
-
-    this.setState({ activeTrackStyle });
-  }
 
   // Handlers
   handleMouseDown(event) {
@@ -67,7 +57,7 @@ class Track extends React.Component {
 
   // Render
   render() {
-    const activeTrackStyle = this.state.activeTrackStyle || {};
+    const activeTrackStyle = getActiveTrackStyle(this);
     const classNames = this.props.classNames;
 
     return (

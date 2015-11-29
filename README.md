@@ -77,7 +77,7 @@ disabled                |boolean                  |Disabled or not
 maxValue                |number                   |Maximum value it can accept
 minValue                |number                   |Minimum value it can accept
 name                    |string                   |Name of `form` input
-onChange                |Function                 |`onChange` callback
+onChange                |Function                 |`onChange` callback (required)
 step                    |number                   |Increment/decrement value
 value                   |number                   |Current value
 values                  |Object                   |Current range of values

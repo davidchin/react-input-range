@@ -1,3 +1,4 @@
+// Module
 const defaultClassNames = {
   component: 'InputRange',
   labelContainer: 'InputRange-labelContainer',

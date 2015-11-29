@@ -1,28 +1,78 @@
 import React from 'react';
 import Slider from './Slider';
 import Track from './Track';
-import ValueTransformer from './ValueTransformer';
-import { autobind, captialize, clamp, distanceTo, extend, isEmpty, isNumber, omit } from './util';
-import { maxMinValuePropType } from './propTypes';
+import Label from './Label';
 import defaultClassNames from './defaultClassNames';
+import valueTransformer from './valueTransformer';
+import { autobind, captialize, distanceTo, length } from './util';
+import { maxMinValuePropType } from './propTypes';
 
-// Helpers
-function isNewStep(component, value, oldValue) {
-  return Math.abs(value - oldValue) >= component.props.step;
+// Constants
+const KeyCode = {
+  LEFT_ARROW: 37,
+  RIGHT_ARROW: 39,
+};
+
+// Functions
+function isWithinRange(inputRange, values) {
+  const { props } = inputRange;
+
+  if (inputRange.isMultiValue) {
+    return values.min >= props.minValue &&
+           values.max <= props.maxValue &&
+           values.min < values.max;
+  }
+
+  return values.max >= props.minValue &&
+         values.max <= props.maxValue;
 }
 
-function getKeyBySlider(component, slider) {
-  if (slider === component.refs.sliderMin) {
+function hasStepDifference(inputRange, values) {
+  const { props } = inputRange;
+  const currentValues = valueTransformer.valuesFromProps(inputRange);
+
+  return length(values.min, currentValues.min) >= props.step ||
+         length(values.max, currentValues.max) >= props.step;
+}
+
+function shouldUpdate(inputRange, values) {
+  return isWithinRange(inputRange, values) &&
+         hasStepDifference(inputRange, values);
+}
+
+function getComponentClassName(inputRange) {
+  const { props } = inputRange;
+
+  if (!props.disabled) {
+    return props.classNames.component;
+  }
+
+  return `${props.classNames.component} is-disabled`;
+}
+
+function getKeyFromSlider(inputRange, slider) {
+  if (slider === inputRange.refs.sliderMin) {
     return 'min';
   }
 
   return 'max';
 }
 
-function getKeyByPosition(component, position) {
-  if (component.isMultiValue) {
-    const distanceToMin = distanceTo(position, component.state.positions.min);
-    const distanceToMax = distanceTo(position, component.state.positions.max);
+function getKeys(inputRange) {
+  if (inputRange.isMultiValue) {
+    return ['max', 'min'];
+  }
+
+  return ['max'];
+}
+
+function getKeyByPosition(inputRange, position) {
+  const values = valueTransformer.valuesFromProps(inputRange);
+  const positions = valueTransformer.positionsFromValues(inputRange, values);
+
+  if (inputRange.isMultiValue) {
+    const distanceToMin = distanceTo(position, positions.min);
+    const distanceToMax = distanceTo(position, positions.max);
 
     if (distanceToMin < distanceToMax) {
       return 'min';
@@ -32,46 +82,65 @@ function getKeyByPosition(component, position) {
   return 'max';
 }
 
-function getKeys(component) {
-  if (component.isMultiValue) {
-    return ['max', 'min'];
+function renderSliders(inputRange) {
+  const { classNames } = inputRange.props;
+  const sliders = [];
+  const keys = getKeys(inputRange);
+  const values = valueTransformer.valuesFromProps(inputRange);
+  const percentages = valueTransformer.percentagesFromValues(inputRange, values);
+
+  for (const key of keys) {
+    const value = values[key];
+    const percentage = percentages[key];
+    const ref = `slider${captialize(key)}`;
+
+    let { maxValue, minValue } = inputRange.props;
+
+    if (key === 'min') {
+      maxValue = values.max;
+    } else {
+      minValue = values.min;
+    }
+
+    const slider = (
+      <Slider
+        classNames={ classNames }
+        key={ key }
+        maxValue={ maxValue }
+        minValue={ minValue }
+        onSliderKeyDown={ inputRange.handleSliderKeyDown }
+        onSliderMouseMove={ inputRange.handleSliderMouseMove }
+        percentage={ percentage }
+        ref={ ref }
+        type={ key }
+        value={ value } />
+    );
+
+    sliders.push(slider);
   }
 
-  return ['max'];
+  return sliders;
 }
 
-// Constants
-const KeyCode = {
-  LEFT_ARROW: 37,
-  RIGHT_ARROW: 39,
-};
+function renderHiddenInputs(inputRange) {
+  const inputs = [];
+  const keys = getKeys(inputRange);
+
+  for (const key of keys) {
+    const name = inputRange.isMultiValue ? `${inputRange.props.name}${captialize(key)}` : inputRange.props.name;
+
+    const input = (
+      <input type="hidden" name={ name }/>
+    );
+  }
+
+  return inputs;
+}
 
 // Class
 class InputRange extends React.Component {
   constructor(props) {
     super(props);
-
-    // Initial state
-    const state = {
-      didChange: false,
-      percentages: {
-        min: 0,
-        max: 0,
-      },
-      positions: {
-        min: { x: 0, y: 0 },
-        max: { x: 0, y: 0 },
-      },
-      values: {
-        min: 0,
-        max: 0,
-      },
-    };
-
-    this.state = state;
-    this.valueTransformer = new ValueTransformer(this);
-    this.isMultiValue = this.props.hasOwnProperty('defaultValues') ||
-                        this.props.hasOwnProperty('values');
 
     // Auto-bind
     autobind([
@@ -81,154 +150,83 @@ class InputRange extends React.Component {
     ], this);
   }
 
-  // Life Cycle
-  componentDidMount() {
-    this.setPositionsByProps(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const props = omit(nextProps, ['defaultValue', 'defaultValues']);
-
-    this.setPositionsByProps(props);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const currentProps = this.props;
-    const currentState = this.state;
-    const shouldUpdate = (
-      currentState.values.min !== nextState.values.min ||
-      currentState.values.max !== nextState.values.max ||
-      currentState.value !== nextState.value ||
-      currentProps.minValue !== nextProps.minValue ||
-      currentProps.maxValue !== nextProps.maxValue
-    );
-
-    return shouldUpdate;
-  }
-
-  componentDidUpdate() {
-    if (this.props.onChange && this.state.didChange) {
-      let results = this.state.values.max;
-
-      if (this.isMultiValue) {
-        results = this.state.values;
-      }
-
-      this.props.onChange(this, results);
-    }
-
-    this.setState({
-      didChange: true,
-    });
-  }
-
   // Getters / Setters
   get trackClientRect() {
-    const track = this.refs.track;
+    const { track } = this.refs;
 
-    return track && track.clientRect;
+    if (track) {
+      return track.clientRect;
+    }
+
+    return {
+      height: 0,
+      left: 0,
+      top: 0,
+      width: 0,
+    };
+  }
+
+  get isMultiValue() {
+    return this.props.hasOwnProperty('defaultValues') ||
+           this.props.hasOwnProperty('values');
   }
 
   // Methods
-  setPositions(positions) {
+  updatePosition(key, position) {
+    const values = valueTransformer.valuesFromProps(this);
+    const positions = valueTransformer.positionsFromValues(this, values);
+
+    positions[key] = position;
+
+    this.updatePositions(positions);
+  }
+
+  updatePositions(positions) {
     const values = {
-      min: this.valueTransformer.valueFromPosition(positions.min),
-      max: this.valueTransformer.valueFromPosition(positions.max),
+      min: valueTransformer.valueFromPosition(this, positions.min),
+      max: valueTransformer.valueFromPosition(this, positions.max),
     };
 
     const transformedValues = {
-      min: this.valueTransformer.stepValueFromValue(values.min),
-      max: this.valueTransformer.stepValueFromValue(values.max),
+      min: valueTransformer.stepValueFromValue(this, values.min),
+      max: valueTransformer.stepValueFromValue(this, values.max),
     };
 
-    const transformedPositions = {
-      min: this.valueTransformer.positionFromValue(transformedValues.min),
-      max: this.valueTransformer.positionFromValue(transformedValues.max),
-    };
-
-    const transformedPercentages = {
-      min: this.valueTransformer.percentageFromPosition(transformedPositions.min),
-      max: this.valueTransformer.percentageFromPosition(transformedPositions.max),
-    };
-
-    const isStep = isNewStep(this, transformedValues.min, this.state.values.min) ||
-                   isNewStep(this, transformedValues.max, this.state.values.max);
-    const isValid = !this.isMultiValue || transformedValues.min < transformedValues.max;
-    const shouldUpdate = isStep && isValid;
-
-    if (shouldUpdate) {
-      const state = {
-        percentages: transformedPercentages,
-        positions: transformedPositions,
-        values: transformedValues,
-      };
-
-      this.setState(state);
-    }
+    this.updateValues(transformedValues);
   }
 
-  setPosition(slider, position) {
-    const key = slider && slider.props.type || getKeyByPosition(this, position);
-    const positions = extend({}, this.state.positions, {
-      [key]: position,
-    });
+  updateValue(key, value) {
+    const values = valueTransformer.valuesFromProps(this);
 
-    this.setPositions(positions);
+    values[key] = value;
+
+    this.updateValues(values);
   }
 
-  setPositionByValue(slider, value) {
-    if (!isNumber(value)) {
+  updateValues(values) {
+    if (!shouldUpdate(this, values)) {
       return;
     }
 
-    const validValue = clamp(value, this.props.minValue, this.props.maxValue);
-    const position = this.valueTransformer.positionFromValue(validValue);
-
-    this.setPosition(slider, position);
-  }
-
-  setPositionsByValues(values) {
-    if (!values || !isNumber(values.min) || !isNumber(values.max)) {
-      return;
-    }
-
-    const validValues = {
-      min: clamp(values.min, this.props.minValue, this.props.maxValue),
-      max: clamp(values.max, this.props.minValue, this.props.maxValue),
-    };
-
-    const positions = {
-      min: this.valueTransformer.positionFromValue(validValues.min),
-      max: this.valueTransformer.positionFromValue(validValues.max),
-    };
-
-    this.setPositions(positions);
-  }
-
-  setPositionsByProps(props) {
     if (this.isMultiValue) {
-      const values = !isEmpty(props.values) ? props.values : props.defaultValues;
-
-      this.setPositionsByValues(values);
+      this.props.onChange(this, values);
     } else {
-      const value = isNumber(props.value) ? props.value : props.defaultValue;
-
-      this.setPositionByValue(this.refs.sliderMax, value);
+      this.props.onChange(this, values.max);
     }
   }
 
-  incrementValue(slider) {
-    const key = getKeyBySlider(this, slider);
-    const value = this.state.values[key] + this.props.step;
+  incrementValue(key) {
+    const values = valueTransformer.valuesFromProps(this);
+    const value = values[key] + this.props.step;
 
-    this.setPositionByValue(slider, value);
+    this.updateValue(key, value);
   }
 
-  decrementValue(slider) {
-    const key = getKeyBySlider(this, slider);
-    const value = this.state.values[key] - this.props.step;
+  decrementValue(key) {
+    const values = valueTransformer.valuesFromProps(this);
+    const value = values[key] - this.props.step;
 
-    this.setPositionByValue(slider, value);
+    this.updateValue(key, value);
   }
 
   // Handlers
@@ -237,9 +235,10 @@ class InputRange extends React.Component {
       return;
     }
 
-    const position = this.valueTransformer.positionFromEvent(event);
+    const key = getKeyFromSlider(this, slider);
+    const position = valueTransformer.positionFromEvent(this, event);
 
-    this.setPosition(slider, position);
+    this.updatePosition(key, position);
   }
 
   handleSliderKeyDown(slider, event) {
@@ -247,13 +246,15 @@ class InputRange extends React.Component {
       return;
     }
 
+    const key = getKeyFromSlider(this, slider);
+
     switch (event.keyCode) {
     case KeyCode.LEFT_ARROW:
-      this.decrementValue(slider);
+      this.decrementValue(key);
       break;
 
     case KeyCode.RIGHT_ARROW:
-      this.incrementValue(slider);
+      this.incrementValue(key);
       break;
 
     default:
@@ -266,98 +267,45 @@ class InputRange extends React.Component {
       return;
     }
 
-    this.setPosition(null, position);
+    const key = getKeyByPosition(this, position);
+
+    this.updatePosition(key, position);
   }
 
   // Render
-  renderSliders() {
-    const classNames = this.props.classNames;
-    const sliders = [];
-    const keys = getKeys(this);
-
-    for (const key of keys) {
-      const value = this.state.values[key];
-      const percentage = this.state.percentages[key];
-      const ref = `slider${captialize(key)}`;
-
-      let { maxValue, minValue } = this.props;
-
-      if (key === 'min') {
-        maxValue = this.state.values.max;
-      } else {
-        minValue = this.state.values.min;
-      }
-
-      const slider = (
-        <Slider
-          classNames={ classNames }
-          key={ key }
-          maxValue={ maxValue }
-          minValue={ minValue }
-          onSliderKeyDown={ this.handleSliderKeyDown }
-          onSliderMouseMove={ this.handleSliderMouseMove }
-          percentage={ percentage }
-          ref={ ref }
-          type={ key }
-          value={ value } />
-      );
-
-      sliders.push(slider);
-    }
-
-    return sliders;
-  }
-
-  renderHiddenInputs() {
-    const inputs = [];
-    const keys = getKeys(this);
-
-    for (const key of keys) {
-      const name = this.isMultiValue ? `${this.props.name}${captialize(key)}` : this.props.name;
-
-      const input = (
-        <input type="hidden" name={ name }/>
-      );
-    }
-
-    return inputs;
-  }
-
   render() {
-    const classNames = this.props.classNames;
-    let componentClassName = classNames.component;
-
-    if (this.props.disabled) {
-      componentClassName = `${componentClassName} is-disabled`;
-    }
+    const { classNames } = this.props;
+    const componentClassName = getComponentClassName(this);
+    const values = valueTransformer.valuesFromProps(this);
+    const percentages = valueTransformer.percentagesFromValues(this, values);
 
     return (
       <div
         aria-disabled={ this.props.disabled }
         ref="inputRange"
         className={ componentClassName }>
-        <span className={ classNames.labelMin }>
-          <span className={ classNames.labelContainer }>
-            { this.props.minValue }
-          </span>
-        </span>
+        <Label
+          className={ classNames.labelMin }
+          containerClassName={ classNames.labelContainer }>
+          { this.props.minValue }
+        </Label>
 
         <Track
           classNames={ classNames }
           ref="track"
-          percentages={ this.state.percentages }
+          percentages={ percentages }
           onTrackMouseDown={ this.handleTrackMouseDown }>
 
-          { this.renderSliders() }
+          { renderSliders(this) }
         </Track>
 
-        <span className={ classNames.labelMax }>
-          <span className={ classNames.labelContainer }>
-            { this.props.maxValue }
-          </span>
-        </span>
+        <Label
+          className={ classNames.labelMax }
+          containerClassName={ classNames.labelContainer }>
+          { this.props.maxValue }
+        </Label>
 
-        { this.renderHiddenInputs() }
+        { renderHiddenInputs(this) }
       </div>
     );
   }
@@ -372,7 +320,7 @@ InputRange.propTypes = {
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
-  onChange: React.PropTypes.func,
+  onChange: React.PropTypes.func.isRequired,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
   values: maxMinValuePropType,

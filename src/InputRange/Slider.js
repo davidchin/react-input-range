@@ -1,12 +1,28 @@
 import React from 'react';
-import { autobind, extend } from './util';
+import Label from './Label';
+import { autobind } from './util';
 
+// Functions
+function getDocument(slider) {
+  const { slider: { ownerDocument } } = slider.refs;
+
+  return ownerDocument;
+}
+
+function getStyle(slider) {
+  const perc = (slider.props.percentage || 0) * 100;
+  const style = {
+    position: 'absolute',
+    left: `${perc}%`,
+  };
+
+  return style;
+}
+
+// Class
 class Slider extends React.Component {
   constructor(props) {
     super(props);
-
-    // Initial state
-    this.state = {};
 
     // Auto-bind
     autobind([
@@ -21,43 +37,13 @@ class Slider extends React.Component {
     ], this);
   }
 
-  // Life Cycle
-  componentDidMount() {
-    this.setPosition(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setPosition(nextProps);
-  }
-
-  // Getters / Setters
-  get document() {
-    const { slider } = this.refs;
-    const document = slider.ownerDocument;
-
-    return document;
-  }
-
-  // Methods
-  setPosition(props) {
-    const perc = (props.percentage || 0) * 100;
-    const newStyle = {
-      position: 'absolute',
-      left: `${perc}%`,
-    };
-
-    const style = extend({}, this.state.style, newStyle);
-
-    this.setState({ style });
-  }
-
   // Handlers
   handleClick(event) {
     event.preventDefault();
   }
 
   handleMouseDown() {
-    const document = this.document;
+    const document = getDocument(this);
 
     // Event
     document.addEventListener('mousemove', this.handleMouseMove);
@@ -65,7 +51,7 @@ class Slider extends React.Component {
   }
 
   handleMouseUp() {
-    const document = this.document;
+    const document = getDocument(this);
 
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
@@ -77,7 +63,7 @@ class Slider extends React.Component {
   }
 
   handleTouchStart(event) {
-    const document = this.document;
+    const document = getDocument(this);
 
     event.preventDefault();
 
@@ -90,7 +76,7 @@ class Slider extends React.Component {
   }
 
   handleTouchEnd() {
-    const document = this.document;
+    const document = getDocument(this);
 
     event.preventDefault();
 
@@ -105,18 +91,18 @@ class Slider extends React.Component {
   // Render
   render() {
     const classNames = this.props.classNames;
-    const style = this.state.style || {};
+    const style = getStyle(this);
 
     return (
       <span
         className={ classNames.sliderContainer }
         ref="slider"
         style={ style }>
-        <span className={ classNames.labelValue }>
-          <span className={ classNames.labelContainer }>
-            { this.props.value }
-          </span>
-        </span>
+        <Label
+          className={ classNames.labelValue }
+          containerClassName={ classNames.labelContainer }>
+          { this.props.value }
+        </Label>
 
         <a
           aria-labelledby={ this.props.ariaLabelledby }

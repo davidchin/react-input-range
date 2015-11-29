@@ -1,10 +1,7 @@
 import { isNumber, objectOf } from './util';
 
-function numberPredicate(value) {
-  return typeof value === 'number';
-}
-
-export function maxMinValuePropType(props) {
+// Functions
+function maxMinValuePropType(props) {
   const maxValue = props.maxValue;
   const minValue = props.minValue;
   const value = props.value;
@@ -14,15 +11,15 @@ export function maxMinValuePropType(props) {
 
   if (!values &&
       !defaultValues &&
-      !numberPredicate(value) &&
-      !numberPredicate(defaultValue)) {
+      !isNumber(value) &&
+      !isNumber(defaultValue)) {
     return new Error('`value` or `defaultValue` must be a number');
   }
 
   if (!isNumber(value) &&
       !isNumber(defaultValue) &&
-      !objectOf(values, numberPredicate) &&
-      !objectOf(defaultValues, numberPredicate)) {
+      !objectOf(values, isNumber) &&
+      !objectOf(defaultValues, isNumber)) {
     return new Error('`values` or `defaultValues` must be an object of numbers');
   }
 
@@ -38,3 +35,5 @@ export function maxMinValuePropType(props) {
     return new Error('`value` must be within `minValue` and `maxValue`');
   }
 }
+
+export { maxMinValuePropType as maxMinValuePropType };

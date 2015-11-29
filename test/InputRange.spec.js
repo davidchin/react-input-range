@@ -1,20 +1,26 @@
 import React from 'react';
 import InputRange from 'InputRange';
-import _ from 'lodash';
+import valueTransformer from '../src/InputRange/valueTransformer';
 import { renderComponent } from './TestUtil';
 
 let inputRange;
+let onChange;
 
 describe('InputRange', () => {
+  let value;
   let values;
 
   beforeEach(() => {
+    value = 5;
     values = {
       min: 2,
       max: 10,
     };
 
-    inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} />);
+    onChange = jasmine.createSpy('onChange');
+    inputRange = renderComponent(
+      <InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />
+    );
   });
 
   describe('initialize', () => {
@@ -33,184 +39,69 @@ describe('InputRange', () => {
     });
   });
 
-  describe('componentDidMount', () => {
+  describe('updateValue', () => {
+    let newValue;
+
     beforeEach(() => {
-      spyOn(inputRange, 'setPositionsByProps');
+      spyOn(inputRange, 'updateValues');
+      spyOn(valueTransformer, 'valuesFromProps').and.returnValue({ max: 10 });
+
+      newValue = 10;
     });
 
-    it('should set the initial position for slider', () => {
-      const props = {
-        classNames: jasmine.any(Object),
-        disabled: false,
-        maxValue: 20,
-        minValue: 0,
-        values: {
-          min: 2,
-          max: 10,
-        },
-        step: 1,
-      };
+    it('should get values from props', () => {
+      inputRange.updateValue('max', newValue);
 
-      inputRange.componentDidMount();
+      expect(valueTransformer.valuesFromProps).toHaveBeenCalledWith(inputRange);
+    });
 
-      expect(inputRange.setPositionsByProps).toHaveBeenCalledWith(props);
+    it('should update value for key', () => {
+      inputRange.updateValue('max', newValue);
+
+      expect(inputRange.updateValues).toHaveBeenCalledWith({ max: 10 });
     });
   });
 
-  describe('componentWillReceiveProps', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'setPositionsByProps');
-    });
-
-    it('should set the current position for slider', () => {
-      const newProps = {
-        maxValue: 20,
-        minValue: 0,
-        values: {
-          min: 5,
-          max: 8,
-        },
-        defaultValues: {
-          min: 1,
-          max: 10,
-        },
-        value: 0,
-        step: 1,
-      };
-
-      inputRange.componentWillReceiveProps(newProps);
-
-      expect(inputRange.setPositionsByProps).toHaveBeenCalledWith(_.omit(newProps, 'defaultValues'));
-    });
-  });
-
-  describe('shouldComponentUpdate', () => {
-    let nextProps;
-    let nextState;
+  describe('updateValues', () => {
+    let newValues;
 
     beforeEach(() => {
-      nextProps = Object.assign({}, inputRange.props);
-      nextState = Object.assign({}, inputRange.state);
-    });
-
-    it('should return true if current min value has been changed', () => {
-      nextState.values = {
-        max: inputRange.state.values.max,
-        min: inputRange.state.values.min + 1,
+      newValues = {
+        min: 2,
+        max: 11,
       };
-
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
     });
 
-    it('should return true if current max value has been changed', () => {
-      nextState.values = {
-        max: inputRange.state.values.max + 1,
-        min: inputRange.state.values.min,
-      };
+    describe('if it is a multi-value slider', () => {
+      it('should call `onChange` callback', () => {
+        inputRange.updateValues(newValues);
 
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
-    });
-
-    it('should return true if current value has been changed', () => {
-      nextState.value = inputRange.state.value + 1;
-
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
-    });
-
-    it('should return true if min value has been changed', () => {
-      nextProps.minValue = inputRange.props.minValue + 1;
-
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
-    });
-
-    it('should return true if max value has been changed', () => {
-      nextProps.maxValue = inputRange.props.maxValue + 1;
-
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeTruthy();
-    });
-
-    it('should return false if a non-essential value has been changed', () => {
-      nextState.random = Math.random();
-
-      expect(inputRange.shouldComponentUpdate(nextProps, nextState)).toBeFalsy();
-    });
-  });
-
-  describe('componentDidUpdate', () => {
-    let nextState;
-    let onChange;
-
-    beforeEach(() => {
-      onChange = jasmine.createSpy('onChange');
-    });
-
-    describe('if `onChange` callback is provided', () => {
-      describe('if it is an initial change', () => {
-        beforeEach(() => {
-          inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
-          nextState = Object.assign({}, inputRange.state, { didChange: false });
-        });
-
-        it('should not execute `onChange` callback', () => {
-          inputRange.state = nextState;
-          inputRange.componentDidUpdate();
-
-          expect(onChange).not.toHaveBeenCalledWith(inputRange, values);
-        });
-      });
-
-      describe('if it is not an initial change', () => {
-        describe('if multiple values is provided', () => {
-          beforeEach(() => {
-            inputRange = renderComponent(<InputRange maxValue={20} minValue={0} values={values} onChange={onChange} />);
-            nextState = Object.assign({}, inputRange.state, { didChange: true });
-          });
-
-          it('should execute `onChange` callback with the changed values', () => {
-            inputRange.state = nextState;
-            inputRange.componentDidUpdate();
-
-            expect(onChange).toHaveBeenCalledWith(inputRange, values);
-          });
-        });
-
-        describe('if single value is provided', () => {
-          let value;
-
-          beforeEach(() => {
-            value = 1;
-
-            inputRange = renderComponent(<InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />);
-            nextState = Object.assign({}, inputRange.state, { didChange: true });
-          });
-
-          it('should execute `onChange` callback with the changed value', () => {
-            inputRange.state = nextState;
-            inputRange.componentDidUpdate();
-
-            expect(onChange).toHaveBeenCalledWith(inputRange, value);
-          });
-        });
+        expect(onChange).toHaveBeenCalledWith(inputRange, newValues);
       });
     });
 
-    describe('if `onChange` callback is not provided', () => {
-      it('should not execute `onChange` callback', () => {
-        inputRange.state = nextState;
-        inputRange.componentDidUpdate();
+    describe('if it is not a multi-value slider', () => {
+      beforeEach(() => {
+        inputRange = renderComponent(
+          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
+        );
+      });
 
-        expect(onChange).not.toHaveBeenCalled();
+      it('should call `onChange` callback', () => {
+        inputRange.updateValues(newValues);
+
+        expect(onChange).toHaveBeenCalledWith(inputRange, newValues.max);
       });
     });
   });
 
-  describe('setPositions', () => {
+  describe('updatePositions', () => {
     let positions;
 
     beforeEach(() => {
-      spyOn(inputRange, 'setState');
-      spyOn(inputRange.valueTransformer, 'valueFromPosition').and.callThrough();
-      spyOn(inputRange.valueTransformer, 'percentageFromPosition').and.callThrough();
+      spyOn(inputRange, 'updateValues');
+      spyOn(valueTransformer, 'valueFromPosition').and.callThrough();
+      spyOn(valueTransformer, 'stepValueFromValue').and.callThrough();
 
       positions = {
         min: {
@@ -224,323 +115,66 @@ describe('InputRange', () => {
       };
     });
 
-    describe('if it is a multi-value input', () => {
-      beforeEach(() => {
-        inputRange.isMultiValue = true;
-      });
+    it('should update values', () => {
+      inputRange.updatePositions(positions);
 
-      it('should update state if new positions are within range', () => {
-        inputRange.setPositions(positions);
-
-        expect(inputRange.setState).toHaveBeenCalled();
-      });
-
-      it('should not update state if new positions are out of range', () => {
-        positions.min.x = positions.max.x + 1;
-
-        inputRange.setPositions(positions);
-
-        expect(inputRange.setState).not.toHaveBeenCalled();
-      });
-    });
-
-    it('should update state with new percentages, positions and values', () => {
-      inputRange.setPositions(positions);
-
-      expect(inputRange.setState).toHaveBeenCalledWith({
-        percentages: jasmine.any(Object),
-        positions: jasmine.any(Object),
-        values: jasmine.any(Object),
-      });
+      expect(inputRange.updateValues).toHaveBeenCalledWith({ min: 0, max: 5 });
     });
 
     it('should convert positions into values', () => {
-      inputRange.setPositions(positions);
+      inputRange.updatePositions(positions);
 
-      expect(inputRange.valueTransformer.valueFromPosition).toHaveBeenCalled();
+      expect(valueTransformer.valueFromPosition).toHaveBeenCalled();
     });
 
-    it('should translate positions into percentages', () => {
-      inputRange.setPositions(positions);
+    it('should convert values into step values', () => {
+      inputRange.updatePositions(positions);
 
-      expect(inputRange.valueTransformer.percentageFromPosition).toHaveBeenCalled();
-    });
-  });
-
-  describe('setPosition', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'setPositions');
-
-      inputRange.setState({
-        positions: {
-          min: { x: 0, y: 0 },
-          max: { x: 500, y: 0 },
-        },
-      });
-    });
-
-    describe('if slider is provided', () => {
-      it('should set the position of the slider according to its type', () => {
-        const slider = {
-          props: {
-            type: 'min',
-          },
-        };
-
-        const position = {
-          x: 100,
-          y: 0,
-        };
-
-        inputRange.setPosition(slider, position);
-
-        expect(inputRange.setPositions).toHaveBeenCalledWith({
-          min: position,
-          max: { x: 500, y: 0 },
-        });
-      });
-    });
-
-    describe('if slider is not provided', () => {
-      describe('if it is a multi-value slider', () => {
-        beforeEach(() => {
-          inputRange.isMultiValue = true;
-        });
-
-        describe('if the new position is closer to `min` slider', () => {
-          it('should set the position of the `min` slider', () => {
-            const position = {
-              x: 100,
-              y: 0,
-            };
-
-            inputRange.setPosition(undefined, position);
-
-            expect(inputRange.setPositions).toHaveBeenCalledWith({
-              max: { x: 500, y: 0 },
-              min: position,
-            });
-          });
-        });
-
-        describe('if the new position is closer to `max` slider', () => {
-          it('should set the position of the `max` slider', () => {
-            const position = {
-              x: 400,
-              y: 0,
-            };
-
-            inputRange.setPosition(undefined, position);
-
-            expect(inputRange.setPositions).toHaveBeenCalledWith({
-              max: position,
-              min: { x: 0, y: 0 },
-            });
-          });
-        });
-      });
-
-      describe('if it is not a multi-value slider', () => {
-        beforeEach(() => {
-          inputRange.isMultiValue = false;
-        });
-
-        it('should set the position of the `max` slider', () => {
-          const position = {
-            x: 100,
-            y: 0,
-          };
-
-          inputRange.setPosition(undefined, position);
-
-          expect(inputRange.setPositions).toHaveBeenCalledWith({
-            max: position,
-            min: { x: 0, y: 0 },
-          });
-        });
-      });
+      expect(valueTransformer.stepValueFromValue).toHaveBeenCalled();
     });
   });
 
-  describe('setPositionByValue', () => {
-    let slider;
-    let position;
-
+  describe('updatePosition', () => {
     beforeEach(() => {
-      slider = {};
+      spyOn(inputRange, 'updatePositions');
+    });
 
-      spyOn(inputRange, 'setPosition');
-      spyOn(inputRange.valueTransformer, 'positionFromValue');
-
-      position = {
-        min: {
-          x: 0,
-          y: 0,
-        },
-        max: {
-          x: 0,
-          y: 0,
-        },
+    it('should set the position of the slider according to its type', () => {
+      const position = {
+        x: 100,
+        y: 0,
       };
 
-      inputRange.valueTransformer.positionFromValue.and.returnValue(position);
-    });
+      inputRange.updatePosition('min', position);
 
-    it('should set the position of slider according to the provided value', () => {
-      inputRange.setPositionByValue(slider, 10);
-
-      expect(inputRange.setPosition).toHaveBeenCalledWith(slider, position);
-    });
-
-    describe('if value is larger than max value', () => {
-      it('should cap the value', () => {
-        inputRange.setPositionByValue(slider, 30);
-
-        expect(inputRange.valueTransformer.positionFromValue).toHaveBeenCalledWith(20);
-      });
-    });
-
-    describe('if value is smaller than min value', () => {
-      it('should cap the value', () => {
-        inputRange.setPositionByValue(slider, -10);
-
-        expect(inputRange.valueTransformer.positionFromValue).toHaveBeenCalledWith(0);
-      });
-    });
-  });
-
-  describe('setPositionsByValues', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'setPositions');
-      spyOn(inputRange.valueTransformer, 'positionFromValue');
-    });
-
-    it('should calculate the position of each slider based on its value', () => {
-      inputRange.setPositionsByValues(values);
-
-      expect(inputRange.valueTransformer.positionFromValue).toHaveBeenCalledWith(values.min);
-      expect(inputRange.valueTransformer.positionFromValue).toHaveBeenCalledWith(values.max);
-    });
-
-    it('should set the position of min slider', () => {
-      inputRange.valueTransformer.positionFromValue.and.returnValue(123);
-
-      inputRange.setPositionsByValues({
-        min: 3,
-        max: values.max,
-      });
-
-      expect(inputRange.setPositions).toHaveBeenCalledWith({
-        min: 123,
-        max: 123,
-      });
-    });
-
-    it('should set the position of max slider', () => {
-      inputRange.valueTransformer.positionFromValue.and.returnValue(123);
-
-      inputRange.setPositionsByValues({
-        min: values.min,
-        max: 15,
-      });
-
-      expect(inputRange.setPositions).toHaveBeenCalledWith({
-        min: 123,
-        max: 123,
-      });
-    });
-  });
-
-  describe('setPositionsByProps', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'setPositionsByValues');
-      spyOn(inputRange, 'setPositionByValue');
-    });
-
-    describe('if it only accepts single value', () => {
-      beforeEach(() => {
-        inputRange.isMultiValue = false;
-      });
-
-      it('should set the position of max slider', () => {
-        const props = {
-          value: 1,
-        };
-
-        inputRange.setPositionsByProps(props);
-
-        expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.value);
-      });
-
-      it('should set the position of max slider using default value if current value is undefined', () => {
-        const props = {
-          defaultValue: 6,
-        };
-
-        inputRange.setPositionsByProps(props);
-
-        expect(inputRange.setPositionByValue).toHaveBeenCalledWith(inputRange.refs.sliderMax, props.defaultValue);
-      });
-    });
-
-    describe('if it only accepts multiple values', () => {
-      beforeEach(() => {
-        inputRange.isMultiValue = true;
-      });
-
-      it('should set the position of all sliders', () => {
-        const props = {
-          values: {
-            min: 2,
-            max: 12,
-          },
-        };
-
-        inputRange.setPositionsByProps(props);
-
-        expect(inputRange.setPositionsByValues).toHaveBeenCalledWith(props.values);
-      });
-
-      it('should set the position of all sliders using default values if current values are undefined', () => {
-        const props = {
-          defaultValues: {
-            min: 6,
-            max: 10,
-          },
-        };
-
-        inputRange.setPositionsByProps(props);
-
-        expect(inputRange.setPositionsByValues).toHaveBeenCalledWith(props.defaultValues);
+      expect(inputRange.updatePositions).toHaveBeenCalledWith({
+        min: position,
+        max: { x: jasmine.any(Number), y: jasmine.any(Number) },
       });
     });
   });
 
   describe('incrementValue', () => {
     beforeEach(() => {
-      spyOn(inputRange, 'setPositionByValue');
+      spyOn(inputRange, 'updateValue');
     });
 
     it('should increment slider value by the step amount', () => {
-      const slider = inputRange.refs.sliderMin;
+      inputRange.incrementValue('min');
 
-      inputRange.incrementValue(slider);
-
-      expect(inputRange.setPositionByValue).toHaveBeenCalledWith(slider, values.min + 1);
+      expect(inputRange.updateValue).toHaveBeenCalledWith('min', values.min + 1);
     });
   });
 
   describe('decrementValue', () => {
     beforeEach(() => {
-      spyOn(inputRange, 'setPositionByValue');
+      spyOn(inputRange, 'updateValue');
     });
 
     it('should decrement slider value by the step amount', () => {
-      const slider = inputRange.refs.sliderMin;
+      inputRange.decrementValue('min');
 
-      inputRange.decrementValue(slider);
-
-      expect(inputRange.setPositionByValue).toHaveBeenCalledWith(slider, values.min - 1);
+      expect(inputRange.updateValue).toHaveBeenCalledWith('min', values.min - 1);
     });
   });
 
@@ -549,7 +183,7 @@ describe('InputRange', () => {
     let event;
 
     beforeEach(() => {
-      spyOn(inputRange, 'setPosition');
+      spyOn(inputRange, 'updatePosition');
 
       slider = inputRange.refs.sliderMax;
       event = {
@@ -561,15 +195,15 @@ describe('InputRange', () => {
     it('should set the position of a slider according to mouse event', () => {
       inputRange.handleSliderMouseMove(slider, event);
 
-      expect(inputRange.setPosition).toHaveBeenCalledWith(slider, { x: 92, y: 0 });
+      expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
     });
 
     it('should not set the position of a slider if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0}/>);
-      spyOn(inputRange, 'setPosition');
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
+      spyOn(inputRange, 'updatePosition');
       inputRange.handleSliderMouseMove(slider, event);
 
-      expect(inputRange.setPosition).not.toHaveBeenCalled();
+      expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });
   });
 
@@ -588,15 +222,15 @@ describe('InputRange', () => {
       });
 
       it('should decrement value', () => {
-        inputRange.handleSliderKeyDown(slider, event);
+        inputRange.handleSliderKeyDown('max', event);
 
-        expect(inputRange.decrementValue).toHaveBeenCalledWith(slider);
+        expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should not decrement value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown(slider, event);
+        inputRange.handleSliderKeyDown('max', event);
 
         expect(inputRange.decrementValue).not.toHaveBeenCalled();
       });
@@ -615,11 +249,11 @@ describe('InputRange', () => {
       it('should increment value', () => {
         inputRange.handleSliderKeyDown(slider, event);
 
-        expect(inputRange.incrementValue).toHaveBeenCalledWith(slider);
+        expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should not increment value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'incrementValue');
         inputRange.handleSliderKeyDown(slider, event);
 
@@ -633,7 +267,7 @@ describe('InputRange', () => {
     let position;
 
     beforeEach(() => {
-      spyOn(inputRange, 'setPosition');
+      spyOn(inputRange, 'updatePosition');
 
       track = {};
       position = {
@@ -642,18 +276,48 @@ describe('InputRange', () => {
       };
     });
 
-    it('should set a new position based on the position of mouse click', () => {
+    it('should not set a new position if disabled', () => {
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+      spyOn(inputRange, 'updatePosition');
       inputRange.handleTrackMouseDown(track, position);
 
-      expect(inputRange.setPosition).toHaveBeenCalledWith(null, position);
+      expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });
 
-    it('should not set a new position if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10}/>);
-      spyOn(inputRange, 'setPosition');
-      inputRange.handleTrackMouseDown(track, position);
+    describe('if it is a multi-value slider', () => {
+      describe('if the new position is closer to `min` slider', () => {
+        it('should set the position of the `min` slider', () => {
+          position.x = 100;
+          inputRange.handleTrackMouseDown(track, position);
 
-      expect(inputRange.setPosition).not.toHaveBeenCalled();
+          expect(inputRange.updatePosition).toHaveBeenCalledWith('min', position);
+        });
+      });
+
+      describe('if the new position is closer to `max` slider', () => {
+        it('should set the position of the `max` slider', () => {
+          position.x = 400;
+          inputRange.handleTrackMouseDown(track, position);
+
+          expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
+        });
+      });
+    });
+
+    describe('if it is not a multi-value slider', () => {
+      beforeEach(() => {
+        inputRange = renderComponent(
+          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
+        );
+        spyOn(inputRange, 'updatePosition');
+      });
+
+      it('should set the position of the `max` slider', () => {
+        position.x = 100;
+        inputRange.handleTrackMouseDown(track, position);
+
+        expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
+      });
     });
   });
 });
