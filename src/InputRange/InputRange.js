@@ -60,7 +60,7 @@ function getKeyFromSlider(inputRange, slider) {
 
 function getKeys(inputRange) {
   if (inputRange.isMultiValue) {
-    return ['max', 'min'];
+    return ['min', 'max'];
   }
 
   return ['max'];
