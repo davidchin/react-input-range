@@ -53,6 +53,8 @@ class Slider extends React.Component {
   handleMouseUp() {
     const document = getDocument(this);
 
+    this.props.onSliderMouseUp(this, event);
+
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
@@ -79,6 +81,8 @@ class Slider extends React.Component {
     const document = getDocument(this);
 
     event.preventDefault();
+
+    this.props.onSliderMouseUp(this, event);
 
     document.removeEventListener('touchmove', this.handleTouchMove);
     document.removeEventListener('touchend', this.handleTouchEnd);
@@ -130,6 +134,7 @@ Slider.propTypes = {
   minValue: React.PropTypes.number,
   onSliderKeyDown: React.PropTypes.func.isRequired,
   onSliderMouseMove: React.PropTypes.func.isRequired,
+  onSliderMouseUp: React.PropTypes.func.isRequired,
   percentage: React.PropTypes.number.isRequired,
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,

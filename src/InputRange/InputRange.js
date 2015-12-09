@@ -27,6 +27,11 @@ function isWithinRange(inputRange, values) {
          values.max <= props.maxValue;
 }
 
+function isInteractiveUpdateEnd(inputRange, interactiveUpdate) {
+  const { props } = inputRange;
+  return interactiveUpdate === false && props.onInteractiveUpdate;
+}
+
 function hasStepDifference(inputRange, values) {
   const { props } = inputRange;
   const currentValues = valueTransformer.valuesFromProps(inputRange);
@@ -35,9 +40,9 @@ function hasStepDifference(inputRange, values) {
          length(values.max, currentValues.max) >= props.step;
 }
 
-function shouldUpdate(inputRange, values) {
+function shouldUpdate(inputRange, values, interactiveUpdate) {
   return isWithinRange(inputRange, values) &&
-         hasStepDifference(inputRange, values);
+         (hasStepDifference(inputRange, values) || isInteractiveUpdateEnd(inputRange, interactiveUpdate));
 }
 
 function getComponentClassName(inputRange) {
@@ -110,6 +115,7 @@ function renderSliders(inputRange) {
         minValue={ minValue }
         onSliderKeyDown={ inputRange.handleSliderKeyDown }
         onSliderMouseMove={ inputRange.handleSliderMouseMove }
+        onSliderMouseUp={ inputRange.handleSliderMouseUp }
         percentage={ percentage }
         ref={ ref }
         type={ key }
@@ -145,6 +151,7 @@ class InputRange extends React.Component {
     // Auto-bind
     autobind([
       'handleSliderMouseMove',
+      'handleSliderMouseUp',
       'handleSliderKeyDown',
       'handleTrackMouseDown',
     ], this);
@@ -172,16 +179,16 @@ class InputRange extends React.Component {
   }
 
   // Methods
-  updatePosition(key, position) {
+  updatePosition(key, position, interactiveUpdate) {
     const values = valueTransformer.valuesFromProps(this);
     const positions = valueTransformer.positionsFromValues(this, values);
 
     positions[key] = position;
 
-    this.updatePositions(positions);
+    this.updatePositions(positions, interactiveUpdate);
   }
 
-  updatePositions(positions) {
+  updatePositions(positions, interactiveUpdate) {
     const values = {
       min: valueTransformer.valueFromPosition(this, positions.min),
       max: valueTransformer.valueFromPosition(this, positions.max),
@@ -192,26 +199,27 @@ class InputRange extends React.Component {
       max: valueTransformer.stepValueFromValue(this, values.max),
     };
 
-    this.updateValues(transformedValues);
+    this.updateValues(transformedValues, interactiveUpdate);
   }
 
-  updateValue(key, value) {
+  updateValue(key, value, interactiveUpdate) {
     const values = valueTransformer.valuesFromProps(this);
 
     values[key] = value;
 
-    this.updateValues(values);
+    this.updateValues(values, interactiveUpdate);
   }
 
-  updateValues(values) {
-    if (!shouldUpdate(this, values)) {
+  updateValues(values, interactiveUpdate) {
+    if (!shouldUpdate(this, values, interactiveUpdate)) {
       return;
     }
 
+    const changeFn = interactiveUpdate && this.props.onInteractiveUpdate ? this.props.onInteractiveUpdate : this.props.onChange;
     if (this.isMultiValue) {
-      this.props.onChange(this, values);
+      changeFn(this, values);
     } else {
-      this.props.onChange(this, values.max);
+      changeFn(this, values.max);
     }
   }
 
@@ -238,7 +246,18 @@ class InputRange extends React.Component {
     const key = getKeyFromSlider(this, slider);
     const position = valueTransformer.positionFromEvent(this, event);
 
-    this.updatePosition(key, position);
+    this.updatePosition(key, position, true);
+  }
+
+  handleSliderMouseUp(slider, event) {
+    if (this.props.disabled) {
+      return;
+    }
+
+    const key = getKeyFromSlider(this, slider);
+    const position = valueTransformer.positionFromEvent(this, event);
+
+    this.updatePosition(key, position, false);
   }
 
   handleSliderKeyDown(slider, event) {
@@ -319,6 +338,7 @@ InputRange.propTypes = {
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
+  onInteractiveUpdate: React.PropTypes.func,
   onChange: React.PropTypes.func.isRequired,
   step: React.PropTypes.number,
   value: maxMinValuePropType,

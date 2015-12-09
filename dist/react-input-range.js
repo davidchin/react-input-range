@@ -59,6 +59,12 @@ function isWithinRange(inputRange, values) {
   return values.max >= props.minValue && values.max <= props.maxValue;
 }
 
+function isInteractiveUpdateEnd(inputRange, interactiveUpdate) {
+  var props = inputRange.props;
+
+  return interactiveUpdate === false && props.onInteractiveUpdate;
+}
+
 function hasStepDifference(inputRange, values) {
   var props = inputRange.props;
 
@@ -67,8 +73,8 @@ function hasStepDifference(inputRange, values) {
   return (0, _util.length)(values.min, currentValues.min) >= props.step || (0, _util.length)(values.max, currentValues.max) >= props.step;
 }
 
-function shouldUpdate(inputRange, values) {
-  return isWithinRange(inputRange, values) && hasStepDifference(inputRange, values);
+function shouldUpdate(inputRange, values, interactiveUpdate) {
+  return isWithinRange(inputRange, values) && (hasStepDifference(inputRange, values) || isInteractiveUpdateEnd(inputRange, interactiveUpdate));
 }
 
 function getComponentClassName(inputRange) {
@@ -150,6 +156,7 @@ function renderSliders(inputRange) {
         minValue: minValue,
         onSliderKeyDown: inputRange.handleSliderKeyDown,
         onSliderMouseMove: inputRange.handleSliderMouseMove,
+        onSliderMouseUp: inputRange.handleSliderMouseUp,
         percentage: percentage,
         ref: ref,
         type: key,
@@ -217,22 +224,22 @@ var InputRange = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(InputRange.prototype), 'constructor', this).call(this, props);
 
-    (0, _util.autobind)(['handleSliderMouseMove', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
+    (0, _util.autobind)(['handleSliderMouseMove', 'handleSliderMouseUp', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
   }
 
   _createClass(InputRange, [{
     key: 'updatePosition',
-    value: function updatePosition(key, position) {
+    value: function updatePosition(key, position, interactiveUpdate) {
       var values = _valueTransformer2['default'].valuesFromProps(this);
       var positions = _valueTransformer2['default'].positionsFromValues(this, values);
 
       positions[key] = position;
 
-      this.updatePositions(positions);
+      this.updatePositions(positions, interactiveUpdate);
     }
   }, {
     key: 'updatePositions',
-    value: function updatePositions(positions) {
+    value: function updatePositions(positions, interactiveUpdate) {
       var values = {
         min: _valueTransformer2['default'].valueFromPosition(this, positions.min),
         max: _valueTransformer2['default'].valueFromPosition(this, positions.max)
@@ -243,28 +250,29 @@ var InputRange = (function (_React$Component) {
         max: _valueTransformer2['default'].stepValueFromValue(this, values.max)
       };
 
-      this.updateValues(transformedValues);
+      this.updateValues(transformedValues, interactiveUpdate);
     }
   }, {
     key: 'updateValue',
-    value: function updateValue(key, value) {
+    value: function updateValue(key, value, interactiveUpdate) {
       var values = _valueTransformer2['default'].valuesFromProps(this);
 
       values[key] = value;
 
-      this.updateValues(values);
+      this.updateValues(values, interactiveUpdate);
     }
   }, {
     key: 'updateValues',
-    value: function updateValues(values) {
-      if (!shouldUpdate(this, values)) {
+    value: function updateValues(values, interactiveUpdate) {
+      if (!shouldUpdate(this, values, interactiveUpdate)) {
         return;
       }
 
+      var changeFn = interactiveUpdate && this.props.onInteractiveUpdate ? this.props.onInteractiveUpdate : this.props.onChange;
       if (this.isMultiValue) {
-        this.props.onChange(this, values);
+        changeFn(this, values);
       } else {
-        this.props.onChange(this, values.max);
+        changeFn(this, values.max);
       }
     }
   }, {
@@ -293,7 +301,19 @@ var InputRange = (function (_React$Component) {
       var key = getKeyFromSlider(this, slider);
       var position = _valueTransformer2['default'].positionFromEvent(this, event);
 
-      this.updatePosition(key, position);
+      this.updatePosition(key, position, true);
+    }
+  }, {
+    key: 'handleSliderMouseUp',
+    value: function handleSliderMouseUp(slider, event) {
+      if (this.props.disabled) {
+        return;
+      }
+
+      var key = getKeyFromSlider(this, slider);
+      var position = _valueTransformer2['default'].positionFromEvent(this, event);
+
+      this.updatePosition(key, position, false);
     }
   }, {
     key: 'handleSliderKeyDown',
@@ -403,6 +423,7 @@ InputRange.propTypes = {
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
+  onInteractiveUpdate: _react2['default'].PropTypes.func,
   onChange: _react2['default'].PropTypes.func.isRequired,
   step: _react2['default'].PropTypes.number,
   value: _propTypes.maxMinValuePropType
@@ -558,6 +579,8 @@ var Slider = (function (_React$Component) {
     value: function handleMouseUp() {
       var document = getDocument(this);
 
+      this.props.onSliderMouseUp(this, event);
+
       document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('mouseup', this.handleMouseUp);
     }
@@ -587,6 +610,8 @@ var Slider = (function (_React$Component) {
       var document = getDocument(this);
 
       event.preventDefault();
+
+      this.props.onSliderMouseUp(this, event);
 
       document.removeEventListener('touchmove', this.handleTouchMove);
       document.removeEventListener('touchend', this.handleTouchEnd);
@@ -642,6 +667,7 @@ Slider.propTypes = {
   minValue: _react2['default'].PropTypes.number,
   onSliderKeyDown: _react2['default'].PropTypes.func.isRequired,
   onSliderMouseMove: _react2['default'].PropTypes.func.isRequired,
+  onSliderMouseUp: _react2['default'].PropTypes.func.isRequired,
   percentage: _react2['default'].PropTypes.number.isRequired,
   type: _react2['default'].PropTypes.string.isRequired,
   value: _react2['default'].PropTypes.number.isRequired

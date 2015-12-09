@@ -67,6 +67,18 @@ If accepting a single value, pass a number to `value` prop, i.e.:
 />
 ```
 
+To differentiate between an interactive update (eg, an in-progress mousemove of the slider) and a final change, include an onInteractiveUpdate handler.  A final change event will be fired when the interactive updated is completed.
+
+```{js}
+<InputRange
+  maxValue={20}
+  minValue={0}
+  value={this.state.value}
+  onInteractiveUpdate={this.handleInteractiveUpdate.bind(this)}
+  onChange={this.handleValueChange.bind(this)}
+/>
+```
+
 ### Options
 Property                | Type                               | Description
 :-----------------------|:-----------------------------------|:----------------------------------
@@ -78,6 +90,7 @@ maxValue                |number                              |Maximum value it c
 minValue                |number                              |Minimum value it can accept
 name                    |string                              |Name of `form` input
 onChange                |Function                            |`onChange` callback (required)
+onInteractiveUpdate     |Function                            |`onInteractiveUpdate` callback
 step                    |number                              |Increment/decrement value
 value                   |number &vert; Object.&lt;number&gt; |Current value(s) (required)
 
