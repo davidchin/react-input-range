@@ -5,6 +5,7 @@ import { renderComponent } from './TestUtil';
 
 let inputRange;
 let onChange;
+let onInteractiveUpdate;
 
 describe('InputRange', () => {
   let value;
@@ -18,8 +19,9 @@ describe('InputRange', () => {
     };
 
     onChange = jasmine.createSpy('onChange');
+    onInteractiveUpdate = jasmine.createSpy('onInteractiveUpdate');
     inputRange = renderComponent(
-      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} />
+      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} onInteractiveUpdate={onInteractiveUpdate} />
     );
   });
 
@@ -58,7 +60,7 @@ describe('InputRange', () => {
     it('should update value for key', () => {
       inputRange.updateValue('max', newValue);
 
-      expect(inputRange.updateValues).toHaveBeenCalledWith({ max: 10 });
+      expect(inputRange.updateValues).toHaveBeenCalledWith({ max: 10 }, undefined);
     });
   });
 
@@ -78,13 +80,25 @@ describe('InputRange', () => {
 
         expect(onChange).toHaveBeenCalledWith(inputRange, newValues);
       });
+
+      it('should call `onInteractiveUpdate` callback when it is an interactive update', () => {
+        inputRange.updateValues(newValues, true);
+
+        expect(onInteractiveUpdate).toHaveBeenCalledWith(inputRange, newValues);
+      });
     });
 
     describe('if it is not a multi-value slider', () => {
       beforeEach(() => {
         inputRange = renderComponent(
-          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
+          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onInteractiveUpdate={onInteractiveUpdate} />
         );
+      });
+
+      it('should call `onInteractiveUpdate` callback when it is an interactive update', () => {
+        inputRange.updateValues(newValues, true);
+
+        expect(onInteractiveUpdate).toHaveBeenCalledWith(inputRange, newValues.max);
       });
 
       it('should call `onChange` callback', () => {
@@ -118,7 +132,7 @@ describe('InputRange', () => {
     it('should update values', () => {
       inputRange.updatePositions(positions);
 
-      expect(inputRange.updateValues).toHaveBeenCalledWith({ min: 0, max: 5 });
+      expect(inputRange.updateValues).toHaveBeenCalledWith({ min: 0, max: 5 }, undefined);
     });
 
     it('should convert positions into values', () => {
@@ -150,7 +164,7 @@ describe('InputRange', () => {
       expect(inputRange.updatePositions).toHaveBeenCalledWith({
         min: position,
         max: { x: jasmine.any(Number), y: jasmine.any(Number) },
-      });
+      }, undefined);
     });
   });
 
@@ -195,7 +209,7 @@ describe('InputRange', () => {
     it('should set the position of a slider according to mouse event', () => {
       inputRange.handleSliderMouseMove(slider, event);
 
-      expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
+      expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 }, true);
     });
 
     it('should not set the position of a slider if disabled', () => {
