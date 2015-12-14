@@ -44,6 +44,10 @@ function isObject(object) {
   return object !== null && typeof object === 'object';
 }
 
+function isDefined(value) {
+  return value !== undefined && value !== null;
+}
+
 function isEmpty(obj) {
   if (!obj) {
     return true;
@@ -102,6 +106,7 @@ const util = {
   clamp,
   distanceTo,
   extend,
+  isDefined,
   isEmpty,
   isNumber,
   isObject,

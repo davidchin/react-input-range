@@ -35,8 +35,6 @@ class Track extends React.Component {
     return clientRect;
   }
 
-  // Methods
-
   // Handlers
   handleMouseDown(event) {
     const trackClientRect = this.clientRect;
@@ -46,7 +44,7 @@ class Track extends React.Component {
       y: 0,
     };
 
-    this.props.onTrackMouseDown(this, position);
+    this.props.onTrackMouseDown(event, this, position);
   }
 
   handleTouchStart(event) {
