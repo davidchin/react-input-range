@@ -335,8 +335,11 @@ describe('InputRange', () => {
 
     beforeEach(() => {
       onChangeComplete = jasmine.createSpy('onChangeComplete');
-      mouseDownEvent = new MouseEvent('mousedown', { bubbles: true });
-      mouseUpEvent = new MouseEvent('mouseup', { bubbles: true });
+      mouseDownEvent = document.createEvent('MouseEvent');
+      mouseUpEvent = document.createEvent('MouseEvent');
+
+      mouseDownEvent.initMouseEvent('mousedown', true);
+      mouseUpEvent.initMouseEvent('mouseup', true);
 
       inputRange = renderComponent(
         <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>

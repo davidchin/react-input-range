@@ -5,6 +5,7 @@ module.exports = function(config) {
     frameworks: ['browserify', 'jasmine'],
 
     files: [
+      'node_modules/es5-shim/es5-shim.js',
       'node_modules/react/dist/react.js',
       'node_modules/react-dom/dist/react-dom.js',
       'node_modules/lodash/index.js',
@@ -37,15 +38,6 @@ module.exports = function(config) {
       ]
     },
 
-    customLaunchers: {
-      ChromeCustom: {
-        base: 'Chrome',
-        flags: [
-          '--window-size=300,300'
-        ]
-      }
-    },
-
     reporters: ['progress'],
 
     port: 9876,
@@ -56,7 +48,7 @@ module.exports = function(config) {
 
     autoWatch: true,
 
-    browsers: ['ChromeCustom'],
+    browsers: ['PhantomJS'],
 
     singleRun: false
   })
