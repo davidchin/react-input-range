@@ -78,6 +78,7 @@ maxValue                |number                              |Maximum value it c
 minValue                |number                              |Minimum value it can accept
 name                    |string                              |Name of `form` input
 onChange                |Function                            |`onChange` callback (required)
+onChangeComplete        |Function                            |`onChangeComplete` callback
 step                    |number                              |Increment/decrement value
 value                   |number &vert; Object.&lt;number&gt; |Current value(s) (required)
 

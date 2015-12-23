@@ -37,6 +37,15 @@ module.exports = function(config) {
       ]
     },
 
+    customLaunchers: {
+      ChromeCustom: {
+        base: 'Chrome',
+        flags: [
+          '--window-size=300,300'
+        ]
+      }
+    },
+
     reporters: ['progress'],
 
     port: 9876,
@@ -47,7 +56,7 @@ module.exports = function(config) {
 
     autoWatch: true,
 
-    browsers: ['PhantomJS2'],
+    browsers: ['ChromeCustom'],
 
     singleRun: false
   })

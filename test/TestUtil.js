@@ -14,8 +14,19 @@ function renderComponent(jsx) {
   return ReactDOM.render(jsx, container);
 }
 
+function rerenderComponent(jsx) {
+  const container = document.getElementById('container');
+
+  if (container) {
+    return ReactDOM.render(jsx, container);
+  }
+
+  return renderComponent(jsx);
+}
+
 const TestUtil = {
   renderComponent,
+  rerenderComponent,
 };
 
 export default TestUtil;

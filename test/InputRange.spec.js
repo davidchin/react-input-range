@@ -1,7 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import InputRange from 'InputRange';
 import valueTransformer from '../src/InputRange/valueTransformer';
-import { renderComponent } from './TestUtil';
+import { renderComponent, rerenderComponent } from './TestUtil';
 
 let inputRange;
 let onChange;
@@ -193,7 +194,7 @@ describe('InputRange', () => {
     });
 
     it('should set the position of a slider according to mouse event', () => {
-      inputRange.handleSliderMouseMove(slider, event);
+      inputRange.handleSliderMouseMove(event, slider);
 
       expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
     });
@@ -201,7 +202,7 @@ describe('InputRange', () => {
     it('should not set the position of a slider if disabled', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
       spyOn(inputRange, 'updatePosition');
-      inputRange.handleSliderMouseMove(slider, event);
+      inputRange.handleSliderMouseMove(event, slider);
 
       expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });
@@ -222,7 +223,7 @@ describe('InputRange', () => {
       });
 
       it('should decrement value', () => {
-        inputRange.handleSliderKeyDown('max', event);
+        inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
       });
@@ -230,7 +231,7 @@ describe('InputRange', () => {
       it('should not decrement value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown('max', event);
+        inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.decrementValue).not.toHaveBeenCalled();
       });
@@ -247,7 +248,7 @@ describe('InputRange', () => {
       });
 
       it('should increment value', () => {
-        inputRange.handleSliderKeyDown(slider, event);
+        inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
       });
@@ -255,7 +256,7 @@ describe('InputRange', () => {
       it('should not increment value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'incrementValue');
-        inputRange.handleSliderKeyDown(slider, event);
+        inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.incrementValue).not.toHaveBeenCalled();
       });
@@ -265,6 +266,7 @@ describe('InputRange', () => {
   describe('handleTrackMouseDown', () => {
     let track;
     let position;
+    let event;
 
     beforeEach(() => {
       spyOn(inputRange, 'updatePosition');
@@ -274,12 +276,16 @@ describe('InputRange', () => {
         x: 100,
         y: 0,
       };
+      event = {
+        clientX: 100,
+        clientY: 200,
+      };
     });
 
     it('should not set a new position if disabled', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
       spyOn(inputRange, 'updatePosition');
-      inputRange.handleTrackMouseDown(track, position);
+      inputRange.handleTrackMouseDown(event, track, position);
 
       expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });
@@ -288,7 +294,7 @@ describe('InputRange', () => {
       describe('if the new position is closer to `min` slider', () => {
         it('should set the position of the `min` slider', () => {
           position.x = 100;
-          inputRange.handleTrackMouseDown(track, position);
+          inputRange.handleTrackMouseDown(event, track, position);
 
           expect(inputRange.updatePosition).toHaveBeenCalledWith('min', position);
         });
@@ -297,7 +303,7 @@ describe('InputRange', () => {
       describe('if the new position is closer to `max` slider', () => {
         it('should set the position of the `max` slider', () => {
           position.x = 400;
-          inputRange.handleTrackMouseDown(track, position);
+          inputRange.handleTrackMouseDown(event, track, position);
 
           expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
         });
@@ -314,10 +320,49 @@ describe('InputRange', () => {
 
       it('should set the position of the `max` slider', () => {
         position.x = 100;
-        inputRange.handleTrackMouseDown(track, position);
+        inputRange.handleTrackMouseDown(event, track, position);
 
         expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
       });
+    });
+  });
+
+  describe('handleInteractionEnd', () => {
+    let onChangeComplete;
+    let mouseDownEvent;
+    let mouseUpEvent;
+    let slider;
+
+    beforeEach(() => {
+      onChangeComplete = jasmine.createSpy('onChangeComplete');
+      mouseDownEvent = new MouseEvent('mousedown', { bubbles: true });
+      mouseUpEvent = new MouseEvent('mouseup', { bubbles: true });
+
+      inputRange = renderComponent(
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+      );
+      slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
+    });
+
+    it('should call onChangeComplete if value has changed since the start of interaction', () => {
+      slider.dispatchEvent(mouseDownEvent);
+      value += 2;
+      inputRange = rerenderComponent(
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+      );
+      slider.dispatchEvent(mouseUpEvent);
+
+      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+    });
+
+    it('should not call onChangeComplete if value has not changed since the start of interaction', () => {
+      slider.dispatchEvent(mouseDownEvent);
+      inputRange = rerenderComponent(
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+      );
+      slider.dispatchEvent(mouseUpEvent);
+
+      expect(onChangeComplete).not.toHaveBeenCalled();
     });
   });
 });

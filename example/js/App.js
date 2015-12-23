@@ -50,6 +50,10 @@ class App extends React.Component {
     });
   }
 
+  handleChangeComplete(component, value) {
+    console.log(value);
+  }
+
   render() {
     const defaultValue = 2;
     const defaultValue2 = {
@@ -64,6 +68,7 @@ class App extends React.Component {
           minValue={0}
           value={this.state.value}
           onChange={this.handleValueChange.bind(this)}
+          onChangeComplete={this.handleChangeComplete.bind(this)}
         />
 
         <InputRange
@@ -71,6 +76,7 @@ class App extends React.Component {
           minValue={0}
           value={this.state.value4}
           onChange={this.handleValue4Change.bind(this)}
+          onChangeComplete={this.handleChangeComplete.bind(this)}
         />
 
         <InputRange

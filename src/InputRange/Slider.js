@@ -59,7 +59,7 @@ class Slider extends React.Component {
   }
 
   handleMouseMove(event) {
-    this.props.onSliderMouseMove(this, event);
+    this.props.onSliderMouseMove(event, this);
   }
 
   handleTouchStart(event) {
@@ -72,7 +72,7 @@ class Slider extends React.Component {
   }
 
   handleTouchMove(event) {
-    this.props.onSliderMouseMove(this, event);
+    this.props.onSliderMouseMove(event, this);
   }
 
   handleTouchEnd() {
@@ -85,7 +85,7 @@ class Slider extends React.Component {
   }
 
   handleKeyDown(event) {
-    this.props.onSliderKeyDown(this, event);
+    this.props.onSliderKeyDown(event, this);
   }
 
   // Render

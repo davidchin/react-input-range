@@ -4,10 +4,12 @@ import Track from './Track';
 import Label from './Label';
 import defaultClassNames from './defaultClassNames';
 import valueTransformer from './valueTransformer';
-import { autobind, captialize, distanceTo, isObject, length } from './util';
+import { autobind, captialize, distanceTo, isDefined, isObject, length } from './util';
 import { maxMinValuePropType } from './propTypes';
 
 // Constants
+const internals = new WeakMap();
+
 const KeyCode = {
   LEFT_ARROW: 37,
   RIGHT_ARROW: 39,
@@ -38,6 +40,12 @@ function hasStepDifference(inputRange, values) {
 function shouldUpdate(inputRange, values) {
   return isWithinRange(inputRange, values) &&
          hasStepDifference(inputRange, values);
+}
+
+function getDocument(inputRange) {
+  const { inputRange: { ownerDocument } } = inputRange.refs;
+
+  return ownerDocument;
 }
 
 function getComponentClassName(inputRange) {
@@ -142,10 +150,21 @@ class InputRange extends React.Component {
   constructor(props) {
     super(props);
 
+    // Private
+    internals.set(this, {});
+
     // Auto-bind
     autobind([
-      'handleSliderMouseMove',
+      'handleInteractionEnd',
+      'handleInteractionStart',
+      'handleKeyDown',
+      'handleKeyUp',
+      'handleMouseDown',
+      'handleMouseUp',
       'handleSliderKeyDown',
+      'handleSliderMouseMove',
+      'handleTouchStart',
+      'handleTouchEnd',
       'handleTrackMouseDown',
     ], this);
   }
@@ -230,7 +249,7 @@ class InputRange extends React.Component {
   }
 
   // Handlers
-  handleSliderMouseMove(slider, event) {
+  handleSliderMouseMove(event, slider) {
     if (this.props.disabled) {
       return;
     }
@@ -241,7 +260,7 @@ class InputRange extends React.Component {
     this.updatePosition(key, position);
   }
 
-  handleSliderKeyDown(slider, event) {
+  handleSliderKeyDown(event, slider) {
     if (this.props.disabled) {
       return;
     }
@@ -262,7 +281,7 @@ class InputRange extends React.Component {
     }
   }
 
-  handleTrackMouseDown(track, position) {
+  handleTrackMouseDown(event, track, position) {
     if (this.props.disabled) {
       return;
     }
@@ -270,6 +289,70 @@ class InputRange extends React.Component {
     const key = getKeyByPosition(this, position);
 
     this.updatePosition(key, position);
+  }
+
+  handleInteractionStart() {
+    const _this = internals.get(this);
+
+    if (!this.props.onChangeComplete || isDefined(_this.startValue)) {
+      return;
+    }
+
+    _this.startValue = this.props.value;
+  }
+
+  handleInteractionEnd() {
+    const _this = internals.get(this);
+
+    if (!this.props.onChangeComplete || !isDefined(_this.startValue)) {
+      return;
+    }
+
+    if (_this.startValue !== this.props.value) {
+      this.props.onChangeComplete(this, this.props.value);
+    }
+
+    _this.startValue = null;
+  }
+
+  handleKeyDown(event) {
+    this.handleInteractionStart(event);
+  }
+
+  handleKeyUp(event) {
+    this.handleInteractionEnd(event);
+  }
+
+  handleMouseDown(event) {
+    const document = getDocument(this);
+
+    this.handleInteractionStart(event);
+
+    document.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  handleMouseUp(event) {
+    const document = getDocument(this);
+
+    this.handleInteractionEnd(event);
+
+    document.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  handleTouchStart(event) {
+    const document = getDocument(this);
+
+    this.handleInteractionStart(event);
+
+    document.addEventListener('touchend', this.handleTouchEnd);
+  }
+
+  handleTouchEnd(event) {
+    const document = getDocument(this);
+
+    this.handleInteractionEnd(event);
+
+    document.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   // Render
@@ -283,7 +366,11 @@ class InputRange extends React.Component {
       <div
         aria-disabled={ this.props.disabled }
         ref="inputRange"
-        className={ componentClassName }>
+        className={ componentClassName }
+        onKeyDown={ this.handleKeyDown }
+        onKeyUp={ this.handleKeyUp }
+        onMouseDown={ this.handleMouseDown }
+        onTouchStart={ this.handleTouchStart }>
         <Label
           className={ classNames.labelMin }
           containerClassName={ classNames.labelContainer }>
@@ -320,6 +407,7 @@ InputRange.propTypes = {
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
   onChange: React.PropTypes.func.isRequired,
+  onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
 };
