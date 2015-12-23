@@ -44,6 +44,8 @@ var _util = require('./util');
 
 var _propTypes = require('./propTypes');
 
+var internals = new WeakMap();
+
 var KeyCode = {
   LEFT_ARROW: 37,
   RIGHT_ARROW: 39
@@ -69,6 +71,12 @@ function hasStepDifference(inputRange, values) {
 
 function shouldUpdate(inputRange, values) {
   return isWithinRange(inputRange, values) && hasStepDifference(inputRange, values);
+}
+
+function getDocument(inputRange) {
+  var ownerDocument = inputRange.refs.inputRange.ownerDocument;
+
+  return ownerDocument;
 }
 
 function getComponentClassName(inputRange) {
@@ -217,7 +225,9 @@ var InputRange = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(InputRange.prototype), 'constructor', this).call(this, props);
 
-    (0, _util.autobind)(['handleSliderMouseMove', 'handleSliderKeyDown', 'handleTrackMouseDown'], this);
+    internals.set(this, {});
+
+    (0, _util.autobind)(['handleInteractionEnd', 'handleInteractionStart', 'handleKeyDown', 'handleKeyUp', 'handleMouseDown', 'handleMouseUp', 'handleSliderKeyDown', 'handleSliderMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTrackMouseDown'], this);
   }
 
   _createClass(InputRange, [{
@@ -285,7 +295,7 @@ var InputRange = (function (_React$Component) {
     }
   }, {
     key: 'handleSliderMouseMove',
-    value: function handleSliderMouseMove(slider, event) {
+    value: function handleSliderMouseMove(event, slider) {
       if (this.props.disabled) {
         return;
       }
@@ -297,7 +307,7 @@ var InputRange = (function (_React$Component) {
     }
   }, {
     key: 'handleSliderKeyDown',
-    value: function handleSliderKeyDown(slider, event) {
+    value: function handleSliderKeyDown(event, slider) {
       if (this.props.disabled) {
         return;
       }
@@ -319,7 +329,7 @@ var InputRange = (function (_React$Component) {
     }
   }, {
     key: 'handleTrackMouseDown',
-    value: function handleTrackMouseDown(track, position) {
+    value: function handleTrackMouseDown(event, track, position) {
       if (this.props.disabled) {
         return;
       }
@@ -327,6 +337,78 @@ var InputRange = (function (_React$Component) {
       var key = getKeyByPosition(this, position);
 
       this.updatePosition(key, position);
+    }
+  }, {
+    key: 'handleInteractionStart',
+    value: function handleInteractionStart() {
+      var _this = internals.get(this);
+
+      if (!this.props.onChangeComplete || (0, _util.isDefined)(_this.startValue)) {
+        return;
+      }
+
+      _this.startValue = this.props.value;
+    }
+  }, {
+    key: 'handleInteractionEnd',
+    value: function handleInteractionEnd() {
+      var _this = internals.get(this);
+
+      if (!this.props.onChangeComplete || !(0, _util.isDefined)(_this.startValue)) {
+        return;
+      }
+
+      if (_this.startValue !== this.props.value) {
+        this.props.onChangeComplete(this, this.props.value);
+      }
+
+      _this.startValue = null;
+    }
+  }, {
+    key: 'handleKeyDown',
+    value: function handleKeyDown(event) {
+      this.handleInteractionStart(event);
+    }
+  }, {
+    key: 'handleKeyUp',
+    value: function handleKeyUp(event) {
+      this.handleInteractionEnd(event);
+    }
+  }, {
+    key: 'handleMouseDown',
+    value: function handleMouseDown(event) {
+      var document = getDocument(this);
+
+      this.handleInteractionStart(event);
+
+      document.addEventListener('mouseup', this.handleMouseUp);
+    }
+  }, {
+    key: 'handleMouseUp',
+    value: function handleMouseUp(event) {
+      var document = getDocument(this);
+
+      this.handleInteractionEnd(event);
+
+      document.removeEventListener('mouseup', this.handleMouseUp);
+    }
+  }, {
+    key: 'handleTouchStart',
+    value: function handleTouchStart(event) {
+      var document = getDocument(this);
+
+      this.handleInteractionStart(event);
+
+      document.addEventListener('touchend', this.handleTouchEnd);
+    }
+  }, {
+    key: 'handleTouchEnd',
+    value: function handleTouchEnd(event) {
+      var document = getDocument(this);
+
+      this.handleInteractionEnd(event);
+
+      document.removeEventListener('touchend', this.handleTouchEnd);
     }
   }, {
     key: 'render',
@@ -342,7 +424,11 @@ var InputRange = (function (_React$Component) {
         {
           'aria-disabled': this.props.disabled,
           ref: 'inputRange',
-          className: componentClassName },
+          className: componentClassName,
+          onKeyDown: this.handleKeyDown,
+          onKeyUp: this.handleKeyUp,
+          onMouseDown: this.handleMouseDown,
+          onTouchStart: this.handleTouchStart },
         _react2['default'].createElement(
           _Label2['default'],
           {
@@ -404,6 +490,7 @@ InputRange.propTypes = {
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
   onChange: _react2['default'].PropTypes.func.isRequired,
+  onChangeComplete: _react2['default'].PropTypes.func,
   step: _react2['default'].PropTypes.number,
   value: _propTypes.maxMinValuePropType
 };
@@ -564,7 +651,7 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event) {
-      this.props.onSliderMouseMove(this, event);
+      this.props.onSliderMouseMove(event, this);
     }
   }, {
     key: 'handleTouchStart',
@@ -579,7 +666,7 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleTouchMove',
     value: function handleTouchMove(event) {
-      this.props.onSliderMouseMove(this, event);
+      this.props.onSliderMouseMove(event, this);
     }
   }, {
     key: 'handleTouchEnd',
@@ -594,7 +681,7 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleKeyDown',
     value: function handleKeyDown(event) {
-      this.props.onSliderKeyDown(this, event);
+      this.props.onSliderKeyDown(event, this);
     }
   }, {
     key: 'render',
@@ -714,7 +801,7 @@ var Track = (function (_React$Component) {
         y: 0
       };
 
-      this.props.onTrackMouseDown(this, position);
+      this.props.onTrackMouseDown(event, this, position);
     }
   }, {
     key: 'handleTouchStart',
@@ -883,6 +970,10 @@ function isObject(object) {
   return object !== null && typeof object === 'object';
 }
 
+function isDefined(value) {
+  return value !== undefined && value !== null;
+}
+
 function isEmpty(obj) {
   if (!obj) {
     return true;
@@ -940,6 +1031,7 @@ var util = {
   clamp: clamp,
   distanceTo: distanceTo,
   extend: extend,
+  isDefined: isDefined,
   isEmpty: isEmpty,
   isNumber: isNumber,
   isObject: isObject,

@@ -4,7 +4,7 @@
     "dist/react-input-range.js",
     "dist/react-input-range.css"
   ],
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "React component for inputting numeric values within a range",
   "homepage": "https://github.com/davidchin/react-input-range",
   "authors": [
