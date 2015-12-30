@@ -30,7 +30,7 @@ class Track extends React.Component {
   // Getters / Setters
   get clientRect() {
     const { track } = this.refs;
-    const clientRect = track.getClientRects()[0];
+    const clientRect = track.getBoundingClientRect();
 
     return clientRect;
   }
