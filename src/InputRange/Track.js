@@ -1,9 +1,9 @@
-import React from 'react';
-import { autobind } from './util';
-
 /**
  * @module InputRange/Track
  */
+
+import React from 'react';
+import { autobind } from './util';
 
 /**
  * Get the CSS styles for an active track

@@ -1,3 +1,7 @@
+/**
+ * @module InputRange
+ */
+
 import React from 'react';
 import Slider from './Slider';
 import Track from './Track';
@@ -6,10 +10,6 @@ import defaultClassNames from './defaultClassNames';
 import valueTransformer from './valueTransformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from './util';
 import { maxMinValuePropType } from './propTypes';
-
-/**
- * @module InputRange
- */
 
 /**
  * A map for storing internal members

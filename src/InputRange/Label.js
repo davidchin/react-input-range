@@ -1,8 +1,8 @@
-import React from 'react';
-
 /**
  * @module InputRange/Label
  */
+
+import React from 'react';
 
 /**
  * Label React component

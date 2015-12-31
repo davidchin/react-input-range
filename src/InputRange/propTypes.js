@@ -1,8 +1,8 @@
-import { isNumber, objectOf } from './util';
-
 /**
  * @module InputRange/maxMinValuePropType
  */
+
+import { isNumber, objectOf } from './util';
 
 /**
  * A prop type accepting a range of numeric values or a single numeric value

@@ -1,8 +1,8 @@
-import InputRange from './InputRange';
-
 /**
  * @module InputRange
  */
+
+import InputRange from './InputRange';
 
 /**
  * An object describing the position of a point

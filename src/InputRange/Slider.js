@@ -1,10 +1,10 @@
-import React from 'react';
-import Label from './Label';
-import { autobind } from './util';
-
 /**
  * @module InputRange/Slider
  */
+
+import React from 'react';
+import Label from './Label';
+import { autobind } from './util';
 
 /**
  * Get the owner document of slider

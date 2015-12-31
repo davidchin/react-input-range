@@ -1,8 +1,8 @@
-import { clamp, isEmpty, isNumber, objectOf } from './util';
-
 /**
  * @module InputRange/valueTransformer
  */
+
+import { clamp, isEmpty, isNumber, objectOf } from './util';
 
 /**
  * Convert position into percentage value
