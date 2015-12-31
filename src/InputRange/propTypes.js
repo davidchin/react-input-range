@@ -1,6 +1,14 @@
 import { isNumber, objectOf } from './util';
 
-// Functions
+/**
+ * @module InputRange/maxMinValuePropType
+ */
+
+/**
+ * A prop type accepting a range of numeric values or a single numeric value
+ * @param {Object} props - React component props
+ * @return {void|Error} Return Error if validation fails
+ */
 function maxMinValuePropType(props) {
   const maxValue = props.maxValue;
   const minValue = props.minValue;

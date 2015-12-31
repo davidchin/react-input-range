@@ -2,13 +2,27 @@ import React from 'react';
 import Label from './Label';
 import { autobind } from './util';
 
-// Functions
+/**
+ * @module InputRange/Slider
+ */
+
+/**
+ * Get the owner document of slider
+ * @private
+ * @param {Slider} slider - React component
+ * @return {Document} Document
+ */
 function getDocument(slider) {
   const { slider: { ownerDocument } } = slider.refs;
 
   return ownerDocument;
 }
 
+/**
+ * Get the style of slider based on its props
+ * @param {Slider} slider - React component
+ * @return {Object} CSS styles
+ */
 function getStyle(slider) {
   const perc = (slider.props.percentage || 0) * 100;
   const style = {
@@ -19,7 +33,12 @@ function getStyle(slider) {
   return style;
 }
 
-// Class
+/**
+ * Slider React component
+ * @class
+ * @extends React.Component
+ * @param {Object} props - React component props
+ */
 class Slider extends React.Component {
   constructor(props) {
     super(props);
@@ -37,11 +56,18 @@ class Slider extends React.Component {
     ], this);
   }
 
-  // Handlers
+  /**
+   * Handle any click event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleClick(event) {
     event.preventDefault();
   }
 
+  /**
+   * Handle any mousedown event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleMouseDown() {
     const document = getDocument(this);
 
@@ -50,6 +76,10 @@ class Slider extends React.Component {
     document.addEventListener('mouseup', this.handleMouseUp);
   }
 
+  /**
+   * Handle any mouseup event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleMouseUp() {
     const document = getDocument(this);
 
@@ -58,10 +88,18 @@ class Slider extends React.Component {
     document.removeEventListener('mouseup', this.handleMouseUp);
   }
 
+  /**
+   * Handle any mousemove event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleMouseMove(event) {
     this.props.onSliderMouseMove(event, this);
   }
 
+  /**
+   * Handle any touchstart event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleTouchStart(event) {
     const document = getDocument(this);
 
@@ -71,10 +109,18 @@ class Slider extends React.Component {
     document.addEventListener('touchend', this.handleTouchEnd);
   }
 
+  /**
+   * Handle any touchmove event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleTouchMove(event) {
     this.props.onSliderMouseMove(event, this);
   }
 
+  /**
+   * Handle any touchend event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleTouchEnd() {
     const document = getDocument(this);
 
@@ -84,11 +130,18 @@ class Slider extends React.Component {
     document.removeEventListener('touchend', this.handleTouchEnd);
   }
 
+  /**
+   * Handle any keydown event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleKeyDown(event) {
     this.props.onSliderKeyDown(event, this);
   }
 
-  // Render
+  /**
+   * Render method of the component
+   * @return {string} Component JSX
+   */
   render() {
     const classNames = this.props.classNames;
     const style = getStyle(this);
@@ -123,6 +176,19 @@ class Slider extends React.Component {
   }
 }
 
+/**
+ * Accepted propTypes of Slider
+ * @static {Object}
+ * @property {Function} ariaLabelledby
+ * @property {Function} className
+ * @property {Function} maxValue
+ * @property {Function} minValue
+ * @property {Function} onSliderKeyDown
+ * @property {Function} onSliderMouseMove
+ * @property {Function} percentage
+ * @property {Function} type
+ * @property {Function} value
+ */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),

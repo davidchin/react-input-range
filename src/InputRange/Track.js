@@ -1,7 +1,15 @@
 import React from 'react';
 import { autobind } from './util';
 
-// Functions
+/**
+ * @module InputRange/Track
+ */
+
+/**
+ * Get the CSS styles for an active track
+ * @param {Track} track React component
+ * @return {Object} CSS styles
+ */
 function getActiveTrackStyle(track) {
   const { props } = track;
   const width = `${(props.percentages.max - props.percentages.min) * 100}%`;
@@ -15,7 +23,12 @@ function getActiveTrackStyle(track) {
   return activeTrackStyle;
 }
 
-// Class
+/**
+ * Track React component
+ * @class
+ * @extends React.Component
+ * @param {Object} props - React component props
+ */
 class Track extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +40,10 @@ class Track extends React.Component {
     ], this);
   }
 
-  // Getters / Setters
+  /**
+   * Return the clientRect of the component
+   * @member {ClientRect}
+   */
   get clientRect() {
     const { track } = this.refs;
     const clientRect = track.getBoundingClientRect();
@@ -35,7 +51,10 @@ class Track extends React.Component {
     return clientRect;
   }
 
-  // Handlers
+  /**
+   * Handle any mousedown event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleMouseDown(event) {
     const trackClientRect = this.clientRect;
     const { clientX } = event.touches ? event.touches[0] : event;
@@ -47,13 +66,20 @@ class Track extends React.Component {
     this.props.onTrackMouseDown(event, this, position);
   }
 
+  /**
+   * Handle any touchstart event received by the component
+   * @param {SyntheticEvent} event - User event
+   */
   handleTouchStart(event) {
     event.preventDefault();
 
     this.handleMouseDown(event);
   }
 
-  // Render
+  /**
+   * Render method of the component
+   * @return {string} Component JSX
+   */
   render() {
     const activeTrackStyle = getActiveTrackStyle(this);
     const classNames = this.props.classNames;
@@ -74,6 +100,14 @@ class Track extends React.Component {
   }
 }
 
+/**
+ * Accepted propTypes of Track
+ * @static {Object}
+ * @property {Function} children
+ * @property {Function} classNames
+ * @property {Function} onTrackMouseDown
+ * @property {Function} percentages
+ */
 Track.propTypes = {
   children: React.PropTypes.node,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),

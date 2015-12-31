@@ -1,4 +1,20 @@
-// Module
+/**
+ * @module InputRange/defaultClassNames
+ */
+
+/**
+* An object containing class names
+* @const {Object}
+* @property {string} component
+* @property {string} labelContainer
+* @property {string} labelMax
+* @property {string} labelMin
+* @property {string} labelValue
+* @property {string} slider
+* @property {string} sliderContainer
+* @property {string} trackActive
+* @property {string} trackContainer
+*/
 const defaultClassNames = {
   component: 'InputRange',
   labelContainer: 'InputRange-labelContainer',
