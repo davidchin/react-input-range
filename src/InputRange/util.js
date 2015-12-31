@@ -201,7 +201,7 @@ function autobind(methodNames, instance) {
   });
 }
 
-const util = {
+export default {
   arrayOf,
   autobind,
   captialize,
@@ -216,5 +216,3 @@ const util = {
   objectOf,
   omit,
 };
-
-export default util;

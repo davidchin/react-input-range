@@ -20,6 +20,7 @@ function getDocument(slider) {
 
 /**
  * Get the style of slider based on its props
+ * @private
  * @param {Slider} slider - React component
  * @return {Object} CSS styles
  */
@@ -39,7 +40,7 @@ function getStyle(slider) {
  * @extends React.Component
  * @param {Object} props - React component props
  */
-class Slider extends React.Component {
+export default class Slider extends React.Component {
   constructor(props) {
     super(props);
 
@@ -200,5 +201,3 @@ Slider.propTypes = {
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
 };
-
-export default Slider;

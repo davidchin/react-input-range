@@ -15,7 +15,7 @@
 * @property {string} trackActive
 * @property {string} trackContainer
 */
-const defaultClassNames = {
+export default {
   component: 'InputRange',
   labelContainer: 'InputRange-labelContainer',
   labelMax: 'InputRange-label InputRange-label--max',
@@ -26,5 +26,3 @@ const defaultClassNames = {
   trackActive: 'InputRange-track InputRange-track--active',
   trackContainer: 'InputRange-track InputRange-track--container',
 };
-
-export default defaultClassNames;

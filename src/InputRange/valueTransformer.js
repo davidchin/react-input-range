@@ -154,7 +154,7 @@ function stepValueFromValue(inputRange, value) {
   return Math.round(value / inputRange.props.step) * inputRange.props.step;
 }
 
-const valueTransformer = {
+export default {
   percentageFromPosition,
   percentageFromValue,
   percentagesFromValues,
@@ -165,5 +165,3 @@ const valueTransformer = {
   valueFromPosition,
   valuesFromProps,
 };
-
-export default valueTransformer;

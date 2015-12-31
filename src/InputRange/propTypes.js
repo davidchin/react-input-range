@@ -7,9 +7,9 @@ import { isNumber, objectOf } from './util';
 /**
  * A prop type accepting a range of numeric values or a single numeric value
  * @param {Object} props - React component props
- * @return {void|Error} Return Error if validation fails
+ * @return {?Error} Return Error if validation fails
  */
-function maxMinValuePropType(props) {
+export function maxMinValuePropType(props) {
   const maxValue = props.maxValue;
   const minValue = props.minValue;
   const value = props.value;
@@ -40,5 +40,3 @@ function maxMinValuePropType(props) {
     return new Error('`value` must be within `minValue` and `maxValue`');
   }
 }
-
-export { maxMinValuePropType as maxMinValuePropType };

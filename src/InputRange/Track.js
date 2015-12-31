@@ -7,6 +7,7 @@ import { autobind } from './util';
 
 /**
  * Get the CSS styles for an active track
+ * @private
  * @param {Track} track React component
  * @return {Object} CSS styles
  */
@@ -29,7 +30,7 @@ function getActiveTrackStyle(track) {
  * @extends React.Component
  * @param {Object} props - React component props
  */
-class Track extends React.Component {
+export default class Track extends React.Component {
   constructor(props) {
     super(props);
 
@@ -114,5 +115,3 @@ Track.propTypes = {
   onTrackMouseDown: React.PropTypes.func.isRequired,
   percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
 };
-
-export default Track;

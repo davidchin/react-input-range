@@ -10,7 +10,7 @@ import React from 'react';
  * @extends React.Component
  * @param {Object} props - React component props
  */
-class Label extends React.Component {
+export default class Label extends React.Component {
   /**
    * Render method of the component
    * @return {string} Component JSX
@@ -40,5 +40,3 @@ Label.propTypes = {
   className: React.PropTypes.string,
   containerClassName: React.PropTypes.string,
 };
-
-export default Label;

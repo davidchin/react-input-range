@@ -8,7 +8,7 @@ import { autobind, captialize, distanceTo, isDefined, isObject, length } from '.
 import { maxMinValuePropType } from './propTypes';
 
 /**
- * @module InputRange/InputRange
+ * @module InputRange
  */
 
 /**
@@ -227,7 +227,7 @@ function renderHiddenInputs(inputRange) {
  * @extends React.Component
  * @param {Object} props - React component props
  */
-class InputRange extends React.Component {
+export default class InputRange extends React.Component {
   constructor(props) {
     super(props);
 
@@ -612,5 +612,3 @@ InputRange.defaultProps = {
   step: 1,
   value: null,
 };
-
-export default InputRange;
