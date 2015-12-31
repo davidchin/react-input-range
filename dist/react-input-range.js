@@ -481,6 +481,8 @@ var InputRange = (function (_React$Component) {
   return InputRange;
 })(_react2['default'].Component);
 
+exports['default'] = InputRange;
+
 InputRange.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
@@ -504,8 +506,6 @@ InputRange.defaultProps = {
   step: 1,
   value: null
 };
-
-exports['default'] = InputRange;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -562,13 +562,13 @@ var Label = (function (_React$Component) {
   return Label;
 })(_react2['default'].Component);
 
+exports['default'] = Label;
+
 Label.propTypes = {
   children: _react2['default'].PropTypes.node,
   className: _react2['default'].PropTypes.string,
   containerClassName: _react2['default'].PropTypes.string
 };
-
-exports['default'] = Label;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -722,6 +722,8 @@ var Slider = (function (_React$Component) {
   return Slider;
 })(_react2['default'].Component);
 
+exports['default'] = Slider;
+
 Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
@@ -733,8 +735,6 @@ Slider.propTypes = {
   type: _react2['default'].PropTypes.string.isRequired,
   value: _react2['default'].PropTypes.number.isRequired
 };
-
-exports['default'] = Slider;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -834,7 +834,7 @@ var Track = (function (_React$Component) {
     get: function get() {
       var track = this.refs.track;
 
-      var clientRect = track.getClientRects()[0];
+      var clientRect = track.getBoundingClientRect();
 
       return clientRect;
     }
@@ -843,14 +843,14 @@ var Track = (function (_React$Component) {
   return Track;
 })(_react2['default'].Component);
 
+exports['default'] = Track;
+
 Track.propTypes = {
   children: _react2['default'].PropTypes.node,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   onTrackMouseDown: _react2['default'].PropTypes.func.isRequired,
   percentages: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.number).isRequired
 };
-
-exports['default'] = Track;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -860,8 +860,7 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-
-var defaultClassNames = {
+exports['default'] = {
   component: 'InputRange',
   labelContainer: 'InputRange-labelContainer',
   labelMax: 'InputRange-label InputRange-label--max',
@@ -872,8 +871,6 @@ var defaultClassNames = {
   trackActive: 'InputRange-track InputRange-track--active',
   trackContainer: 'InputRange-track InputRange-track--container'
 };
-
-exports['default'] = defaultClassNames;
 module.exports = exports['default'];
 
 },{}],6:[function(require,module,exports){
@@ -882,6 +879,7 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.maxMinValuePropType = maxMinValuePropType;
 
 var _util = require('./util');
 
@@ -915,8 +913,6 @@ function maxMinValuePropType(props) {
     return new Error('`value` must be within `minValue` and `maxValue`');
   }
 }
-
-exports.maxMinValuePropType = maxMinValuePropType;
 
 },{"./util":7}],7:[function(require,module,exports){
 'use strict';
@@ -962,12 +958,12 @@ function length(numA, numB) {
   return Math.abs(numA - numB);
 }
 
-function isNumber(number) {
-  return typeof number === 'number';
+function isNumber(value) {
+  return typeof value === 'number';
 }
 
-function isObject(object) {
-  return object !== null && typeof object === 'object';
+function isObject(value) {
+  return value !== null && typeof value === 'object';
 }
 
 function isDefined(value) {
@@ -1024,7 +1020,7 @@ function autobind(methodNames, instance) {
   });
 }
 
-var util = {
+exports['default'] = {
   arrayOf: arrayOf,
   autobind: autobind,
   captialize: captialize,
@@ -1039,8 +1035,6 @@ var util = {
   objectOf: objectOf,
   omit: omit
 };
-
-exports['default'] = util;
 module.exports = exports['default'];
 
 },{}],8:[function(require,module,exports){
@@ -1148,7 +1142,7 @@ function stepValueFromValue(inputRange, value) {
   return Math.round(value / inputRange.props.step) * inputRange.props.step;
 }
 
-var valueTransformer = {
+exports['default'] = {
   percentageFromPosition: percentageFromPosition,
   percentageFromValue: percentageFromValue,
   percentagesFromValues: percentagesFromValues,
@@ -1159,8 +1153,6 @@ var valueTransformer = {
   valueFromPosition: valueFromPosition,
   valuesFromProps: valuesFromProps
 };
-
-exports['default'] = valueTransformer;
 module.exports = exports['default'];
 
 },{"./util":7}],9:[function(require,module,exports){
