@@ -416,6 +416,8 @@ export default class InputRange extends React.Component {
       return;
     }
 
+    event.preventDefault();
+
     const key = getKeyByPosition(this, position);
 
     this.updatePosition(key, position);
