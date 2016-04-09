@@ -536,11 +536,13 @@ export default class InputRange extends React.Component {
         onKeyUp={ this.handleKeyUp }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }>
-        <Label
-          className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }>
-          { this.props.minValue }
-        </Label>
+        {this.props.showLabel &&
+          <Label
+            className={ classNames.labelMin }
+            containerClassName={ classNames.labelContainer }>
+            { this.props.minValue }
+          </Label>
+        }
 
         <Track
           classNames={ classNames }
@@ -611,4 +613,5 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  showLabel: true
 };
