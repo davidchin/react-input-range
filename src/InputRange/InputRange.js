@@ -593,7 +593,7 @@ InputRange.propTypes = {
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
-  showLabel: React.PropTypes.bool
+  showLabel: React.PropTypes.bool,
 };
 
 /**
@@ -615,5 +615,5 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
-  showLabel: true
+  showLabel: true,
 };
