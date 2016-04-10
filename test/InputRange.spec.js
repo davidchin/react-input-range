@@ -357,7 +357,21 @@ describe('InputRange', () => {
       event = {
         clientX: 100,
         clientY: 200,
+        preventDefault: jasmine.createSpy('preventDefault'),
       };
+    });
+
+    it('should call event.preventDefault if not disabled', () => {
+      inputRange.handleTrackMouseDown(event, track, position);
+
+      expect(event.preventDefault).toHaveBeenCalledWith();
+    });
+
+    it('should not call event.preventDefault if disabled', () => {
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+      inputRange.handleTrackMouseDown(event, track, position);
+
+      expect(event.preventDefault).not.toHaveBeenCalledWith();
     });
 
     it('should not set a new position if disabled', () => {
