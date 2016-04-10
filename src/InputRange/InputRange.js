@@ -22,8 +22,10 @@ const internals = new WeakMap();
  * @const {Object.<string, number>}
  */
 const KeyCode = {
+  DOWN_ARROW: 40,
   LEFT_ARROW: 37,
   RIGHT_ARROW: 39,
+  UP_ARROW: 38,
 };
 
 /**
@@ -393,10 +395,14 @@ export default class InputRange extends React.Component {
 
     switch (event.keyCode) {
     case KeyCode.LEFT_ARROW:
+    case KeyCode.DOWN_ARROW:
+      event.preventDefault();
       this.decrementValue(key);
       break;
 
     case KeyCode.RIGHT_ARROW:
+    case KeyCode.UP_ARROW:
+      event.preventDefault();
       this.incrementValue(key);
       break;
 

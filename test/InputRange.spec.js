@@ -219,6 +219,7 @@ describe('InputRange', () => {
         slider = inputRange.refs.sliderMax;
         event = {
           keyCode: 37,
+          preventDefault: jasmine.createSpy('preventDefault'),
         };
       });
 
@@ -226,6 +227,44 @@ describe('InputRange', () => {
         inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
+      });
+
+      it('should call event.preventDefault()', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(event.preventDefault).toHaveBeenCalledWith();
+      });
+
+      it('should not decrement value if disabled', () => {
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        spyOn(inputRange, 'decrementValue');
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(inputRange.decrementValue).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when pressing down arrow key', () => {
+      beforeEach(() => {
+        spyOn(inputRange, 'decrementValue');
+
+        slider = inputRange.refs.sliderMax;
+        event = {
+          keyCode: 40,
+          preventDefault: jasmine.createSpy('preventDefault'),
+        };
+      });
+
+      it('should decrement value', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
+      });
+
+      it('should call event.preventDefault()', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(event.preventDefault).toHaveBeenCalledWith();
       });
 
       it('should not decrement value if disabled', () => {
@@ -244,6 +283,7 @@ describe('InputRange', () => {
         slider = inputRange.refs.sliderMax;
         event = {
           keyCode: 39,
+          preventDefault: jasmine.createSpy('preventDefault'),
         };
       });
 
@@ -251,6 +291,44 @@ describe('InputRange', () => {
         inputRange.handleSliderKeyDown(event, slider);
 
         expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
+      });
+
+      it('should call event.preventDefault()', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(event.preventDefault).toHaveBeenCalledWith();
+      });
+
+      it('should not increment value if disabled', () => {
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        spyOn(inputRange, 'incrementValue');
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(inputRange.incrementValue).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when pressing up arrow key', () => {
+      beforeEach(() => {
+        spyOn(inputRange, 'incrementValue');
+
+        slider = inputRange.refs.sliderMax;
+        event = {
+          keyCode: 38,
+          preventDefault: jasmine.createSpy('preventDefault'),
+        };
+      });
+
+      it('should increment value', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
+      });
+
+      it('should call event.preventDefault()', () => {
+        inputRange.handleSliderKeyDown(event, slider);
+
+        expect(event.preventDefault).toHaveBeenCalledWith();
       });
 
       it('should not increment value if disabled', () => {
