@@ -544,11 +544,13 @@ export default class InputRange extends React.Component {
         onKeyUp={ this.handleKeyUp }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }>
-        <Label
-          className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }>
-          { this.props.minValue }
-        </Label>
+        {this.props.showLabel &&
+          <Label
+            className={ classNames.labelMin }
+            containerClassName={ classNames.labelContainer }>
+            { this.props.minValue }
+          </Label>
+        }
 
         <Track
           classNames={ classNames }
@@ -574,17 +576,18 @@ export default class InputRange extends React.Component {
 /**
  * Accepted propTypes of InputRange
  * @static {Object}
- * @property {Function} ariaLabelledby
- * @property {Function} classNames
- * @property {Function} defaultValue
- * @property {Function} disabled
- * @property {Function} maxValue
- * @property {Function} minValue
- * @property {Function} name
+ * @property {String} ariaLabelledby
+ * @property {Object} classNames
+ * @property {String|Number} defaultValue
+ * @property {Boolean} disabled
+ * @property {Number} maxValue
+ * @property {Number} minValue
+ * @property {String} name
  * @property {Function} onChange
  * @property {Function} onChangeComplete
- * @property {Function} step
- * @property {Function} value
+ * @property {Number} step
+ * @property {String|Number} value
+ * @property {Boolean} showLabel
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -598,6 +601,7 @@ InputRange.propTypes = {
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
+  showLabel: React.PropTypes.bool,
 };
 
 /**
@@ -619,4 +623,5 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  showLabel: true,
 };
