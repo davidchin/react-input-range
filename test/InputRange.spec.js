@@ -460,4 +460,32 @@ describe('InputRange', () => {
       expect(onChangeComplete).not.toHaveBeenCalled();
     });
   });
+
+  describe('ariaLabelledby', () => {
+    it('should call onChangeComplete if value has changed since the start of interaction', () => {
+      inputRange = renderComponent(
+        <InputRange ariaLabelledby="foobar" maxValue={20} minValue={0} value={values} onChange={onChange} />
+      );
+
+      const slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
+      const handle = slider.querySelector('a');
+      const ariaLabelledby = handle.getAttribute('aria-labelledby');
+
+      expect(ariaLabelledby).toEqual('foobar');
+    });
+  });
+
+  describe('ariaControls', () => {
+    it('should call onChangeComplete if value has changed since the start of interaction', () => {
+      inputRange = renderComponent(
+        <InputRange ariaControls="foobar" maxValue={20} minValue={0} value={values} onChange={onChange} />
+      );
+
+      const slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
+      const handle = slider.querySelector('a');
+      const ariaControls = handle.getAttribute('aria-controls');
+
+      expect(ariaControls).toEqual('foobar');
+    });
+  });
 });

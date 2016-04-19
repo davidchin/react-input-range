@@ -184,6 +184,8 @@ function renderSliders(inputRange) {
 
     const slider = (
       <Slider
+        ariaLabelledby={ inputRange.props.ariaLabelledby }
+        ariaControls={ inputRange.props.ariaControls }
         classNames={ classNames }
         key={ key }
         maxValue={ maxValue }
@@ -575,6 +577,7 @@ export default class InputRange extends React.Component {
  * Accepted propTypes of InputRange
  * @static {Object}
  * @property {Function} ariaLabelledby
+ * @property {Function} ariaControls
  * @property {Function} classNames
  * @property {Function} defaultValue
  * @property {Function} disabled
@@ -588,6 +591,7 @@ export default class InputRange extends React.Component {
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
+  ariaControls: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
   disabled: React.PropTypes.bool,

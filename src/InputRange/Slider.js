@@ -160,6 +160,7 @@ export default class Slider extends React.Component {
 
         <a
           aria-labelledby={ this.props.ariaLabelledby }
+          aria-controls={ this.props.ariaControls }
           aria-valuemax={ this.props.maxValue }
           aria-valuemin={ this.props.minValue }
           aria-valuenow={ this.props.value }
@@ -181,6 +182,7 @@ export default class Slider extends React.Component {
  * Accepted propTypes of Slider
  * @static {Object}
  * @property {Function} ariaLabelledby
+ * @property {Function} ariaControls
  * @property {Function} className
  * @property {Function} maxValue
  * @property {Function} minValue
@@ -192,6 +194,7 @@ export default class Slider extends React.Component {
  */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
+  ariaControls: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   maxValue: React.PropTypes.number,
   minValue: React.PropTypes.number,

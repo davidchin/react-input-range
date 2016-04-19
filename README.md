@@ -71,6 +71,7 @@ If accepting a single value, pass a number to `value` prop, i.e.:
 Property                | Type                               | Description
 :-----------------------|:-----------------------------------|:----------------------------------
 ariaLabelledby          |string                              |`aria-labelledby` attribute
+ariaControls            |string                              |`aria-controls` attribute
 classNames              |Object.&lt;string&gt;               |CSS class names
 defaultValue            |number &vert; Object.&lt;number&gt; |Default value(s)
 disabled                |boolean                             |Disabled or not
