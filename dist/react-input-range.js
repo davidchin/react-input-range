@@ -47,8 +47,10 @@ var _propTypes = require('./propTypes');
 var internals = new WeakMap();
 
 var KeyCode = {
+  DOWN_ARROW: 40,
   LEFT_ARROW: 37,
-  RIGHT_ARROW: 39
+  RIGHT_ARROW: 39,
+  UP_ARROW: 38
 };
 
 function isWithinRange(inputRange, values) {
@@ -152,6 +154,8 @@ function renderSliders(inputRange) {
       }
 
       var slider = _react2['default'].createElement(_Slider2['default'], {
+        ariaLabelledby: inputRange.props.ariaLabelledby,
+        ariaControls: inputRange.props.ariaControls,
         classNames: classNames,
         key: key,
         maxValue: maxValue,
@@ -316,10 +320,14 @@ var InputRange = (function (_React$Component) {
 
       switch (event.keyCode) {
         case KeyCode.LEFT_ARROW:
+        case KeyCode.DOWN_ARROW:
+          event.preventDefault();
           this.decrementValue(key);
           break;
 
         case KeyCode.RIGHT_ARROW:
+        case KeyCode.UP_ARROW:
+          event.preventDefault();
           this.incrementValue(key);
           break;
 
@@ -333,6 +341,8 @@ var InputRange = (function (_React$Component) {
       if (this.props.disabled) {
         return;
       }
+
+      event.preventDefault();
 
       var key = getKeyByPosition(this, position);
 
@@ -485,6 +495,7 @@ exports['default'] = InputRange;
 
 InputRange.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
+  ariaControls: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   defaultValue: _propTypes.maxMinValuePropType,
   disabled: _react2['default'].PropTypes.bool,
@@ -704,6 +715,7 @@ var Slider = (function (_React$Component) {
         ),
         _react2['default'].createElement('a', {
           'aria-labelledby': this.props.ariaLabelledby,
+          'aria-controls': this.props.ariaControls,
           'aria-valuemax': this.props.maxValue,
           'aria-valuemin': this.props.minValue,
           'aria-valuenow': this.props.value,
@@ -726,6 +738,7 @@ exports['default'] = Slider;
 
 Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
+  ariaControls: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   maxValue: _react2['default'].PropTypes.number,
   minValue: _react2['default'].PropTypes.number,
