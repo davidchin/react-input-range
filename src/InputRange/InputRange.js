@@ -187,6 +187,7 @@ function renderSliders(inputRange) {
         ariaLabelledby={ inputRange.props.ariaLabelledby }
         ariaControls={ inputRange.props.ariaControls }
         classNames={ classNames }
+        formatLabel={ inputRange.props.formatLabel }
         key={ key }
         maxValue={ maxValue }
         minValue={ minValue }
@@ -548,7 +549,8 @@ export default class InputRange extends React.Component {
         onTouchStart={ this.handleTouchStart }>
         <Label
           className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }>
+          containerClassName={ classNames.labelContainer }
+          formatLabel={ this.props.formatLabel }>
           { this.props.minValue }
         </Label>
 
@@ -563,7 +565,8 @@ export default class InputRange extends React.Component {
 
         <Label
           className={ classNames.labelMax }
-          containerClassName={ classNames.labelContainer }>
+          containerClassName={ classNames.labelContainer }
+          formatLabel={ this.props.formatLabel }>
           { this.props.maxValue }
         </Label>
 
@@ -595,6 +598,7 @@ InputRange.propTypes = {
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
   disabled: React.PropTypes.bool,
+  formatLabel: React.PropTypes.func,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,

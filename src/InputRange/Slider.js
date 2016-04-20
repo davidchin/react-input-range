@@ -154,7 +154,8 @@ export default class Slider extends React.Component {
         style={ style }>
         <Label
           className={ classNames.labelValue }
-          containerClassName={ classNames.labelContainer }>
+          containerClassName={ classNames.labelContainer }
+          formatLabel={ this.props.formatLabel }>
           { this.props.value }
         </Label>
 
@@ -196,6 +197,7 @@ Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   ariaControls: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
+  formatLabel: React.PropTypes.func,
   maxValue: React.PropTypes.number,
   minValue: React.PropTypes.number,
   onSliderKeyDown: React.PropTypes.func.isRequired,

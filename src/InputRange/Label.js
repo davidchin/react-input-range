@@ -16,12 +16,17 @@ export default class Label extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { className, containerClassName } = this.props;
+    const { className, containerClassName, formatLabel, children } = this.props;
+    let labelContents = children;
+
+    if (formatLabel) {
+      labelContents = formatLabel(children);
+    }
 
     return (
       <span className={ className }>
         <span className={ containerClassName }>
-          { this.props.children }
+          { labelContents }
         </span>
       </span>
     );
@@ -39,4 +44,5 @@ Label.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,
   containerClassName: React.PropTypes.string,
+  formatLabel: React.PropTypes.func,
 };

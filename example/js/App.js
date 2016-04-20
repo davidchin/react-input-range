@@ -10,8 +10,8 @@ class App extends React.Component {
       value2: null,
       value3: 10,
       value4: {
-        min: 5,
-        max: 10,
+        max: new Date().getTime(),
+        min: new Date(2012, 3, 2).getTime(),
       },
       value5: {
         min: null,
@@ -72,11 +72,12 @@ class App extends React.Component {
         />
 
         <InputRange
-          maxValue={20}
-          minValue={0}
+          maxValue={new Date().getTime()}
+          minValue={new Date(2009, 3, 2).getTime()}
           value={this.state.value4}
           onChange={this.handleValue4Change.bind(this)}
           onChangeComplete={this.handleChangeComplete.bind(this)}
+          formatLabel={(value) => new Date(value).getMonth() + ' ' + new Date(value).getFullYear()}
         />
 
         <InputRange
