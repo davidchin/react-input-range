@@ -1,24 +1,59 @@
 {
-  "name": "react-input-range",
-  "version": "0.7.1",
-  "description": "React component for inputting numeric values within a range",
-  "keywords": [
-    "react",
-    "react-component",
-    "range-slider",
-    "input-range",
-    "range",
-    "slider",
-    "form",
-    "input"
+  "_args": [
+    [
+      "react-input-range@^0.7.0",
+      "/tmp"
+    ]
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/davidchin/react-input-range.git"
+  "_from": "react-input-range@>=0.7.0 <0.8.0",
+  "_id": "react-input-range@0.7.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-input-range",
+  "_nodeVersion": "4.2.2",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-input-range-0.7.0.tgz_1461070123390_0.9321579250972718"
   },
-  "main": "lib/InputRange/index.js",
-  "author": "David Chin",
-  "license": "MIT",
+  "_npmUser": {
+    "email": "davidchin.yf@gmail.com",
+    "name": "davidchin"
+  },
+  "_npmVersion": "3.5.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "react-input-range",
+    "raw": "react-input-range@^0.7.0",
+    "rawSpec": "^0.7.0",
+    "scope": null,
+    "spec": ">=0.7.0 <0.8.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-input-range/-/react-input-range-0.7.0.tgz",
+  "_shasum": "a73789ff3d35fd8f88968e9ffbce0fbbf8adfeb2",
+  "_shrinkwrap": null,
+  "_spec": "react-input-range@^0.7.0",
+  "_where": "/tmp",
+  "author": {
+    "name": "David Chin"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "react": "global:React",
+    "react-dom": "global:ReactDOM"
+  },
+  "bugs": {
+    "url": "https://github.com/davidchin/react-input-range/issues"
+  },
+  "dependencies": {},
+  "description": "React component for inputting numeric values within a range",
   "devDependencies": {
     "autoprefixer-core": "^5.2.1",
     "babel-core": "^5.8.25",
@@ -63,25 +98,49 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.3.0"
   },
+  "directories": {},
+  "dist": {
+    "shasum": "a73789ff3d35fd8f88968e9ffbce0fbbf8adfeb2",
+    "tarball": "https://registry.npmjs.org/react-input-range/-/react-input-range-0.7.0.tgz"
+  },
+  "gitHead": "794e6de5ccf064b507bd3f6a224dfa42c18b5b26",
+  "homepage": "https://github.com/davidchin/react-input-range#readme",
+  "keywords": [
+    "form",
+    "input",
+    "input-range",
+    "range",
+    "range-slider",
+    "react",
+    "react-component",
+    "slider"
+  ],
+  "license": "MIT",
+  "main": "lib/InputRange/index.js",
+  "maintainers": [
+    {
+      "name": "davidchin",
+      "email": "davidchin.yf@gmail.com"
+    }
+  ],
+  "name": "react-input-range",
+  "optionalDependencies": {},
   "peerDependencies": {
     "react": "^0.14.0"
   },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "react": "global:React",
-    "react-dom": "global:ReactDOM"
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidchin/react-input-range.git"
   },
   "scripts": {
     "build": "gulp build",
     "build:dist": "gulp build:dist",
     "build:lib": "gulp build:lib",
+    "prepublish": "npm run build:lib",
     "release": "gulp release",
     "start": "gulp run",
-    "test": "gulp test",
-    "prepublish": "npm run build:lib"
-  }
+    "test": "gulp test"
+  },
+  "version": "0.7.0"
 }
