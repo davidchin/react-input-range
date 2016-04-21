@@ -157,6 +157,7 @@ function renderSliders(inputRange) {
         ariaLabelledby: inputRange.props.ariaLabelledby,
         ariaControls: inputRange.props.ariaControls,
         classNames: classNames,
+        formatLabel: inputRange.props.formatLabel,
         key: key,
         maxValue: maxValue,
         minValue: minValue,
@@ -443,7 +444,8 @@ var InputRange = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelMin,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.props.formatLabel },
           this.props.minValue
         ),
         _react2['default'].createElement(
@@ -459,7 +461,8 @@ var InputRange = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelMax,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.props.formatLabel },
           this.props.maxValue
         ),
         renderHiddenInputs(this)
@@ -499,6 +502,7 @@ InputRange.propTypes = {
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   defaultValue: _propTypes.maxMinValuePropType,
   disabled: _react2['default'].PropTypes.bool,
+  formatLabel: _react2['default'].PropTypes.func,
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
@@ -557,6 +561,14 @@ var Label = (function (_React$Component) {
       var _props = this.props;
       var className = _props.className;
       var containerClassName = _props.containerClassName;
+      var formatLabel = _props.formatLabel;
+      var children = _props.children;
+
+      var labelContents = children;
+
+      if (formatLabel) {
+        labelContents = formatLabel(children);
+      }
 
       return _react2['default'].createElement(
         'span',
@@ -564,7 +576,7 @@ var Label = (function (_React$Component) {
         _react2['default'].createElement(
           'span',
           { className: containerClassName },
-          this.props.children
+          labelContents
         )
       );
     }
@@ -578,7 +590,8 @@ exports['default'] = Label;
 Label.propTypes = {
   children: _react2['default'].PropTypes.node,
   className: _react2['default'].PropTypes.string,
-  containerClassName: _react2['default'].PropTypes.string
+  containerClassName: _react2['default'].PropTypes.string,
+  formatLabel: _react2['default'].PropTypes.func
 };
 module.exports = exports['default'];
 
@@ -710,7 +723,8 @@ var Slider = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelValue,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.props.formatLabel },
           this.props.value
         ),
         _react2['default'].createElement('a', {
@@ -740,6 +754,7 @@ Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   ariaControls: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
+  formatLabel: _react2['default'].PropTypes.func,
   maxValue: _react2['default'].PropTypes.number,
   minValue: _react2['default'].PropTypes.number,
   onSliderKeyDown: _react2['default'].PropTypes.func.isRequired,
