@@ -16,7 +16,7 @@
  * @param {number} max
  * @return {number}
  */
-function clamp(value, min, max) {
+export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
@@ -27,7 +27,7 @@ function clamp(value, min, max) {
  * @param {...Object} sources - Source objects
  * @return {Object} Destination object, extended with members from sources
  */
-function extend() {
+export function extend() {
   return Object.assign.apply(Object, arguments);
 }
 
@@ -38,7 +38,7 @@ function extend() {
  * @param {number} value
  * @return {boolean}
  */
-function includes(array, value) {
+export function includes(array, value) {
   return array.indexOf(value) > -1;
 }
 
@@ -49,7 +49,7 @@ function includes(array, value) {
  * @param {Array.<string>} omitKeys
  * @return {Object}
  */
-function omit(obj, omitKeys) {
+export function omit(obj, omitKeys) {
   const keys = Object.keys(obj);
   const outputObj = {};
 
@@ -68,7 +68,7 @@ function omit(obj, omitKeys) {
  * @param {string} string
  * @return {string}
  */
-function captialize(string) {
+export function captialize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -79,7 +79,7 @@ function captialize(string) {
  * @param {Point} pointB
  * @return {number} Distance
  */
-function distanceTo(pointA, pointB) {
+export function distanceTo(pointA, pointB) {
   return Math.sqrt(Math.pow(pointB.x - pointA.x, 2) + Math.pow(pointB.y - pointA.y, 2));
 }
 
@@ -90,7 +90,7 @@ function distanceTo(pointA, pointB) {
  * @param {number} numB
  * @return {number}
  */
-function length(numA, numB) {
+export function length(numA, numB) {
   return Math.abs(numA - numB);
 }
 
@@ -100,7 +100,7 @@ function length(numA, numB) {
  * @param {*} value
  * @return {Boolean}
  */
-function isNumber(value) {
+export function isNumber(value) {
   return typeof value === 'number';
 }
 
@@ -110,7 +110,7 @@ function isNumber(value) {
  * @param {*} value
  * @return {Boolean}
  */
-function isObject(value) {
+export function isObject(value) {
   return value !== null && typeof value === 'object';
 }
 
@@ -120,7 +120,7 @@ function isObject(value) {
  * @param {*} value
  * @return {Boolean}
  */
-function isDefined(value) {
+export function isDefined(value) {
   return value !== undefined && value !== null;
 }
 
@@ -130,7 +130,7 @@ function isDefined(value) {
  * @param {Object|Array} obj
  * @return {Boolean}
  */
-function isEmpty(obj) {
+export function isEmpty(obj) {
   if (!obj) {
     return true;
   }
@@ -149,7 +149,7 @@ function isEmpty(obj) {
  * @param {predicateFn} predicate
  * @return {Boolean}
  */
-function arrayOf(array, predicate) {
+export function arrayOf(array, predicate) {
   if (!Array.isArray(array)) {
     return false;
   }
@@ -171,7 +171,7 @@ function arrayOf(array, predicate) {
  * @param {Array.<string>} keys
  * @return {Boolean}
  */
-function objectOf(object, predicate, keys) {
+export function objectOf(object, predicate, keys) {
   if (!isObject(object)) {
     return false;
   }
@@ -195,24 +195,8 @@ function objectOf(object, predicate, keys) {
  * @param {Array.<Function>} methodNames
  * @param {Object} instance
  */
-function autobind(methodNames, instance) {
+export function autobind(methodNames, instance) {
   methodNames.forEach((methodName) => {
     instance[methodName] = instance[methodName].bind(instance);
   });
 }
-
-export default {
-  arrayOf,
-  autobind,
-  captialize,
-  clamp,
-  distanceTo,
-  extend,
-  isDefined,
-  isEmpty,
-  isNumber,
-  isObject,
-  length,
-  objectOf,
-  omit,
-};
