@@ -34,7 +34,8 @@
 .InputRange-label {
   color: #aaaaaa;
   font-family: "Helvetica Neue", san-serif;
-  font-size: 0.8rem; }
+  font-size: 0.8rem;
+  white-space: nowrap; }
 
 .InputRange-label--min,
 .InputRange-label--max {

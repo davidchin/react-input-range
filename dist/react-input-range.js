@@ -157,6 +157,7 @@ function renderSliders(inputRange) {
         ariaLabelledby: inputRange.props.ariaLabelledby,
         ariaControls: inputRange.props.ariaControls,
         classNames: classNames,
+        formatLabel: inputRange.formatLabel,
         key: key,
         maxValue: maxValue,
         minValue: minValue,
@@ -231,7 +232,7 @@ var InputRange = (function (_React$Component) {
 
     internals.set(this, {});
 
-    (0, _util.autobind)(['handleInteractionEnd', 'handleInteractionStart', 'handleKeyDown', 'handleKeyUp', 'handleMouseDown', 'handleMouseUp', 'handleSliderKeyDown', 'handleSliderMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTrackMouseDown'], this);
+    (0, _util.autobind)(['formatLabel', 'handleInteractionEnd', 'handleInteractionStart', 'handleKeyDown', 'handleKeyUp', 'handleMouseDown', 'handleMouseUp', 'handleSliderKeyDown', 'handleSliderMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTrackMouseDown'], this);
   }
 
   _createClass(InputRange, [{
@@ -296,6 +297,20 @@ var InputRange = (function (_React$Component) {
       var value = values[key] - this.props.step;
 
       this.updateValue(key, value);
+    }
+  }, {
+    key: 'formatLabel',
+    value: function formatLabel(labelValue) {
+      var _props = this.props;
+      var formatLabel = _props.formatLabel;
+      var labelPrefix = _props.labelPrefix;
+      var labelSuffix = _props.labelSuffix;
+
+      if (formatLabel) {
+        return formatLabel(labelValue, { labelPrefix: labelPrefix, labelSuffix: labelSuffix });
+      }
+
+      return '' + labelPrefix + labelValue + labelSuffix;
     }
   }, {
     key: 'handleSliderMouseMove',
@@ -443,7 +458,8 @@ var InputRange = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelMin,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.formatLabel },
           this.props.minValue
         ),
         _react2['default'].createElement(
@@ -459,7 +475,8 @@ var InputRange = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelMax,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.formatLabel },
           this.props.maxValue
         ),
         renderHiddenInputs(this)
@@ -499,6 +516,9 @@ InputRange.propTypes = {
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   defaultValue: _propTypes.maxMinValuePropType,
   disabled: _react2['default'].PropTypes.bool,
+  formatLabel: _react2['default'].PropTypes.func,
+  labelPrefix: _react2['default'].PropTypes.string,
+  labelSuffix: _react2['default'].PropTypes.string,
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
@@ -512,6 +532,8 @@ InputRange.defaultProps = {
   classNames: _defaultClassNames2['default'],
   defaultValue: 0,
   disabled: false,
+  labelPrefix: '',
+  labelSuffix: '',
   maxValue: 10,
   minValue: 0,
   step: 1,
@@ -558,13 +580,15 @@ var Label = (function (_React$Component) {
       var className = _props.className;
       var containerClassName = _props.containerClassName;
 
+      var labelValue = this.props.formatLabel ? this.props.formatLabel(this.props.children) : this.props.children;
+
       return _react2['default'].createElement(
         'span',
         { className: className },
         _react2['default'].createElement(
           'span',
           { className: containerClassName },
-          this.props.children
+          labelValue
         )
       );
     }
@@ -578,7 +602,8 @@ exports['default'] = Label;
 Label.propTypes = {
   children: _react2['default'].PropTypes.node,
   className: _react2['default'].PropTypes.string,
-  containerClassName: _react2['default'].PropTypes.string
+  containerClassName: _react2['default'].PropTypes.string,
+  formatLabel: _react2['default'].PropTypes.func
 };
 module.exports = exports['default'];
 
@@ -710,7 +735,8 @@ var Slider = (function (_React$Component) {
           _Label2['default'],
           {
             className: classNames.labelValue,
-            containerClassName: classNames.labelContainer },
+            containerClassName: classNames.labelContainer,
+            formatLabel: this.props.formatLabel },
           this.props.value
         ),
         _react2['default'].createElement('a', {
@@ -740,6 +766,7 @@ Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   ariaControls: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
+  formatLabel: _react2['default'].PropTypes.func,
   maxValue: _react2['default'].PropTypes.number,
   minValue: _react2['default'].PropTypes.number,
   onSliderKeyDown: _react2['default'].PropTypes.func.isRequired,
@@ -933,6 +960,20 @@ function maxMinValuePropType(props) {
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.clamp = clamp;
+exports.extend = extend;
+exports.includes = includes;
+exports.omit = omit;
+exports.captialize = captialize;
+exports.distanceTo = distanceTo;
+exports.length = length;
+exports.isNumber = isNumber;
+exports.isObject = isObject;
+exports.isDefined = isDefined;
+exports.isEmpty = isEmpty;
+exports.arrayOf = arrayOf;
+exports.objectOf = objectOf;
+exports.autobind = autobind;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -1032,23 +1073,6 @@ function autobind(methodNames, instance) {
     instance[methodName] = instance[methodName].bind(instance);
   });
 }
-
-exports['default'] = {
-  arrayOf: arrayOf,
-  autobind: autobind,
-  captialize: captialize,
-  clamp: clamp,
-  distanceTo: distanceTo,
-  extend: extend,
-  isDefined: isDefined,
-  isEmpty: isEmpty,
-  isNumber: isNumber,
-  isObject: isObject,
-  length: length,
-  objectOf: objectOf,
-  omit: omit
-};
-module.exports = exports['default'];
 
 },{}],8:[function(require,module,exports){
 'use strict';
