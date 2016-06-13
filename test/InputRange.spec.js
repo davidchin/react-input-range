@@ -179,6 +179,42 @@ describe('InputRange', () => {
     });
   });
 
+  describe('formatLabel', () => {
+    it('should format label by prepending prefix label if it is provided', () => {
+      inputRange = renderComponent(
+        <InputRange labelPrefix="$" value={value} onChange={onChange} />
+      );
+
+      const output = inputRange.formatLabel(5);
+
+      expect(output).toEqual('$5');
+    });
+
+    it('should format label by appending suffix label if it is provided', () => {
+      inputRange = renderComponent(
+        <InputRange labelSuffix="kg" value={value} onChange={onChange} />
+      );
+
+      const output = inputRange.formatLabel(5);
+
+      expect(output).toEqual('5kg');
+    });
+
+    it('should format label by calling custom formatter if it provided', () => {
+      function formatLabel(labelValue) {
+        return `${labelValue} burgers`;
+      }
+
+      inputRange = renderComponent(
+        <InputRange formatLabel={formatLabel} value={value} onChange={onChange} />
+      );
+
+      const output = inputRange.formatLabel(5);
+
+      expect(output).toEqual('5 burgers');
+    });
+  });
+
   describe('handleSliderMouseMove', () => {
     let slider;
     let event;

@@ -187,6 +187,7 @@ function renderSliders(inputRange) {
         ariaLabelledby={ inputRange.props.ariaLabelledby }
         ariaControls={ inputRange.props.ariaControls }
         classNames={ classNames }
+        formatLabel={ inputRange.formatLabel }
         key={ key }
         maxValue={ maxValue }
         minValue={ minValue }
@@ -240,6 +241,7 @@ export default class InputRange extends React.Component {
 
     // Auto-bind
     autobind([
+      'formatLabel',
       'handleInteractionEnd',
       'handleInteractionStart',
       'handleKeyDown',
@@ -365,6 +367,21 @@ export default class InputRange extends React.Component {
     const value = values[key] - this.props.step;
 
     this.updateValue(key, value);
+  }
+
+  /**
+   * Format label
+   * @param {number} labelValue - Label value
+   * @return {string} Formatted label value
+   */
+  formatLabel(labelValue) {
+    const { formatLabel, labelPrefix, labelSuffix } = this.props;
+
+    if (formatLabel) {
+      return formatLabel(labelValue, { labelPrefix, labelSuffix });
+    }
+
+    return `${labelPrefix}${labelValue}${labelSuffix}`;
   }
 
   /**
@@ -548,7 +565,8 @@ export default class InputRange extends React.Component {
         onTouchStart={ this.handleTouchStart }>
         <Label
           className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }>
+          containerClassName={ classNames.labelContainer }
+          formatLabel={ this.formatLabel }>
           { this.props.minValue }
         </Label>
 
@@ -563,7 +581,8 @@ export default class InputRange extends React.Component {
 
         <Label
           className={ classNames.labelMax }
-          containerClassName={ classNames.labelContainer }>
+          containerClassName={ classNames.labelContainer }
+          formatLabel={ this.formatLabel }>
           { this.props.maxValue }
         </Label>
 
@@ -581,6 +600,9 @@ export default class InputRange extends React.Component {
  * @property {Function} classNames
  * @property {Function} defaultValue
  * @property {Function} disabled
+ * @property {Function} formatLabel
+ * @property {Function} labelPrefix
+ * @property {Function} labelSuffix
  * @property {Function} maxValue
  * @property {Function} minValue
  * @property {Function} name
@@ -595,6 +617,9 @@ InputRange.propTypes = {
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
   disabled: React.PropTypes.bool,
+  formatLabel: React.PropTypes.func,
+  labelPrefix: React.PropTypes.string,
+  labelSuffix: React.PropTypes.string,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
@@ -610,6 +635,8 @@ InputRange.propTypes = {
  * @property {Object.<string, string>} defaultClassNames
  * @property {Range|number} defaultValue
  * @property {boolean} disabled
+ * @property {string} labelPrefix
+ * @property {string} labelSuffix
  * @property {number} maxValue
  * @property {number} minValue
  * @property {number} step
@@ -619,6 +646,8 @@ InputRange.defaultProps = {
   classNames: defaultClassNames,
   defaultValue: 0,
   disabled: false,
+  labelPrefix: '',
+  labelSuffix: '',
   maxValue: 10,
   minValue: 0,
   step: 1,
