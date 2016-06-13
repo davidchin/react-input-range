@@ -75,6 +75,9 @@ ariaControls            |string                              |`aria-controls` at
 classNames              |Object.&lt;string&gt;               |CSS class names
 defaultValue            |number &vert; Object.&lt;number&gt; |Default value(s)
 disabled                |boolean                             |Disabled or not
+formatLabel             |Function                            |Label formatter
+labelPrefix             |string                              |Label prefix
+labelSuffix             |string                              |Label suffix
 maxValue                |number                              |Maximum value it can accept
 minValue                |number                              |Minimum value it can accept
 name                    |string                              |Name of `form` input
