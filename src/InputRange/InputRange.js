@@ -196,7 +196,8 @@ function renderSliders(inputRange) {
         percentage={ percentage }
         ref={ ref }
         type={ key }
-        value={ value } />
+        value={ value }
+        showLabelInSlider={ inputRange.props.showLabelInSlider }/>
     );
 
     sliders.push(slider);
@@ -627,6 +628,7 @@ InputRange.propTypes = {
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
+  showLabelInSlider: React.PropTypes.bool,
 };
 
 /**
@@ -652,4 +654,5 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  showLabelInSlider: false,
 };
