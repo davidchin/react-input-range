@@ -1,0 +1,112 @@
+.InputRange {
+	height: 16px;
+	border: 1px solid #6c6c6c;
+	background-color: #ffffff;
+}
+
+.InputRange-track--container {
+	top: 3px;
+	left: 1px;
+	background-color: #ffffff;
+}
+
+.InputRange-track {
+	height: 14px;
+}
+
+.InputRange-track--active {
+	background-color: #57b5e3;
+	border-radius: 0;
+}
+
+.InputRange-label {
+	font-size: 13px;
+    color: #3f3f3f;
+}
+
+.InputRange-slider {
+	top: 7px;
+	margin-top: 0;
+	height: 20px;
+	background-color: #F55F51;
+	border: 0;
+	border-radius: 0;
+	width: 40px;
+	margin-left: -20px;
+}
+
+.InputRange-label--value {
+	top: -1px;
+	margin-left: -8px;
+    position: absolute;
+    display: block;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fb6e52;
+}
+
+.InputRange-label--value .InputRange-labelContainer {
+	padding-top: 2px;
+    top: 8px;
+    z-index: 50;
+    left: -20px;
+    color: #ffffff;
+    width: 40px;
+    height: 18px;
+    position: absolute;
+    text-align: center;
+    background-color: #fb6e52;
+}
+
+.InputRange-sliderContainer a {
+	z-index: 100;
+	background-color: transparent;
+}
+
+/*
+* vertical styles
+*/
+
+.InputRange.vertical {
+	width: 16px;
+}
+
+.vertical .InputRange-track--container {
+	margin-bottom: 1px;
+	margin-left: 0;
+	left: 1px;
+	width: 14px;
+}
+
+.vertical .InputRange-label--value {
+    top: -6px;
+    margin-left: -18px;
+    position: absolute;
+    display: block;
+    z-index: 50;
+    border-right: 6px solid #fb6e52;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;	
+}
+
+.vertical .InputRange-label--value .InputRange-labelContainer {
+	top: -10px;
+	left: 6px;
+	padding: 2px 5px 0 5px;
+	width: auto;
+}
+
+.vertical .InputRange-slider {
+    top: -10px;
+    left: 24px;	
+}
+
+.vertical .InputRange-label--max {
+	right: -14px;
+    top: -10px;
+}
+
+.vertical .InputRange-label--min {
+	left: 28px;
+	bottom: -10px;
+}
