@@ -83,3 +83,40 @@
   height: 1rem;
   position: relative;
   width: 100%; }
+  
+/*
+    styles for vertical slider
+*/
+.InputRange.vertical {
+    height: 100%;
+    width: 1rem;
+    min-height: 200px;
+}
+
+.vertical .InputRange-track--container {
+    margin-top: 0;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -0.15rem;
+    height: 100%;
+}
+
+.vertical .InputRange-slider {
+    margin-left: -0.25rem;
+}
+
+.vertical .InputRange-label--min {
+    bottom: 0;
+    left: 1.75rem;
+}
+
+.vertical .InputRange-label--max {
+    right: -0.5rem;
+    top: 0;
+}
+
+.vertical .InputRange-label--value {
+    left: 1.5rem;
+    top: -0.5rem;
+}
