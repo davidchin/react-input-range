@@ -563,11 +563,12 @@ export default class InputRange extends React.Component {
         onKeyUp={ this.handleKeyUp }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }>
+
         <Label
           className={ classNames.labelMin }
           containerClassName={ classNames.labelContainer }
           formatLabel={ this.formatLabel }>
-          { this.props.minValue }
+          { values.min || this.props.minValue }
         </Label>
 
         <Track
@@ -583,7 +584,7 @@ export default class InputRange extends React.Component {
           className={ classNames.labelMax }
           containerClassName={ classNames.labelContainer }
           formatLabel={ this.formatLabel }>
-          { this.props.maxValue }
+          { values.max || this.props.maxValue }
         </Label>
 
         { renderHiddenInputs(this) }
