@@ -459,7 +459,7 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    _this.startValue = this.props.value;
+    _this.startValue = this.props.value || this.props.defaultValue;
   }
 
   /**

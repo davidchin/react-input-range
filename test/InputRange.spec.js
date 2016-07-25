@@ -486,6 +486,23 @@ describe('InputRange', () => {
       expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
     });
 
+    it('should call onChangeComplete if value has changed since the start of interaction when only defaultValue was provided', () => {
+      const defaultValue = value;
+      inputRange = renderComponent(
+        <InputRange maxValue={20} minValue={0} defaultValue={defaultValue} onChange={onChange} onChangeComplete={onChangeComplete}/>
+      );
+      slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
+
+      slider.dispatchEvent(mouseDownEvent);
+      value += 2;
+      inputRange = rerenderComponent(
+        <InputRange maxValue={20} minValue={0} defaultValue={defaultValue} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+      );
+      slider.dispatchEvent(mouseUpEvent);
+
+      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+    });
+
     it('should not call onChangeComplete if value has not changed since the start of interaction', () => {
       slider.dispatchEvent(mouseDownEvent);
       inputRange = rerenderComponent(
