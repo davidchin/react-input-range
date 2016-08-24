@@ -122,7 +122,7 @@ export default class Slider extends React.Component {
    * Handle any touchend event received by the component
    * @param {SyntheticEvent} event - User event
    */
-  handleTouchEnd() {
+  handleTouchEnd(event) {
     const document = getDocument(this);
 
     event.preventDefault();
