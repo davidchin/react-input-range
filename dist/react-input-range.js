@@ -706,7 +706,7 @@ var Slider = (function (_React$Component) {
     }
   }, {
     key: 'handleTouchEnd',
-    value: function handleTouchEnd() {
+    value: function handleTouchEnd(event) {
       var document = getDocument(this);
 
       event.preventDefault();
