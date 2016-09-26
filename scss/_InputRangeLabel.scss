@@ -22,4 +22,6 @@
 .InputRange-label--value {
   position: absolute;
   top: -1.8rem;
+  // fix iOS font render glitch
+  transform: rotateX(0deg);
 }
