@@ -550,7 +550,7 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames, Label, Track } = this.props;
+    const { classNames, Label, Track, children } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -587,6 +587,8 @@ export default class InputRange extends React.Component {
           { this.props.maxValue }
         </Label>
 
+        { children }
+
         { renderHiddenInputs(this) }
       </div>
     );
@@ -614,6 +616,7 @@ export default class InputRange extends React.Component {
  * @property {Function} Track
  * @property {Function} Slider
  * @property {Function} Label
+ * @property {Function} children
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -634,6 +637,7 @@ InputRange.propTypes = {
   Track: React.PropTypes.func,
   Slider: React.PropTypes.func,
   Label: React.PropTypes.func,
+  children: React.PropTypes.any,
 };
 
 /**

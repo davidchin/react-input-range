@@ -144,7 +144,7 @@ export default class Slider extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames, Label } = this.props;
+    const { classNames, Label, children } = this.props;
     const style = getStyle(this);
 
     return (
@@ -174,6 +174,8 @@ export default class Slider extends React.Component {
           onTouchStart={ this.handleTouchStart }
           role="slider">
         </a>
+
+        { children }
       </span>
     );
   }
@@ -194,6 +196,7 @@ export default class Slider extends React.Component {
  * @property {Function} type
  * @property {Function} value
  * @property {Function} Label
+ * @property {Function} children
  */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -208,6 +211,7 @@ Slider.propTypes = {
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
   Label: React.PropTypes.func,
+  children: React.PropTypes.any,
 };
 
 /**
