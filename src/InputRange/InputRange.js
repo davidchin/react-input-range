@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import Slider from './Slider';
-import Track from './Track';
-import Label from './Label';
+import { default as DefaultSlider } from './Slider';
+import { default as DefaultTrack } from './Track';
+import { default as DefaultLabel } from './Label';
 import defaultClassNames from './defaultClassNames';
 import valueTransformer from './valueTransformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from './util';
@@ -163,7 +163,7 @@ function getKeyByPosition(inputRange, position) {
  * @return {Array.<string>} Array of HTML
  */
 function renderSliders(inputRange) {
-  const { classNames } = inputRange.props;
+  const { classNames, Slider, Label } = inputRange.props;
   const sliders = [];
   const keys = getKeys(inputRange);
   const values = valueTransformer.valuesFromProps(inputRange);
@@ -196,7 +196,8 @@ function renderSliders(inputRange) {
         percentage={ percentage }
         ref={ ref }
         type={ key }
-        value={ value } />
+        value={ value }
+        Label={ Label } />
     );
 
     sliders.push(slider);
@@ -549,7 +550,7 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames } = this.props;
+    const { classNames, Label, Track } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -610,6 +611,9 @@ export default class InputRange extends React.Component {
  * @property {Function} onChangeComplete
  * @property {Function} step
  * @property {Function} value
+ * @property {Function} Track
+ * @property {Function} Slider
+ * @property {Function} Label
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -627,6 +631,9 @@ InputRange.propTypes = {
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
+  Track: React.PropTypes.func,
+  Slider: React.PropTypes.func,
+  Label: React.PropTypes.func,
 };
 
 /**
@@ -641,6 +648,9 @@ InputRange.propTypes = {
  * @property {number} minValue
  * @property {number} step
  * @property {Range|number} value
+ * @property {Function} Track
+ * @property {Function} Slider
+ * @property {Function} Label
  */
 InputRange.defaultProps = {
   classNames: defaultClassNames,
@@ -652,4 +662,7 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  Track: DefaultTrack,
+  Slider: DefaultSlider,
+  Label: DefaultLabel,
 };
