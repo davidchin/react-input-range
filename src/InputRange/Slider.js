@@ -164,7 +164,7 @@ export default class Slider extends React.Component {
           aria-controls={ this.props.ariaControls }
           aria-valuemax={ this.props.maxValue }
           aria-valuemin={ this.props.minValue }
-          aria-valuenow={ this.props.value }
+          aria-valuenow={ this.props.formatLabel ? this.props.formatLabel( this.props.value ) : this.props.value }
           className={ classNames.slider }
           draggable="false"
           href="#"
