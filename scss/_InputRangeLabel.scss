@@ -23,3 +23,18 @@
   position: absolute;
   top: -1.8rem;
 }
+
+.vertical .InputRange-label--min {
+    bottom: 0;
+    left: 1.75rem;
+}
+
+.vertical .InputRange-label--max {
+    right: -0.5rem;
+    top: 0;
+}
+
+.vertical .InputRange-label--value {
+    left: 1.5rem;
+    top: -0.5rem;
+}

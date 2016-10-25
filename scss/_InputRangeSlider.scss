@@ -33,3 +33,7 @@
 .InputRange-sliderContainer {
   transition: $InputRange-sliderContainer-transition;
 }
+
+.vertical .InputRange-slider {
+    margin-left: $InputRange-slider-width / -4;
+}

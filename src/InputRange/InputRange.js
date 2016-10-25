@@ -97,11 +97,16 @@ function getDocument(inputRange) {
 function getComponentClassName(inputRange) {
   const { props } = inputRange;
 
-  if (!props.disabled) {
-    return props.classNames.component;
+  let verticalClass = '';
+  if (props.orientation === 'vertical') {
+    verticalClass = ' vertical';
   }
 
-  return `${props.classNames.component} is-disabled`;
+  if (!props.disabled) {
+    return props.classNames.component + verticalClass;
+  }
+
+  return `${props.classNames.component} is-disabled ${verticalClass}`;
 }
 
 /**
@@ -196,7 +201,8 @@ function renderSliders(inputRange) {
         percentage={ percentage }
         ref={ ref }
         type={ key }
-        value={ value } />
+        value={ value }
+        orientation={ inputRange.props.orientation }/>
     );
 
     sliders.push(slider);
@@ -444,7 +450,6 @@ export default class InputRange extends React.Component {
     event.preventDefault();
 
     const key = getKeyByPosition(this, position);
-
     this.updatePosition(key, position);
   }
 
@@ -566,7 +571,8 @@ export default class InputRange extends React.Component {
         <Label
           className={ classNames.labelMin }
           containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
+          formatLabel={ this.formatLabel }
+          orientation={this.props.orientation}>
           { this.props.minValue }
         </Label>
 
@@ -574,7 +580,8 @@ export default class InputRange extends React.Component {
           classNames={ classNames }
           ref="track"
           percentages={ percentages }
-          onTrackMouseDown={ this.handleTrackMouseDown }>
+          onTrackMouseDown={ this.handleTrackMouseDown }
+          orientation={this.props.orientation}>
 
           { renderSliders(this) }
         </Track>
@@ -582,7 +589,8 @@ export default class InputRange extends React.Component {
         <Label
           className={ classNames.labelMax }
           containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
+          formatLabel={ this.formatLabel }
+          orientation={this.props.orientation}>
           { this.props.maxValue }
         </Label>
 
@@ -610,6 +618,7 @@ export default class InputRange extends React.Component {
  * @property {Function} onChangeComplete
  * @property {Function} step
  * @property {Function} value
+ * @property {Function} orientation
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -627,6 +636,7 @@ InputRange.propTypes = {
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
+  orientation: React.PropTypes.string,
 };
 
 /**
@@ -641,6 +651,7 @@ InputRange.propTypes = {
  * @property {number} minValue
  * @property {number} step
  * @property {Range|number} value
+ * @property {string} orientation
  */
 InputRange.defaultProps = {
   classNames: defaultClassNames,
@@ -652,4 +663,5 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  orientation: 'horizontal',
 };

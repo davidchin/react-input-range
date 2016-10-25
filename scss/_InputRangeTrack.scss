@@ -22,3 +22,12 @@
 .InputRange-track--active {
   background: $InputRange-track--active-background;
 }
+
+.vertical .InputRange-track--container {
+    margin-top: 0;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -0.5 * $InputRange-track-height;
+    height: 100%;
+}

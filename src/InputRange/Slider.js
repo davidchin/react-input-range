@@ -26,6 +26,16 @@ function getDocument(slider) {
  */
 function getStyle(slider) {
   const perc = (slider.props.percentage || 0) * 100;
+
+  if (slider.props.orientation === 'vertical') {
+    const style = {
+      position: 'absolute',
+      bottom: `${perc}%`,
+    };
+
+    return style;
+  }
+
   const style = {
     position: 'absolute',
     left: `${perc}%`,
@@ -193,6 +203,7 @@ export default class Slider extends React.Component {
  * @property {Function} percentage
  * @property {Function} type
  * @property {Function} value
+ * @property {Function} orientation
  */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -206,4 +217,5 @@ Slider.propTypes = {
   percentage: React.PropTypes.number.isRequired,
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
+  orientation: React.PropTypes.string,
 };

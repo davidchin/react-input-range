@@ -13,6 +13,19 @@ import { autobind } from './util';
  */
 function getActiveTrackStyle(track) {
   const { props } = track;
+
+  if ( props.orientation === 'vertical' ) {
+    const height = `${(props.percentages.max - props.percentages.min) * 100}%`;
+    const top = `${100 - (props.percentages.max * 100)}%`;
+
+    const activeTrackStyle = {
+      top,
+      height,
+    };
+
+    return activeTrackStyle;
+  }
+
   const width = `${(props.percentages.max - props.percentages.min) * 100}%`;
   const left = `${props.percentages.min * 100}%`;
 
@@ -57,12 +70,23 @@ export default class Track extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
-    const trackClientRect = this.clientRect;
+    let trackClientRect = this.clientRect;
     const { clientX } = event.touches ? event.touches[0] : event;
-    const position = {
+
+    let position = {
       x: clientX - trackClientRect.left,
       y: 0,
     };
+
+    if (this.props.orientation === 'vertical') {
+      trackClientRect = this.clientRect;
+      const { clientY } = event.touches ? event.touches[0] : event;
+
+      position = {
+        x: 0,
+        y: trackClientRect.bottom - clientY,
+      };
+    }
 
     this.props.onTrackMouseDown(event, this, position);
   }
@@ -108,10 +132,12 @@ export default class Track extends React.Component {
  * @property {Function} classNames
  * @property {Function} onTrackMouseDown
  * @property {Function} percentages
+ * @property {Function} orientation
  */
 Track.propTypes = {
   children: React.PropTypes.node,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   onTrackMouseDown: React.PropTypes.func.isRequired,
   percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
+  orientation: React.PropTypes.string,
 };

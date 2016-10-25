@@ -12,6 +12,13 @@ import { clamp, isEmpty, isNumber, objectOf } from './util';
  * @return {number} Percentage value
  */
 function percentageFromPosition(inputRange, position) {
+  if (inputRange.props.orientation === 'vertical') {
+    const length = inputRange.trackClientRect.height;
+    const sizePerc = position.y / length;
+
+    return sizePerc || 0;
+  }
+
   const length = inputRange.trackClientRect.width;
   const sizePerc = position.x / length;
 
@@ -98,6 +105,17 @@ function percentagesFromValues(inputRange, values) {
  * @return {Point} Position
  */
 function positionFromValue(inputRange, value) {
+  if (inputRange.props.orientation === 'vertical') {
+    const length = inputRange.trackClientRect.height;
+    const valuePerc = percentageFromValue(inputRange, value);
+    const positionValue = valuePerc * length;
+
+    return {
+      x: 0,
+      y: positionValue,
+    };
+  }
+
   const length = inputRange.trackClientRect.width;
   const valuePerc = percentageFromValue(inputRange, value);
   const positionValue = valuePerc * length;
@@ -132,6 +150,19 @@ function positionsFromValues(inputRange, values) {
  * @return {Point}
  */
 function positionFromEvent(inputRange, event) {
+  if (inputRange.props.orientation === 'vertical') {
+    const trackClientRect = inputRange.trackClientRect;
+    const length = trackClientRect.height;
+    const { clientY } = event.touches ? event.touches[0] : event;
+
+    const position = {
+      x: 0,
+      y: clamp(trackClientRect.bottom - clientY, 0, length),
+    };
+
+    return position;
+  }
+
   const trackClientRect = inputRange.trackClientRect;
   const length = trackClientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
