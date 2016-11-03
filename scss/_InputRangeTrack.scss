@@ -1,6 +1,7 @@
 .InputRange-track {
   background: $InputRange-track-background;
   border-radius: $InputRange-track-height;
+  cursor: pointer;
   display: block;
   height: $InputRange-track-height;
   position: relative;
