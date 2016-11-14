@@ -61,6 +61,7 @@
 .InputRange-track {
   background: #eeeeee;
   border-radius: 0.3rem;
+  cursor: pointer;
   display: block;
   height: 0.3rem;
   position: relative;
@@ -79,7 +80,6 @@
   background: #3f51b5; }
 
 .InputRange {
-  cursor: pointer;
   height: 1rem;
   position: relative;
   width: 100%; }
