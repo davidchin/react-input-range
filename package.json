@@ -17,9 +17,11 @@
     "url": "https://github.com/davidchin/react-input-range.git"
   },
   "main": "lib/InputRange/index.js",
+  "types": "react-input-range.d.ts",
   "author": "David Chin",
   "license": "MIT",
   "devDependencies": {
+    "@types/react": "^0.14.55",
     "autoprefixer-core": "^5.2.1",
     "babel-core": "^5.8.25",
     "babel-eslint": "^4.0.5",
