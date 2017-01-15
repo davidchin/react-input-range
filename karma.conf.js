@@ -1,55 +1,36 @@
-module.exports = function(config) {
+function configureKarma(config) {
   config.set({
-    basePath: '',
-
-    frameworks: ['browserify', 'jasmine'],
-
-    files: [
-      'node_modules/es5-shim/es5-shim.js',
-      'node_modules/react/dist/react.js',
-      'node_modules/react-dom/dist/react-dom.js',
-      'node_modules/lodash/index.js',
-      'node_modules/babelify/polyfill.js',
-      'src/**/*.js',
-      'test/**/*.js'
-    ],
-
-    exclude: [
-    ],
-
-    preprocessors: {
-      'src/**/*.js': ['browserify'],
-      'test/**/*.js': ['browserify'],
-      'node_modules/babelify/polyfill.js': ['browserify']
-    },
-
-    babelPreprocessor: {
-      options: {
-        modules: 'ignore'
-      }
-    },
-
-    browserify: {
-      debug: true,
-      extensions: ['.js', '.jsx'],
-      transform: ['babelify'],
-      paths: [
-        'src'
-      ]
-    },
-
-    reporters: ['progress'],
-
-    port: 9876,
-
-    colors: true,
-
-    logLevel: config.LOG_INFO,
-
-    autoWatch: true,
-
+    basePath: __dirname,
     browsers: ['PhantomJS'],
-
-    singleRun: false
-  })
+    coverageReporter: {
+        reporters: [
+            { type: 'html' },
+            { type: 'text' },
+        ],
+    },
+    frameworks: ['jasmine'],
+    files: ['test/index.js'],
+    preprocessors: {
+      'src/index.js': ['coverage'],
+      'test/index.js': ['webpack', 'sourcemap'],
+    },
+    reporters: ['mocha', 'coverage'],
+    webpack: {
+      devtool: 'inline-source-map',
+      module: {
+        loaders: [
+          {
+            exclude: /node_modules/,
+            loader: 'babel',
+            query: {
+              plugins: ['istanbul'],
+            },
+            test: /\.js$/,
+          },
+        ],
+      },
+    },
+  });
 }
+
+module.exports = configureKarma;

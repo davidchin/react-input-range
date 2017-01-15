@@ -1,5 +1,5 @@
 import React from 'react';
-import InputRange from 'InputRange';
+import InputRange from '../../src/js';
 
 class App extends React.Component {
   constructor(props) {
@@ -22,6 +22,12 @@ class App extends React.Component {
         max: 10,
       },
     };
+
+    this.handleValueChange = this.handleValueChange.bind(this);
+    this.handleValue2Change = this.handleValue2Change.bind(this);
+    this.handleValue3Change = this.handleValue3Change.bind(this);
+    this.handleValue4Change = this.handleValue4Change.bind(this);
+    this.handleValue5Change = this.handleValue5Change.bind(this);
   }
 
   handleValueChange(component, value) {
@@ -78,45 +84,45 @@ class App extends React.Component {
     return (
       <form className="form">
         <InputRange
-          maxValue={20}
-          minValue={0}
-          value={this.state.value}
-          onChange={this.handleValueChange.bind(this)}
-          onChangeComplete={this.handleChangeComplete.bind(this)}
+          maxValue={ 20 }
+          minValue={ 0 }
+          value={ this.state.value }
+          onChange={ this.handleValueChange }
+          onChangeComplete={ this.handleChangeComplete }
         />
 
         <InputRange
-          maxValue={20}
-          minValue={0}
+          maxValue={ 20 }
+          minValue={ 0 }
           labelSuffix="kg"
-          value={this.state.value4}
-          onChange={this.handleValue4Change.bind(this)}
-          onChangeComplete={this.handleChangeComplete.bind(this)}
+          value={ this.state.value4 }
+          onChange={ this.handleValue4Change }
+          onChangeComplete={ this.handleChangeComplete }
         />
 
         <InputRange
-          maxValue={10}
-          minValue={-10}
-          formatLabel={this.formatLabel.bind(this)}
-          value={this.state.value2}
-          defaultValue={defaultValue}
-          onChange={this.handleValue2Change.bind(this)}
+          maxValue={ 10 }
+          minValue={ -10 }
+          formatLabel={ this.formatLabel }
+          value={ this.state.value2 }
+          defaultValue={ defaultValue }
+          onChange={ this.handleValue2Change }
         />
 
         <InputRange
-          maxValue={10}
-          minValue={-10}
-          value={this.state.value5}
-          defaultValue={defaultValue2}
-          onChange={this.handleValue5Change.bind(this)}
+          maxValue={ 10 }
+          minValue={ -10 }
+          value={ this.state.value5 }
+          defaultValue={ defaultValue2 }
+          onChange={ this.handleValue5Change }
         />
 
         <InputRange
-          maxValue={20}
-          minValue={0}
-          disabled={true}
-          value={this.state.value3}
-          onChange={this.handleValue3Change.bind(this)}
+          maxValue={ 20 }
+          minValue={ 0 }
+          disabled={ true }
+          value={ this.state.value3 }
+          onChange={ this.handleValue3Change }
         />
       </form>
     );

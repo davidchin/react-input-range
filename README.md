@@ -90,12 +90,12 @@ value                   |number &vert; Object.&lt;number&gt; |Current value(s) (
 
 If you want to work on this project locally, you need to grab all of its dependencies.
 ```
-npm install && bundle install
+npm install
 ```
 
 After that, you should be able run
 ```
-npm start
+npm run dev
 ```
 
 Contributions are welcome. :)

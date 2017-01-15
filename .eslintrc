@@ -1,23 +1,47 @@
 rules:
+  class-methods-use-this:
+    - 1
   indent:
     - 2
     - 2
+  import/extensions:
+    - 0
+  import/no-extraneous-dependencies:
+    - 0
+  import/prefer-default-export:
+    - 1
+  no-plusplus:
+    - 2
+    - allowForLoopAfterthoughts: true
+  no-underscore-dangle:
+    - 0
   quotes:
     - 2
     - single
   semi:
     - 2
     - always
+  jsx-a11y/anchor-has-content:
+    - 1
   react/jsx-boolean-value:
+    - 1
+  jsx-a11y/href-no-hash:
+    - 1
+  jsx-a11y/no-static-element-interactions:
+    - 0
+  react/jsx-curly-spacing:
     - 2
     - always
-  react/sort-comp:
-    - 2
-    - order
-      - lifecycle
-      - /^on.+$/
-      - render
-      - everything-else
+  react/jsx-closing-bracket-location:
+    - 0
+  react/jsx-filename-extension:
+    - 0
+  react/no-unused-prop-types:
+    - 1
+  react/no-string-refs:
+    - 1
+  react/require-default-props:
+    - 0
 env:
   es6: true
   browser: true

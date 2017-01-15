@@ -1,11 +1,11 @@
+*.conf.js
+*.config.js
+*.log
 **/.*
-bower.json
 build
+coverage
+doc
 example
-Gemfile*
-gulpfile.babel.js
-karma.conf.js
 node_modules
 src
-tasks
 test

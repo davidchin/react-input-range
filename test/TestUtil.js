@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 
-function renderComponent(jsx) {
+export function renderComponent(jsx) {
   let container = document.getElementById('container');
 
   if (container) {
@@ -14,7 +14,7 @@ function renderComponent(jsx) {
   return ReactDOM.render(jsx, container);
 }
 
-function rerenderComponent(jsx) {
+export function rerenderComponent(jsx) {
   const container = document.getElementById('container');
 
   if (container) {
@@ -23,10 +23,3 @@ function rerenderComponent(jsx) {
 
   return renderComponent(jsx);
 }
-
-const TestUtil = {
-  renderComponent,
-  rerenderComponent,
-};
-
-export default TestUtil;
