@@ -30,12 +30,6 @@ import { maxMinValuePropType } from './prop-types';
  */
 
 /**
- * A map for storing internal members
- * @type {WeakMap}
- */
-const internals = new WeakMap();
-
-/**
  * An object storing keyboard key codes
  * @type {Object<string, number>}
  */
@@ -314,9 +308,6 @@ export default class InputRange extends React.Component {
   constructor(props) {
     super(props);
 
-    // Private
-    internals.set(this, {});
-
     // Auto-bind
     autobind([
       'formatLabel',
@@ -530,30 +521,26 @@ export default class InputRange extends React.Component {
    * Handle the start of any user-triggered event
    */
   handleInteractionStart() {
-    const _this = internals.get(this);
-
-    if (!this.props.onChangeComplete || isDefined(_this.startValue)) {
+    if (!this.props.onChangeComplete || isDefined(this.startValue)) {
       return;
     }
 
-    _this.startValue = this.props.value || this.props.defaultValue;
+    this.startValue = this.props.value || this.props.defaultValue;
   }
 
   /**
    * Handle the end of any user-triggered event
    */
   handleInteractionEnd() {
-    const _this = internals.get(this);
-
-    if (!this.props.onChangeComplete || !isDefined(_this.startValue)) {
+    if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
       return;
     }
 
-    if (_this.startValue !== this.props.value) {
+    if (this.startValue !== this.props.value) {
       this.props.onChangeComplete(this, this.props.value);
     }
 
-    _this.startValue = null;
+    this.startValue = null;
   }
 
   /**

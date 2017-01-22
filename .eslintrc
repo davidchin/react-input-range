@@ -13,8 +13,6 @@ rules:
   no-plusplus:
     - 2
     - allowForLoopAfterthoughts: true
-  no-underscore-dangle:
-    - 0
   quotes:
     - 2
     - single
