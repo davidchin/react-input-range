@@ -5,6 +5,7 @@ import Label from './label';
 import defaultClassNames from './default-class-names';
 import * as valueTransformer from './value-transformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
+import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 import { maxMinValuePropType } from './prop-types';
 
 /**
@@ -28,17 +29,6 @@ import { maxMinValuePropType } from './prop-types';
  * @property {number} top - Top value
  * @property {number} width - Width value
  */
-
-/**
- * An object storing keyboard key codes
- * @type {Object<string, number>}
- */
-const KeyCode = {
-  DOWN_ARROW: 40,
-  LEFT_ARROW: 37,
-  RIGHT_ARROW: 39,
-  UP_ARROW: 38,
-};
 
 /**
  * Check if values are within the max and min range of inputRange
@@ -482,14 +472,14 @@ export default class InputRange extends React.Component {
     const key = getKeyFromSlider(this, slider);
 
     switch (event.keyCode) {
-    case KeyCode.LEFT_ARROW:
-    case KeyCode.DOWN_ARROW:
+    case LEFT_ARROW:
+    case DOWN_ARROW:
       event.preventDefault();
       this.decrementValue(key);
       break;
 
-    case KeyCode.RIGHT_ARROW:
-    case KeyCode.UP_ARROW:
+    case RIGHT_ARROW:
+    case UP_ARROW:
       event.preventDefault();
       this.incrementValue(key);
       break;
