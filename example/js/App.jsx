@@ -120,7 +120,7 @@ class App extends React.Component {
         <InputRange
           maxValue={20}
           minValue={0}
-          disabled={true}
+          disabled
           value={this.state.value3}
           onChange={this.handleValue3Change}
         />

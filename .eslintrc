@@ -13,8 +13,6 @@ rules:
   semi:
     - 2
     - always
-  react/jsx-boolean-value:
-    - 1
   jsx-a11y/no-static-element-interactions:
     - 0
   react/jsx-closing-bracket-location:
