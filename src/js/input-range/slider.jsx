@@ -43,7 +43,6 @@ export default class Slider extends React.Component {
     super(props);
 
     autobind([
-      'handleClick',
       'handleMouseDown',
       'handleMouseUp',
       'handleMouseMove',
@@ -74,14 +73,6 @@ export default class Slider extends React.Component {
     };
 
     return style;
-  }
-
-  /**
-   * Handle any click event received by the component
-   * @param {SyntheticEvent} event - User event
-   */
-  handleClick(event) { // eslint-disable-line class-methods-use-this
-    event.preventDefault();
   }
 
   /**
@@ -174,7 +165,7 @@ export default class Slider extends React.Component {
           {this.props.value}
         </Label>
 
-        <a
+        <div
           aria-labelledby={this.props.ariaLabelledby}
           aria-controls={this.props.ariaControls}
           aria-valuemax={this.props.maxValue}
@@ -182,8 +173,6 @@ export default class Slider extends React.Component {
           aria-valuenow={this.props.value}
           className={this.props.classNames.slider}
           draggable="false"
-          href="#"
-          onClick={this.handleClick}
           onKeyDown={this.handleKeyDown}
           onMouseDown={this.handleMouseDown}
           onTouchStart={this.handleTouchStart}

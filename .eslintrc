@@ -13,11 +13,7 @@ rules:
   semi:
     - 2
     - always
-  jsx-a11y/anchor-has-content:
-    - 1
   react/jsx-boolean-value:
-    - 1
-  jsx-a11y/href-no-hash:
     - 1
   jsx-a11y/no-static-element-interactions:
     - 0

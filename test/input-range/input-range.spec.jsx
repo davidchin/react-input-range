@@ -522,7 +522,7 @@ describe('InputRange', () => {
       );
 
       const slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
-      const handle = slider.querySelector('a');
+      const handle = slider.querySelector('[role=slider]');
       const ariaLabelledby = handle.getAttribute('aria-labelledby');
 
       expect(ariaLabelledby).toEqual('foobar');
@@ -536,7 +536,7 @@ describe('InputRange', () => {
       );
 
       const slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
-      const handle = slider.querySelector('a');
+      const handle = slider.querySelector('[role=slider]');
       const ariaControls = handle.getAttribute('aria-controls');
 
       expect(ariaControls).toEqual('foobar');
