@@ -8,9 +8,9 @@ export default function Label(props) {
   const labelValue = formatLabel ? formatLabel(children) : children;
 
   return (
-    <span className={ className }>
-      <span className={ containerClassName }>
-        { labelValue }
+    <span className={className}>
+      <span className={containerClassName}>
+        {labelValue}
       </span>
     </span>
   );

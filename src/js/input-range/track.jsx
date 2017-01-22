@@ -29,7 +29,6 @@ export default class Track extends React.Component {
   constructor(props) {
     super(props);
 
-    // Auto-bind
     autobind([
       'handleMouseDown',
       'handleTouchStart',
@@ -86,18 +85,17 @@ export default class Track extends React.Component {
    */
   render() {
     const activeTrackStyle = this.getActiveTrackStyle();
-    const classNames = this.props.classNames;
 
     return (
       <div
-        className={ classNames.trackContainer }
-        onMouseDown={ this.handleMouseDown }
-        onTouchStart={ this.handleTouchStart }
+        className={this.props.classNames.trackContainer}
+        onMouseDown={this.handleMouseDown}
+        onTouchStart={this.handleTouchStart}
         ref="track">
         <div
-          style={ activeTrackStyle }
-          className={ classNames.trackActive } />
-        { this.props.children }
+          style={activeTrackStyle}
+          className={this.props.classNames.trackActive} />
+        {this.props.children}
       </div>
     );
   }

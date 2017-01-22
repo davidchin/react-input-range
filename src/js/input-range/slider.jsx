@@ -42,7 +42,6 @@ export default class Slider extends React.Component {
   constructor(props) {
     super(props);
 
-    // Auto-bind
     autobind([
       'handleClick',
       'handleMouseDown',
@@ -161,34 +160,33 @@ export default class Slider extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const classNames = this.props.classNames;
     const style = this.getStyle();
 
     return (
       <span
-        className={ classNames.sliderContainer }
+        className={this.props.classNames.sliderContainer}
         ref="slider"
-        style={ style }>
+        style={style}>
         <Label
-          className={ classNames.labelValue }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.props.formatLabel }>
-          { this.props.value }
+          className={this.props.classNames.labelValue}
+          containerClassName={this.props.classNames.labelContainer}
+          formatLabel={this.props.formatLabel}>
+          {this.props.value}
         </Label>
 
         <a
-          aria-labelledby={ this.props.ariaLabelledby }
-          aria-controls={ this.props.ariaControls }
-          aria-valuemax={ this.props.maxValue }
-          aria-valuemin={ this.props.minValue }
-          aria-valuenow={ this.props.value }
-          className={ classNames.slider }
+          aria-labelledby={this.props.ariaLabelledby}
+          aria-controls={this.props.ariaControls}
+          aria-valuemax={this.props.maxValue}
+          aria-valuemin={this.props.minValue}
+          aria-valuenow={this.props.value}
+          className={this.props.classNames.slider}
           draggable="false"
           href="#"
-          onClick={ this.handleClick }
-          onKeyDown={ this.handleKeyDown }
-          onMouseDown={ this.handleMouseDown }
-          onTouchStart={ this.handleTouchStart }
+          onClick={this.handleClick}
+          onKeyDown={this.handleKeyDown}
+          onMouseDown={this.handleMouseDown}
+          onTouchStart={this.handleTouchStart}
           role="slider" />
       </span>
     );

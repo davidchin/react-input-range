@@ -1,9 +1,9 @@
 import React from 'react';
+import * as valueTransformer from './value-transformer';
+import defaultClassNames from './default-class-names';
+import Label from './label';
 import Slider from './slider';
 import Track from './track';
-import Label from './label';
-import defaultClassNames from './default-class-names';
-import * as valueTransformer from './value-transformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 import { rangePropType } from './range-prop-type';
@@ -107,7 +107,6 @@ export default class InputRange extends React.Component {
   constructor(props) {
     super(props);
 
-    // Auto-bind
     autobind([
       'formatLabel',
       'handleInteractionEnd',
@@ -509,7 +508,6 @@ export default class InputRange extends React.Component {
    * @return {string[]} Array of HTML
    */
   renderSliders() {
-    const { classNames } = this.props;
     const keys = this.getKeys();
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -529,19 +527,19 @@ export default class InputRange extends React.Component {
 
       const slider = (
         <Slider
-          ariaLabelledby={ this.props.ariaLabelledby }
-          ariaControls={ this.props.ariaControls }
-          classNames={ classNames }
-          formatLabel={ this.formatLabel }
-          key={ key }
-          maxValue={ maxValue }
-          minValue={ minValue }
-          onSliderKeyDown={ this.handleSliderKeyDown }
-          onSliderMouseMove={ this.handleSliderMouseMove }
-          percentage={ percentage }
-          ref={ ref }
-          type={ key }
-          value={ value } />
+          ariaLabelledby={this.props.ariaLabelledby}
+          ariaControls={this.props.ariaControls}
+          classNames={this.props.classNames}
+          formatLabel={this.formatLabel}
+          key={key}
+          maxValue={maxValue}
+          minValue={minValue}
+          onSliderKeyDown={this.handleSliderKeyDown}
+          onSliderMouseMove={this.handleSliderMouseMove}
+          percentage={percentage}
+          ref={ref}
+          type={key}
+          value={value} />
       );
 
       return slider;
@@ -559,7 +557,7 @@ export default class InputRange extends React.Component {
       const name = this.isMultiValue() ? `${this.props.name}${captialize(key)}` : this.props.name;
 
       return (
-        <input type="hidden" name={ name } />
+        <input type="hidden" name={name} />
       );
     });
   }
@@ -569,44 +567,43 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames } = this.props;
     const componentClassName = this.getComponentClassName();
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
 
     return (
       <div
-        aria-disabled={ this.props.disabled }
+        aria-disabled={this.props.disabled}
         ref="inputRange"
-        className={ componentClassName }
-        onKeyDown={ this.handleKeyDown }
-        onKeyUp={ this.handleKeyUp }
-        onMouseDown={ this.handleMouseDown }
-        onTouchStart={ this.handleTouchStart }>
+        className={componentClassName}
+        onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}
+        onMouseDown={this.handleMouseDown}
+        onTouchStart={this.handleTouchStart}>
         <Label
-          className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.minValue }
+          className={this.props.classNames.labelMin}
+          containerClassName={this.props.classNames.labelContainer}
+          formatLabel={this.formatLabel}>
+          {this.props.minValue}
         </Label>
 
         <Track
-          classNames={ classNames }
+          classNames={this.props.classNames}
           ref="track"
-          percentages={ percentages }
-          onTrackMouseDown={ this.handleTrackMouseDown }>
+          percentages={percentages}
+          onTrackMouseDown={this.handleTrackMouseDown}>
 
-          { this.renderSliders() }
+          {this.renderSliders()}
         </Track>
 
         <Label
-          className={ classNames.labelMax }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.maxValue }
+          className={this.props.classNames.labelMax}
+          containerClassName={this.props.classNames.labelContainer}
+          formatLabel={this.formatLabel}>
+          {this.props.maxValue}
         </Label>
 
-        { this.renderHiddenInputs() }
+        {this.renderHiddenInputs()}
       </div>
     );
   }

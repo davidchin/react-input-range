@@ -84,45 +84,45 @@ class App extends React.Component {
     return (
       <form className="form">
         <InputRange
-          maxValue={ 20 }
-          minValue={ 0 }
-          value={ this.state.value }
-          onChange={ this.handleValueChange }
-          onChangeComplete={ this.handleChangeComplete }
+          maxValue={20}
+          minValue={0}
+          value={this.state.value}
+          onChange={this.handleValueChange}
+          onChangeComplete={this.handleChangeComplete}
         />
 
         <InputRange
-          maxValue={ 20 }
-          minValue={ 0 }
+          maxValue={20}
+          minValue={0}
           labelSuffix="kg"
-          value={ this.state.value4 }
-          onChange={ this.handleValue4Change }
-          onChangeComplete={ this.handleChangeComplete }
+          value={this.state.value4}
+          onChange={this.handleValue4Change}
+          onChangeComplete={this.handleChangeComplete}
         />
 
         <InputRange
-          maxValue={ 10 }
-          minValue={ -10 }
-          formatLabel={ this.formatLabel }
-          value={ this.state.value2 }
-          defaultValue={ defaultValue }
-          onChange={ this.handleValue2Change }
+          maxValue={10}
+          minValue={-10}
+          formatLabel={this.formatLabel}
+          value={this.state.value2}
+          defaultValue={defaultValue}
+          onChange={this.handleValue2Change}
         />
 
         <InputRange
-          maxValue={ 10 }
-          minValue={ -10 }
-          value={ this.state.value5 }
-          defaultValue={ defaultValue2 }
-          onChange={ this.handleValue5Change }
+          maxValue={10}
+          minValue={-10}
+          value={this.state.value5}
+          defaultValue={defaultValue2}
+          onChange={this.handleValue5Change}
         />
 
         <InputRange
-          maxValue={ 20 }
-          minValue={ 0 }
-          disabled={ true }
-          value={ this.state.value3 }
-          onChange={ this.handleValue3Change }
+          maxValue={20}
+          minValue={0}
+          disabled={true}
+          value={this.state.value3}
+          onChange={this.handleValue3Change}
         />
       </form>
     );
