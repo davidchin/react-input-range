@@ -3,33 +3,6 @@ import Label from './label';
 import { autobind } from '../utils';
 
 /**
- * Get the owner document of slider
- * @param {Slider} slider - React component
- * @return {Document} Document
- */
-function getDocument(slider) {
-  const { slider: { ownerDocument } } = slider.refs;
-
-  return ownerDocument;
-}
-
-/**
- * Get the style of slider based on its props
- * @private
- * @param {Slider} slider - React component
- * @return {Object} CSS styles
- */
-function getStyle(slider) {
-  const perc = (slider.props.percentage || 0) * 100;
-  const style = {
-    position: 'absolute',
-    left: `${perc}%`,
-  };
-
-  return style;
-}
-
-/**
  * Slider React component
  */
 export default class Slider extends React.Component {
@@ -45,7 +18,6 @@ export default class Slider extends React.Component {
    * @property {Function} onSliderKeyDown
    * @property {Function} onSliderMouseMove
    * @property {Function} percentage
-   * @property {Function} type
    * @property {Function} value
    */
   static get propTypes() {
@@ -59,7 +31,6 @@ export default class Slider extends React.Component {
       onSliderKeyDown: React.PropTypes.func.isRequired,
       onSliderMouseMove: React.PropTypes.func.isRequired,
       percentage: React.PropTypes.number.isRequired,
-      type: React.PropTypes.string.isRequired,
       value: React.PropTypes.number.isRequired,
     };
   }
@@ -85,10 +56,32 @@ export default class Slider extends React.Component {
   }
 
   /**
+   * Get the owner document of slider
+   * @return {Document} Document
+   */
+  getDocument() {
+    return this.refs.slider.ownerDocument;
+  }
+
+  /**
+   * Get the style of slider based on its props
+   * @return {Object} CSS styles
+   */
+  getStyle() {
+    const perc = (this.props.percentage || 0) * 100;
+    const style = {
+      position: 'absolute',
+      left: `${perc}%`,
+    };
+
+    return style;
+  }
+
+  /**
    * Handle any click event received by the component
    * @param {SyntheticEvent} event - User event
    */
-  handleClick(event) {
+  handleClick(event) { // eslint-disable-line class-methods-use-this
     event.preventDefault();
   }
 
@@ -96,7 +89,7 @@ export default class Slider extends React.Component {
    * Handle any mousedown event received by the component
    */
   handleMouseDown() {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     // Event
     document.addEventListener('mousemove', this.handleMouseMove);
@@ -107,7 +100,7 @@ export default class Slider extends React.Component {
    * Handle any mouseup event received by the component
    */
   handleMouseUp() {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
@@ -127,7 +120,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     event.preventDefault();
 
@@ -147,7 +140,7 @@ export default class Slider extends React.Component {
    * Handle any touchend event received by the component
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     event.preventDefault();
 
@@ -169,7 +162,7 @@ export default class Slider extends React.Component {
    */
   render() {
     const classNames = this.props.classNames;
-    const style = getStyle(this);
+    const style = this.getStyle();
 
     return (
       <span

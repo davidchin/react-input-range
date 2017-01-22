@@ -2,25 +2,6 @@ import React from 'react';
 import { autobind } from '../utils';
 
 /**
- * Get the CSS styles for an active track
- * @private
- * @param {Track} track React component
- * @return {Object} CSS styles
- */
-function getActiveTrackStyle(track) {
-  const { props } = track;
-  const width = `${(props.percentages.max - props.percentages.min) * 100}%`;
-  const left = `${props.percentages.min * 100}%`;
-
-  const activeTrackStyle = {
-    left,
-    width,
-  };
-
-  return activeTrackStyle;
-}
-
-/**
  * Track React component
  */
 export default class Track extends React.Component {
@@ -57,13 +38,21 @@ export default class Track extends React.Component {
 
   /**
    * Return the clientRect of the component
-   * @member {ClientRect}
+   * @return {ClientRect}
    */
-  get clientRect() {
-    const { track } = this.refs;
-    const clientRect = track.getBoundingClientRect();
+  getClientRect() {
+    return this.refs.track.getBoundingClientRect();
+  }
 
-    return clientRect;
+  /**
+   * Get the CSS styles for an active track
+   * @return {Object} CSS styles
+   */
+  getActiveTrackStyle() {
+    const width = `${(this.props.percentages.max - this.props.percentages.min) * 100}%`;
+    const left = `${this.props.percentages.min * 100}%`;
+
+    return { left, width };
   }
 
   /**
@@ -71,8 +60,8 @@ export default class Track extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
-    const trackClientRect = this.clientRect;
-    const { clientX } = event.touches ? event.touches[0] : event;
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+    const trackClientRect = this.getClientRect();
     const position = {
       x: clientX - trackClientRect.left,
       y: 0,
@@ -96,7 +85,7 @@ export default class Track extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const activeTrackStyle = getActiveTrackStyle(this);
+    const activeTrackStyle = this.getActiveTrackStyle();
     const classNames = this.props.classNames;
 
     return (

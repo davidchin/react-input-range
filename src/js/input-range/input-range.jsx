@@ -31,197 +31,6 @@ import { rangePropType } from './range-prop-type';
  */
 
 /**
- * Check if values are within the max and min range of inputRange
- * @param {InputRange} inputRange - React component
- * @param {Range} values - Min/max value of sliders
- * @return {boolean} True if within range
- */
-function isWithinRange(inputRange, values) {
-  const { props } = inputRange;
-
-  if (inputRange.isMultiValue) {
-    return values.min >= props.minValue &&
-           values.max <= props.maxValue &&
-           values.min < values.max;
-  }
-
-  return values.max >= props.minValue &&
-         values.max <= props.maxValue;
-}
-
-/**
- * Check if the difference between values and the current values of inputRange
- * is greater or equal to its step amount
- * @private
- * @param {InputRange} inputRange - React component
- * @param {Range} values - Min/max value of sliders
- * @return {boolean} True if difference is greater or equal to step amount
- */
-function hasStepDifference(inputRange, values) {
-  const { props } = inputRange;
-  const currentValues = valueTransformer.valuesFromProps(inputRange);
-
-  return length(values.min, currentValues.min) >= props.step ||
-         length(values.max, currentValues.max) >= props.step;
-}
-
-/**
- * Check if inputRange should update with new values
- * @private
- * @param {InputRange} inputRange - React component
- * @param {Range} values - Min/max value of sliders
- * @return {boolean} True if inputRange should update
- */
-function shouldUpdate(inputRange, values) {
-  return isWithinRange(inputRange, values) &&
-         hasStepDifference(inputRange, values);
-}
-
-/**
- * Get the owner document of inputRange
- * @private
- * @param {InputRange} inputRange - React component
- * @return {Document} Document
- */
-function getDocument(inputRange) {
-  const { inputRange: { ownerDocument } } = inputRange.refs;
-
-  return ownerDocument;
-}
-
-/**
- * Get the class name(s) of inputRange based on its props
- * @private
- * @param {InputRange} inputRange - React component
- * @return {string} A list of class names delimited with spaces
- */
-function getComponentClassName(inputRange) {
-  const { props } = inputRange;
-
-  if (!props.disabled) {
-    return props.classNames.component;
-  }
-
-  return `${props.classNames.component} ${props.classNames.disabled}`;
-}
-
-/**
- * Get the key name of a slider
- * @private
- * @param {InputRange} inputRange - React component
- * @param {Slider} slider - React component
- * @return {string} Key name
- */
-function getKeyFromSlider(inputRange, slider) {
-  if (slider === inputRange.refs.sliderMin) {
-    return 'min';
-  }
-
-  return 'max';
-}
-
-/**
- * Get all slider keys of inputRange
- * @private
- * @param {InputRange} inputRange - React component
- * @return {string[]} Key names
- */
-function getKeys(inputRange) {
-  if (inputRange.isMultiValue) {
-    return ['min', 'max'];
-  }
-
-  return ['max'];
-}
-
-/**
- * Get the key name of a slider that's the closest to a point
- * @private
- * @param {InputRange} inputRange - React component
- * @param {Point} position - x/y
- * @return {string} Key name
- */
-function getKeyByPosition(inputRange, position) {
-  const values = valueTransformer.valuesFromProps(inputRange);
-  const positions = valueTransformer.positionsFromValues(inputRange, values);
-
-  if (inputRange.isMultiValue) {
-    const distanceToMin = distanceTo(position, positions.min);
-    const distanceToMax = distanceTo(position, positions.max);
-
-    if (distanceToMin < distanceToMax) {
-      return 'min';
-    }
-  }
-
-  return 'max';
-}
-
-/**
- * Get an array of slider HTML for rendering
- * @private
- * @param {InputRange} inputRange - React component
- * @return {string[]} Array of HTML
- */
-function renderSliders(inputRange) {
-  const { classNames } = inputRange.props;
-  const keys = getKeys(inputRange);
-  const values = valueTransformer.valuesFromProps(inputRange);
-  const percentages = valueTransformer.percentagesFromValues(inputRange, values);
-
-  return keys.map((key) => {
-    const value = values[key];
-    const percentage = percentages[key];
-    const ref = `slider${captialize(key)}`;
-
-    let { maxValue, minValue } = inputRange.props;
-
-    if (key === 'min') {
-      maxValue = values.max;
-    } else {
-      minValue = values.min;
-    }
-
-    const slider = (
-      <Slider
-        ariaLabelledby={ inputRange.props.ariaLabelledby }
-        ariaControls={ inputRange.props.ariaControls }
-        classNames={ classNames }
-        formatLabel={ inputRange.formatLabel }
-        key={ key }
-        maxValue={ maxValue }
-        minValue={ minValue }
-        onSliderKeyDown={ inputRange.handleSliderKeyDown }
-        onSliderMouseMove={ inputRange.handleSliderMouseMove }
-        percentage={ percentage }
-        ref={ ref }
-        type={ key }
-        value={ value } />
-    );
-
-    return slider;
-  });
-}
-
-/**
- * Get an array of hidden input HTML for rendering
- * @private
- * @param {InputRange} inputRange - React component
- * @return {string[]} Array of HTML
- */
-function renderHiddenInputs(inputRange) {
-  const keys = getKeys(inputRange);
-
-  return keys.map((key) => {
-    const name = inputRange.isMultiValue ? `${inputRange.props.name}${captialize(key)}` : inputRange.props.name;
-
-    return (
-      <input type="hidden" name={ name } />
-    );
-  });
-}
-
-/**
  * InputRange React component
  */
 export default class InputRange extends React.Component {
@@ -316,14 +125,24 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Get the class name(s) of inputRange based on its props
+   * @return {string} A list of class names delimited with spaces
+   */
+  getComponentClassName() {
+    if (!this.props.disabled) {
+      return this.props.classNames.component;
+    }
+
+    return `${this.props.classNames.component} ${this.props.classNames.disabled}`;
+  }
+
+  /**
    * Return the clientRect of the component's track
    * @return {ClientRect}
    */
-  get trackClientRect() {
-    const { track } = this.refs;
-
-    if (track) {
-      return track.clientRect;
+  getTrackClientRect() {
+    if (this.refs.track) {
+      return this.refs.track.getClientRect();
     }
 
     return {
@@ -335,12 +154,102 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Get the owner document of inputRange
+   * @return {Document} Document
+   */
+  getDocument() {
+    return this.refs.inputRange.ownerDocument;
+  }
+
+  /**
+   * Get the key name of a slider that's the closest to a point
+   * @param {Point} position - x/y
+   * @return {string} Key name
+   */
+  getKeyByPosition(position) {
+    const values = valueTransformer.valuesFromProps(this);
+    const positions = valueTransformer.positionsFromValues(this, values);
+
+    if (this.isMultiValue()) {
+      const distanceToMin = distanceTo(position, positions.min);
+      const distanceToMax = distanceTo(position, positions.max);
+
+      if (distanceToMin < distanceToMax) {
+        return 'min';
+      }
+    }
+
+    return 'max';
+  }
+
+  /**
+   * Get the key name of a slider
+   * @param {Slider} slider - React component
+   * @return {string} Key name
+   */
+  getKeyFromSlider(slider) {
+    if (slider === this.refs.sliderMin) {
+      return 'min';
+    }
+
+    return 'max';
+  }
+
+  /**
+   * Get all slider keys of inputRange
+   * @return {string[]} Key names
+   */
+  getKeys() {
+    if (this.isMultiValue()) {
+      return ['min', 'max'];
+    }
+
+    return ['max'];
+  }
+
+  /**
+   * Check if the difference between values and the current values of inputRange
+   * is greater or equal to its step amount
+   * @param {Range} values - Min/max value of sliders
+   * @return {boolean} True if difference is greater or equal to step amount
+   */
+  hasStepDifference(values) {
+    const currentValues = valueTransformer.valuesFromProps(this);
+
+    return length(values.min, currentValues.min) >= this.props.step ||
+           length(values.max, currentValues.max) >= this.props.step;
+  }
+
+  /**
    * Return true if the component accepts a range of values
    * @return {boolean}
    */
-  get isMultiValue() {
-    return isObject(this.props.value) ||
-           isObject(this.props.defaultValue);
+  isMultiValue() {
+    return isObject(this.props.value) || isObject(this.props.defaultValue);
+  }
+
+  /**
+   * Check if values are within the max and min range of inputRange
+   * @param {Range} values - Min/max value of sliders
+   * @return {boolean} True if within range
+   */
+  isWithinRange(values) {
+    if (this.isMultiValue()) {
+      return values.min >= this.props.minValue &&
+             values.max <= this.props.maxValue &&
+             values.min < values.max;
+    }
+
+    return values.max >= this.props.minValue && values.max <= this.props.maxValue;
+  }
+
+  /**
+   * Check if inputRange should update with new values
+   * @param {Range} values - Min/max value of sliders
+   * @return {boolean} True if inputRange should update
+   */
+  shouldUpdate(values) {
+    return this.isWithinRange(values) && this.hasStepDifference(values);
   }
 
   /**
@@ -395,11 +304,11 @@ export default class InputRange extends React.Component {
    * @param {Object|number} values - Object if multi-value, number if single-value
    */
   updateValues(values) {
-    if (!shouldUpdate(this, values)) {
+    if (!this.shouldUpdate(values)) {
       return;
     }
 
-    if (this.isMultiValue) {
+    if (this.isMultiValue()) {
       this.props.onChange(this, values);
     } else {
       this.props.onChange(this, values.max);
@@ -453,7 +362,7 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    const key = getKeyFromSlider(this, slider);
+    const key = this.getKeyFromSlider(slider);
     const position = valueTransformer.positionFromEvent(this, event);
 
     this.updatePosition(key, position);
@@ -469,7 +378,7 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    const key = getKeyFromSlider(this, slider);
+    const key = this.getKeyFromSlider(slider);
 
     switch (event.keyCode) {
     case LEFT_ARROW:
@@ -502,9 +411,7 @@ export default class InputRange extends React.Component {
 
     event.preventDefault();
 
-    const key = getKeyByPosition(this, position);
-
-    this.updatePosition(key, position);
+    this.updatePosition(this.getKeyByPosition(position), position);
   }
 
   /**
@@ -554,7 +461,7 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     this.handleInteractionStart(event);
 
@@ -566,7 +473,7 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     this.handleInteractionEnd(event);
 
@@ -578,7 +485,7 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     this.handleInteractionStart(event);
 
@@ -590,11 +497,71 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
+    const document = this.getDocument();
 
     this.handleInteractionEnd(event);
 
     document.removeEventListener('touchend', this.handleTouchEnd);
+  }
+
+  /**
+   * Get an array of slider HTML for rendering
+   * @return {string[]} Array of HTML
+   */
+  renderSliders() {
+    const { classNames } = this.props;
+    const keys = this.getKeys();
+    const values = valueTransformer.valuesFromProps(this);
+    const percentages = valueTransformer.percentagesFromValues(this, values);
+
+    return keys.map((key) => {
+      const value = values[key];
+      const percentage = percentages[key];
+      const ref = `slider${captialize(key)}`;
+
+      let { maxValue, minValue } = this.props;
+
+      if (key === 'min') {
+        maxValue = values.max;
+      } else {
+        minValue = values.min;
+      }
+
+      const slider = (
+        <Slider
+          ariaLabelledby={ this.props.ariaLabelledby }
+          ariaControls={ this.props.ariaControls }
+          classNames={ classNames }
+          formatLabel={ this.formatLabel }
+          key={ key }
+          maxValue={ maxValue }
+          minValue={ minValue }
+          onSliderKeyDown={ this.handleSliderKeyDown }
+          onSliderMouseMove={ this.handleSliderMouseMove }
+          percentage={ percentage }
+          ref={ ref }
+          type={ key }
+          value={ value } />
+      );
+
+      return slider;
+    });
+  }
+
+  /**
+   * Get an array of hidden input HTML for rendering
+   * @return {string[]} Array of HTML
+   */
+  renderHiddenInputs() {
+    const keys = this.getKeys();
+
+    return keys.map((key) => {
+      const name = this.isMultiValue() ? `${this.props.name}${captialize(key)}` : this.props.name;
+
+      return (
+        <input type="hidden" name={ name } />
+      );
+    });
   }
 
   /**
@@ -603,7 +570,7 @@ export default class InputRange extends React.Component {
    */
   render() {
     const { classNames } = this.props;
-    const componentClassName = getComponentClassName(this);
+    const componentClassName = this.getComponentClassName();
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
 
@@ -629,7 +596,7 @@ export default class InputRange extends React.Component {
           percentages={ percentages }
           onTrackMouseDown={ this.handleTrackMouseDown }>
 
-          { renderSliders(this) }
+          { this.renderSliders() }
         </Track>
 
         <Label
@@ -639,7 +606,7 @@ export default class InputRange extends React.Component {
           { this.props.maxValue }
         </Label>
 
-        { renderHiddenInputs(this) }
+        { this.renderHiddenInputs() }
       </div>
     );
   }

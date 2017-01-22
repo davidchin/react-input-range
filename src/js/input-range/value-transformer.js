@@ -7,7 +7,7 @@ import { clamp, isEmpty, isNumber, objectOf } from '../utils';
  * @return {number} Percentage value
  */
 export function percentageFromPosition(inputRange, position) {
-  const length = inputRange.trackClientRect.width;
+  const length = inputRange.getTrackClientRect().width;
   const sizePerc = position.x / length;
 
   return sizePerc || 0;
@@ -34,7 +34,7 @@ export function valueFromPosition(inputRange, position) {
  * @return {Range} Range values
  */
 export function valuesFromProps(inputRange, { props } = inputRange) {
-  if (inputRange.isMultiValue) {
+  if (inputRange.isMultiValue()) {
     let values = props.value;
 
     if (isEmpty(values) || !objectOf(values, isNumber)) {
@@ -88,7 +88,7 @@ export function percentagesFromValues(inputRange, values) {
  * @return {Point} Position
  */
 export function positionFromValue(inputRange, value) {
-  const length = inputRange.trackClientRect.width;
+  const length = inputRange.getTrackClientRect().width;
   const valuePerc = percentageFromValue(inputRange, value);
   const positionValue = valuePerc * length;
 
@@ -120,7 +120,7 @@ export function positionsFromValues(inputRange, values) {
  * @return {Point}
  */
 export function positionFromEvent(inputRange, event) {
-  const trackClientRect = inputRange.trackClientRect;
+  const trackClientRect = inputRange.getTrackClientRect();
   const length = trackClientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
   const position = {

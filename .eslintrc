@@ -26,8 +26,6 @@ rules:
     - always
   react/jsx-closing-bracket-location:
     - 0
-  react/no-unused-prop-types:
-    - 1
   react/no-string-refs:
     - 1
   react/require-default-props:
