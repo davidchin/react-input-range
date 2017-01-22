@@ -5,7 +5,7 @@ import { isNumber, objectOf } from '../utils';
  * @param {Object} props - React component props
  * @return {?Error} Return Error if validation fails
  */
-export function maxMinValuePropType(props) {
+export default function rangePropType(props) {
   const maxValue = props.maxValue;
   const minValue = props.minValue;
   const value = props.value;

@@ -6,7 +6,7 @@ import defaultClassNames from './default-class-names';
 import * as valueTransformer from './value-transformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
-import { maxMinValuePropType } from './prop-types';
+import { rangePropType } from './range-prop-type';
 
 /**
  * An object describing the position of a point
@@ -249,18 +249,18 @@ export default class InputRange extends React.Component {
       ariaLabelledby: React.PropTypes.string,
       ariaControls: React.PropTypes.string,
       classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      defaultValue: maxMinValuePropType,
+      defaultValue: rangePropType,
       disabled: React.PropTypes.bool,
       formatLabel: React.PropTypes.func,
       labelPrefix: React.PropTypes.string,
       labelSuffix: React.PropTypes.string,
-      maxValue: maxMinValuePropType,
-      minValue: maxMinValuePropType,
+      maxValue: rangePropType,
+      minValue: rangePropType,
       name: React.PropTypes.string,
       onChange: React.PropTypes.func.isRequired,
       onChangeComplete: React.PropTypes.func,
       step: React.PropTypes.number,
-      value: maxMinValuePropType,
+      value: rangePropType,
     };
   }
 
