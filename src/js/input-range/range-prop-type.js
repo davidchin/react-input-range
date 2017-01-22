@@ -6,21 +6,14 @@ import { isNumber, objectOf } from '../utils';
  * @return {?Error} Return Error if validation fails
  */
 export default function rangePropType(props) {
-  const maxValue = props.maxValue;
-  const minValue = props.minValue;
-  const value = props.value;
-  const defaultValue = props.defaultValue;
-  const isValueNumber = isNumber(value);
-  const isDefaultValueNumber = isNumber(defaultValue);
-  const isValueNumberObject = objectOf(value, isNumber);
-  const isDefaultValueNumberObject = objectOf(defaultValue, isNumber);
+  const { defaultValue, maxValue, minValue, value } = props;
 
   if (value === undefined) {
     return new Error('`value` must be defined');
   }
 
-  if (!isValueNumber && !isDefaultValueNumber &&
-      !isValueNumberObject && !isDefaultValueNumberObject) {
+  if (!isNumber(value) && !isNumber(defaultValue) &&
+      !objectOf(value, isNumber) && !objectOf(defaultValue, isNumber)) {
     return new Error('`value` or `defaultValue` must be a number or an array');
   }
 
