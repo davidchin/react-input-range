@@ -21,7 +21,7 @@ const webpackConfig = {
       {
         exclude: /node_modules/,
         loader: 'babel',
-        test: /\.js$/,
+        test: /\.jsx?$/,
       },
       {
         test: /\.scss$/,
@@ -36,6 +36,9 @@ const webpackConfig = {
       test: /\.min\.js$/,
     }),
   ],
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
 };
 
 module.exports = webpackConfig;

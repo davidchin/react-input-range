@@ -6,7 +6,7 @@ const webpackExampleConfig = {
   context: __dirname,
   devtool: 'source-map',
   entry: {
-    example: './example/js/index.js',
+    example: './example/js/index.jsx',
   },
   output: {
     filename: '[name].js',
@@ -16,7 +16,7 @@ const webpackExampleConfig = {
       {
         exclude: /node_modules/,
         loader: 'babel',
-        test: /\.js$/,
+        test: /\.jsx?$/,
       },
       {
         test: /\.scss$/,
@@ -27,7 +27,7 @@ const webpackExampleConfig = {
       {
         exclude: /node_modules/,
         loader: 'eslint',
-        test: /\.js$/,
+        test: /\.jsx?$/,
       },
     ],
   },
@@ -38,6 +38,9 @@ const webpackExampleConfig = {
       ignorePlugins: ['extract-text-webpack-plugin'],
     }),
   ],
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
 };
 
 module.exports = webpackExampleConfig;

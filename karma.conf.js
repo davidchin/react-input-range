@@ -25,9 +25,12 @@ function configureKarma(config) {
             query: {
               plugins: ['istanbul'],
             },
-            test: /\.js$/,
+            test: /\.jsx?$/,
           },
         ],
+      },
+      resolve: {
+        extensions: ['', '.js', '.jsx'],
       },
     },
   });
