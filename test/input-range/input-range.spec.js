@@ -27,16 +27,16 @@ describe('InputRange', () => {
   describe('initialize', () => {
     it('should set default class names for its sub-components and itself', () => {
       expect(inputRange.props.classNames).toEqual({
-        component: 'InputRange',
-        labelContainer: 'InputRange-labelContainer',
-        labelMax: 'InputRange-label InputRange-label--max',
-        labelMin: 'InputRange-label InputRange-label--min',
-        labelValue: 'InputRange-label InputRange-label--value',
-        slider: 'InputRange-slider',
-        sliderContainer: 'InputRange-sliderContainer',
-        trackActive: 'InputRange-track InputRange-track--active',
-        trackContainer: 'InputRange-track InputRange-track--container',
-        disabled: 'is-disabled',
+        component: 'input-range',
+        disabled: 'input-range--disabled',
+        labelContainer: 'input-range__label-container',
+        labelMax: 'input-range__label input-range__label--max',
+        labelMin: 'input-range__label input-range__label--min',
+        labelValue: 'input-range__label input-range__label--value',
+        slider: 'input-range__slider',
+        sliderContainer: 'input-range__slider-container',
+        trackActive: 'input-range__track input-range__track--active',
+        trackContainer: 'input-range__track input-range__track--container',
       });
     });
   });

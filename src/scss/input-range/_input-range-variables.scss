@@ -1,26 +1,26 @@
-$InputRange-fontFamily: 'Helvetica Neue', san-serif !default;
-$InputRange-primaryColor: #3f51b5 !default;
-$InputRange-neutralColor: #aaaaaa !default;
-$InputRange-neutralLightColor: #eeeeee !default;
-$InputRange-disabledColor: #cccccc !default;
+$input-range-font-family: 'Helvetica Neue', san-serif !default;
+$input-range-primary-color: #3f51b5 !default;
+$input-range-neutral-color: #aaaaaa !default;
+$input-range-neutral-light-color: #eeeeee !default;
+$input-range-disabled-color: #cccccc !default;
 
-// InputRange-slider
-$InputRange-slider-background: $InputRange-primaryColor !default;
-$InputRange-slider-border: 1px solid $InputRange-primaryColor !default;
-$InputRange-slider-height: 1rem !default;
-$InputRange-slider-width: 1rem !default;
-$InputRange-slider-transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !default;
-$InputRange-sliderContainer-transition: left 0.3s ease-out !default;
-$InputRange-slider--active-transform: scale(1.3) !default;
-$InputRange-slider--is-disabled-background: $InputRange-disabledColor !default;
-$InputRange-slider--is-disabled-border: 1px solid $InputRange-disabledColor !default;
+// input-range-slider
+$input-range-slider-background: $input-range-primary-color !default;
+$input-range-slider-border: 1px solid $input-range-primary-color !default;
+$input-range-slider-height: 1rem !default;
+$input-range-slider-width: 1rem !default;
+$input-range-slider-transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !default;
+$input-range-slider-container-transition: left 0.3s ease-out !default;
+$input-range-slider-active-transform: scale(1.3) !default;
+$input-range-slider-disabled-background: $input-range-disabled-color !default;
+$input-range-slider-disabled-border: 1px solid $input-range-disabled-color !default;
 
-// InputRange-label
-$InputRange-label-color: $InputRange-neutralColor !default;
+// input-range-label
+$input-range-label-color: $input-range-neutral-color !default;
 
-// InputRange-track
-$InputRange-track-background: $InputRange-neutralLightColor !default;
-$InputRange-track-height: 0.3rem !default;
-$InputRange-track-transition: left 0.3s ease-out, width 0.3s ease-out !default;
-$InputRange-track--active-background: $InputRange-primaryColor !default;
-$InputRange-track--is-disabled-background: $InputRange-neutralLightColor !default;
+// input-range-track
+$input-range-track-background: $input-range-neutral-light-color !default;
+$input-range-track-height: 0.3rem !default;
+$input-range-track-transition: left 0.3s ease-out, width 0.3s ease-out !default;
+$input-range-track-active-background: $input-range-primary-color !default;
+$input-range-track-disabled-background: $input-range-neutral-light-color !default;

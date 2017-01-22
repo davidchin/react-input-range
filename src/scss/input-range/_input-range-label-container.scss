@@ -1,8 +1,8 @@
-.InputRange-labelContainer {
+.input-range__label-container {
   left: -50%;
   position: relative;
 
-  .InputRange-label--max & {
+  .input-range__label--max & {
     left: 50%;
   }
 }

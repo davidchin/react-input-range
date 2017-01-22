@@ -1,25 +1,25 @@
-.InputRange-label {
-  color: $InputRange-label-color;
-  font-family: $InputRange-fontFamily;
+.input-range__label {
+  color: $input-range-label-color;
+  font-family: $input-range-font-family;
   font-size: 0.8rem;
   white-space: nowrap;
 }
 
-.InputRange-label--min,
-.InputRange-label--max {
+.input-range__label--min,
+.input-range__label--max {
   bottom: -1.4rem;
   position: absolute;
 }
 
-.InputRange-label--min {
+.input-range__label--min {
   left: 0;
 }
 
-.InputRange-label--max {
+.input-range__label--max {
   right: 0;
 }
 
-.InputRange-label--value {
+.input-range__label--value {
   position: absolute;
   top: -1.8rem;
 }

@@ -3,9 +3,9 @@ files:
 options:
   formatter: stylish
 rules:
-  class-name-format: &class-name-format
+  class-name-format:
     - 2
-    - convention: ^(([A-Z][a-z]*)+$|(([A-Z][a-z]*)+|u|is|js)(-|--)([a-z]+([a-z]|[A-Z])*)+|(([A-Z][a-z]*)+|u|is|js)(-|--)([a-z]+([a-z]|[A-Z])*)+(--[a-z]+([a-z]|[A-Z])*)+)|[ng]-(\w)+(-(\w)*)*$
+    - convention: hyphenatedbem
   empty-line-between-blocks:
     - 2
     - ignore-single-line-rulesets: false
@@ -28,8 +28,12 @@ rules:
     - max-depth: 2
   no-ids: 2
   no-important: 2
-  placeholder-name-format: *class-name-format
+  placeholder-name-format:
+    - 2
+    - convention: hyphenatedbem
   quotes:
     - 2
     - style: single
-  variable-name-format: *class-name-format
+  variable-name-format:
+    - 2
+    - convention: hyphenatedlowercase
