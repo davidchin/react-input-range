@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import InputRange from '../../src/js/InputRange/InputRange';
-import * as valueTransformer from '../../src/js/InputRange/valueTransformer';
-import { renderComponent, rerenderComponent } from '../TestUtil';
+import InputRange from '../../src/js/input-range/input-range';
+import * as valueTransformer from '../../src/js/input-range/value-transformer';
+import { renderComponent, rerenderComponent } from '../test-utils';
 
 let inputRange;
 let onChange;

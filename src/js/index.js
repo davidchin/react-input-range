@@ -1,3 +1,3 @@
-import InputRange from './InputRange/InputRange';
+import InputRange from './input-range/input-range';
 
 export default InputRange;

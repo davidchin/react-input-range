@@ -1,11 +1,11 @@
 import React from 'react';
-import Slider from './Slider';
-import Track from './Track';
-import Label from './Label';
-import defaultClassNames from './defaultClassNames';
-import * as valueTransformer from './valueTransformer';
+import Slider from './slider';
+import Track from './track';
+import Label from './label';
+import defaultClassNames from './default-class-names';
+import * as valueTransformer from './value-transformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
-import { maxMinValuePropType } from './propTypes';
+import { maxMinValuePropType } from './prop-types';
 
 /**
  * An object describing the position of a point

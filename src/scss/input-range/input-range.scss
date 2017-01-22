@@ -1,0 +1,11 @@
+@import 'input-range-variables';
+@import 'input-range-slider';
+@import 'input-range-label';
+@import 'input-range-label-container';
+@import 'input-range-track';
+
+.InputRange {
+  height: $InputRange-slider-height;
+  position: relative;
+  width: 100%;
+}
