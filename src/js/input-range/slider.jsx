@@ -58,7 +58,7 @@ export default class Slider extends React.Component {
    * @return {Document} Document
    */
   getDocument() {
-    return this.refs.slider.ownerDocument;
+    return this.node.ownerDocument;
   }
 
   /**
@@ -156,7 +156,7 @@ export default class Slider extends React.Component {
     return (
       <span
         className={this.props.classNames.sliderContainer}
-        ref="slider"
+        ref={(node) => { this.node = node; }}
         style={style}>
         <Label
           className={this.props.classNames.labelValue}

@@ -140,8 +140,8 @@ export default class InputRange extends React.Component {
    * @return {ClientRect}
    */
   getTrackClientRect() {
-    if (this.refs.track) {
-      return this.refs.track.getClientRect();
+    if (this.trackNode) {
+      return this.trackNode.getClientRect();
     }
 
     return {
@@ -157,7 +157,7 @@ export default class InputRange extends React.Component {
    * @return {Document} Document
    */
   getDocument() {
-    return this.refs.inputRange.ownerDocument;
+    return this.node.ownerDocument;
   }
 
   /**
@@ -187,7 +187,7 @@ export default class InputRange extends React.Component {
    * @return {string} Key name
    */
   getKeyFromSlider(slider) {
-    if (slider === this.refs.sliderMin) {
+    if (slider === this.sliderMinNode) {
       return 'min';
     }
 
@@ -515,7 +515,7 @@ export default class InputRange extends React.Component {
     return keys.map((key) => {
       const value = values[key];
       const percentage = percentages[key];
-      const ref = `slider${captialize(key)}`;
+      const ref = `slider${captialize(key)}Node`;
 
       let { maxValue, minValue } = this.props;
 
@@ -537,7 +537,7 @@ export default class InputRange extends React.Component {
           onSliderKeyDown={this.handleSliderKeyDown}
           onSliderMouseMove={this.handleSliderMouseMove}
           percentage={percentage}
-          ref={ref}
+          ref={(node) => { this[ref] = node; }}
           type={key}
           value={value} />
       );
@@ -574,7 +574,7 @@ export default class InputRange extends React.Component {
     return (
       <div
         aria-disabled={this.props.disabled}
-        ref="inputRange"
+        ref={(node) => { this.node = node; }}
         className={componentClassName}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}
@@ -589,7 +589,7 @@ export default class InputRange extends React.Component {
 
         <Track
           classNames={this.props.classNames}
-          ref="track"
+          ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
           onTrackMouseDown={this.handleTrackMouseDown}>
 

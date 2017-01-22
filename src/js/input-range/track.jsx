@@ -40,7 +40,7 @@ export default class Track extends React.Component {
    * @return {ClientRect}
    */
   getClientRect() {
-    return this.refs.track.getBoundingClientRect();
+    return this.node.getBoundingClientRect();
   }
 
   /**
@@ -91,7 +91,7 @@ export default class Track extends React.Component {
         className={this.props.classNames.trackContainer}
         onMouseDown={this.handleMouseDown}
         onTouchStart={this.handleTouchStart}
-        ref="track">
+        ref={(node) => { this.node = node; }}>
         <div
           style={activeTrackStyle}
           className={this.props.classNames.trackActive} />

@@ -17,8 +17,6 @@ rules:
     - 0
   react/jsx-closing-bracket-location:
     - 0
-  react/no-string-refs:
-    - 1
   react/require-default-props:
     - 0
 env:
