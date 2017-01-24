@@ -2,11 +2,11 @@ import React from 'react';
 import * as valueTransformer from './value-transformer';
 import defaultClassNames from './default-class-names';
 import Label from './label';
+import rangePropType from './range-prop-type';
 import Slider from './slider';
 import Track from './track';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
-import { rangePropType } from './range-prop-type';
 
 /**
  * An object describing the position of a point
@@ -557,7 +557,7 @@ export default class InputRange extends React.Component {
       const name = this.isMultiValue() ? `${this.props.name}${captialize(key)}` : this.props.name;
 
       return (
-        <input type="hidden" name={name} />
+        <input key={key} type="hidden" name={name} />
       );
     });
   }
