@@ -364,7 +364,7 @@ export default class InputRange extends React.Component {
     const key = this.getKeyFromSlider(slider);
     const position = valueTransformer.positionFromEvent(this, event);
 
-    this.updatePosition(key, position);
+    requestAnimationFrame(() => this.updatePosition(key, position));
   }
 
   /**
