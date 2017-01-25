@@ -1,13 +1,13 @@
 .input-range__label {
   color: $input-range-label-color;
   font-family: $input-range-font-family;
-  font-size: 0.8rem;
+  font-size: $input-range-label-font-size;
   white-space: nowrap;
 }
 
 .input-range__label--min,
 .input-range__label--max {
-  bottom: -1.4rem;
+  bottom: $input-range-label-position-bottom;
   position: absolute;
 }
 
@@ -21,5 +21,5 @@
 
 .input-range__label--value {
   position: absolute;
-  top: -1.8rem;
+  top: $input-range-label-value-position-top;
 }

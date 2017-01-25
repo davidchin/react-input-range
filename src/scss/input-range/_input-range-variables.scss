@@ -7,6 +7,8 @@ $input-range-disabled-color: #cccccc !default;
 // input-range-slider
 $input-range-slider-background: $input-range-primary-color !default;
 $input-range-slider-border: 1px solid $input-range-primary-color !default;
+$input-range-slider-focus-box-shadow-radius: 5px !default;
+$input-range-slider-focus-box-shadow-color: transparentize($input-range-slider-background, 0.8) !default;
 $input-range-slider-height: 1rem !default;
 $input-range-slider-width: 1rem !default;
 $input-range-slider-transition: transform 0.3s ease-out, box-shadow 0.3s ease-out !default;
@@ -17,6 +19,9 @@ $input-range-slider-disabled-border: 1px solid $input-range-disabled-color !defa
 
 // input-range-label
 $input-range-label-color: $input-range-neutral-color !default;
+$input-range-label-font-size: 0.8rem !default;
+$input-range-label-position-bottom: -1.4rem !default;
+$input-range-label-value-position-top: -1.8rem !default;
 
 // input-range-track
 $input-range-track-background: $input-range-neutral-light-color !default;

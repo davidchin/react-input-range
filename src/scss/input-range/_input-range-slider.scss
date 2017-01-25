@@ -19,7 +19,7 @@
   }
 
   &:focus {
-    box-shadow: 0 0 0 5px transparentize($input-range-slider-background, 0.8);
+    box-shadow: 0 0 0 $input-range-slider-focus-box-shadow-radius $input-range-slider-focus-box-shadow-color;
   }
 
   .input-range--disabled & {
