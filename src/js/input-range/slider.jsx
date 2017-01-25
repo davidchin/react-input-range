@@ -176,7 +176,8 @@ export default class Slider extends React.Component {
           onKeyDown={this.handleKeyDown}
           onMouseDown={this.handleMouseDown}
           onTouchStart={this.handleTouchStart}
-          role="slider" />
+          role="slider"
+          tabIndex="0" />
       </span>
     );
   }
