@@ -508,11 +508,10 @@ export default class InputRange extends React.Component {
    * @return {string[]} Array of HTML
    */
   renderSliders() {
-    const keys = this.getKeys();
     const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.percentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
-    return keys.map((key) => {
+    return this.getKeys().map((key) => {
       const value = values[key];
       const percentage = percentages[key];
       const ref = `slider${captialize(key)}Node`;
@@ -548,16 +547,22 @@ export default class InputRange extends React.Component {
 
   /**
    * Get an array of hidden input HTML for rendering
-   * @return {string[]} Array of HTML
+   * @return {?string[]} Array of HTML
    */
   renderHiddenInputs() {
-    const keys = this.getKeys();
+    if (!this.props.name) {
+      return;
+    }
 
-    return keys.map((key) => {
-      const name = this.isMultiValue() ? `${this.props.name}${captialize(key)}` : this.props.name;
+    const isMultiValue = this.isMultiValue();
+    const values = valueTransformer.valuesFromProps(this.props, isMultiValue);
+
+    return this.getKeys().map((key) => {
+      const value = values[key];
+      const name = isMultiValue ? `${this.props.name}${captialize(key)}` : this.props.name;
 
       return (
-        <input key={key} type="hidden" name={name} />
+        <input key={key} type="hidden" name={name} value={value} />
       );
     });
   }
