@@ -101,7 +101,7 @@ function getComponentClassName(inputRange) {
     return props.classNames.component;
   }
 
-  return `${props.classNames.component} is-disabled`;
+  return `${props.classNames.component} ${props.classNames.disabled}`;
 }
 
 /**

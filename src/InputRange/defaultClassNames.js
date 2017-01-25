@@ -25,4 +25,5 @@ export default {
   sliderContainer: 'InputRange-sliderContainer',
   trackActive: 'InputRange-track InputRange-track--active',
   trackContainer: 'InputRange-track InputRange-track--container',
+  disabled: 'is-disabled',
 };
