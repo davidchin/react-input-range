@@ -166,8 +166,8 @@ export default class InputRange extends React.Component {
    * @return {string} Key name
    */
   getKeyByPosition(position) {
-    const values = valueTransformer.valuesFromProps(this);
-    const positions = valueTransformer.positionsFromValues(this, values);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
+    const positions = valueTransformer.positionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     if (this.isMultiValue()) {
       const distanceToMin = distanceTo(position, positions.min);
@@ -213,7 +213,7 @@ export default class InputRange extends React.Component {
    * @return {boolean} True if difference is greater or equal to step amount
    */
   hasStepDifference(values) {
-    const currentValues = valueTransformer.valuesFromProps(this);
+    const currentValues = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
 
     return length(values.min, currentValues.min) >= this.props.step ||
            length(values.max, currentValues.max) >= this.props.step;
@@ -257,8 +257,8 @@ export default class InputRange extends React.Component {
    * @param {Point} position x/y
    */
   updatePosition(key, position) {
-    const values = valueTransformer.valuesFromProps(this);
-    const positions = valueTransformer.positionsFromValues(this, values);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
+    const positions = valueTransformer.positionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     positions[key] = position;
 
@@ -273,13 +273,13 @@ export default class InputRange extends React.Component {
    */
   updatePositions(positions) {
     const values = {
-      min: valueTransformer.valueFromPosition(this, positions.min),
-      max: valueTransformer.valueFromPosition(this, positions.max),
+      min: valueTransformer.valueFromPosition(positions.min, this.props.minValue, this.props.maxValue, this.getTrackClientRect()),
+      max: valueTransformer.valueFromPosition(positions.max, this.props.minValue, this.props.maxValue, this.getTrackClientRect()),
     };
 
     const transformedValues = {
-      min: valueTransformer.stepValueFromValue(this, values.min),
-      max: valueTransformer.stepValueFromValue(this, values.max),
+      min: valueTransformer.stepValueFromValue(values.min, this.props.step),
+      max: valueTransformer.stepValueFromValue(values.max, this.props.step),
     };
 
     this.updateValues(transformedValues);
@@ -291,7 +291,7 @@ export default class InputRange extends React.Component {
    * @param {number} value - New value
    */
   updateValue(key, value) {
-    const values = valueTransformer.valuesFromProps(this);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
 
     values[key] = value;
 
@@ -319,7 +319,7 @@ export default class InputRange extends React.Component {
    * @param {string} key - max/min
    */
   incrementValue(key) {
-    const values = valueTransformer.valuesFromProps(this);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
     const value = values[key] + this.props.step;
 
     this.updateValue(key, value);
@@ -330,7 +330,7 @@ export default class InputRange extends React.Component {
    * @param {string} key - max/min
    */
   decrementValue(key) {
-    const values = valueTransformer.valuesFromProps(this);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
     const value = values[key] - this.props.step;
 
     this.updateValue(key, value);
@@ -362,7 +362,7 @@ export default class InputRange extends React.Component {
     }
 
     const key = this.getKeyFromSlider(slider);
-    const position = valueTransformer.positionFromEvent(this, event);
+    const position = valueTransformer.positionFromEvent(event, this.getTrackClientRect());
 
     requestAnimationFrame(() => this.updatePosition(key, position));
   }
@@ -509,8 +509,8 @@ export default class InputRange extends React.Component {
    */
   renderSliders() {
     const keys = this.getKeys();
-    const values = valueTransformer.valuesFromProps(this);
-    const percentages = valueTransformer.percentagesFromValues(this, values);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
+    const percentages = valueTransformer.percentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return keys.map((key) => {
       const value = values[key];
@@ -568,8 +568,8 @@ export default class InputRange extends React.Component {
    */
   render() {
     const componentClassName = this.getComponentClassName();
-    const values = valueTransformer.valuesFromProps(this);
-    const percentages = valueTransformer.percentagesFromValues(this, values);
+    const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
+    const percentages = valueTransformer.percentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return (
       <div

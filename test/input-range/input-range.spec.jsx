@@ -4,10 +4,9 @@ import InputRange from '../../src/js/input-range/input-range';
 import * as valueTransformer from '../../src/js/input-range/value-transformer';
 import { renderComponent, rerenderComponent } from '../test-utils';
 
-let inputRange;
-let onChange;
-
 describe('InputRange', () => {
+  let inputRange;
+  let onChange;
   let value;
   let values;
 
@@ -19,6 +18,7 @@ describe('InputRange', () => {
     };
 
     onChange = jasmine.createSpy('onChange');
+
     inputRange = renderComponent(
       <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} />
     );
@@ -54,7 +54,7 @@ describe('InputRange', () => {
     it('should get values from props', () => {
       inputRange.updateValue('max', newValue);
 
-      expect(valueTransformer.valuesFromProps).toHaveBeenCalledWith(inputRange);
+      expect(valueTransformer.valuesFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
     });
 
     it('should update value for key', () => {
@@ -217,8 +217,9 @@ describe('InputRange', () => {
   });
 
   describe('handleSliderMouseMove', () => {
-    let slider;
     let event;
+    let requestAnimationFrame;
+    let slider;
 
     beforeEach(() => {
       spyOn(inputRange, 'updatePosition');
@@ -228,10 +229,20 @@ describe('InputRange', () => {
         clientX: 100,
         clientY: 200,
       };
+
+      requestAnimationFrame = window.requestAnimationFrame;
+      window.requestAnimationFrame = callback => window.setTimeout(callback);
+      jasmine.clock().install();
+    });
+
+    afterEach(() => {
+      window.requestAnimationFrame = requestAnimationFrame;
+      jasmine.clock().uninstall();
     });
 
     it('should set the position of a slider according to mouse event', () => {
       inputRange.handleSliderMouseMove(event, slider);
+      jasmine.clock().tick(0);
 
       expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
     });
@@ -240,6 +251,7 @@ describe('InputRange', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
       spyOn(inputRange, 'updatePosition');
       inputRange.handleSliderMouseMove(event, slider);
+      jasmine.clock().tick(0);
 
       expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });

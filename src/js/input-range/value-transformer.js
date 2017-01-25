@@ -2,12 +2,12 @@ import { clamp, isEmpty, isNumber, objectOf } from '../utils';
 
 /**
  * Convert position into percentage value
- * @param {InputRange} inputRange
  * @param {Point} position
+ * @param {ClientRect} trackClientRect
  * @return {number} Percentage value
  */
-export function percentageFromPosition(inputRange, position) {
-  const length = inputRange.getTrackClientRect().width;
+export function percentageFromPosition(position, trackClientRect) {
+  const length = trackClientRect.width;
   const sizePerc = position.x / length;
 
   return sizePerc || 0;
@@ -15,26 +15,27 @@ export function percentageFromPosition(inputRange, position) {
 
 /**
  * Convert position into model value
- * @param {InputRange} inputRange
  * @param {Point} position
+ * @param {number} minValue
+ * @param {number} maxValue
+ * @param {ClientRect} trackClientRect
  * @return {number} Model value
  */
-export function valueFromPosition(inputRange, position) {
-  const sizePerc = percentageFromPosition(inputRange, position);
-  const valueDiff = inputRange.props.maxValue - inputRange.props.minValue;
-  const value = inputRange.props.minValue + (valueDiff * sizePerc);
+export function valueFromPosition(position, minValue, maxValue, trackClientRect) {
+  const sizePerc = percentageFromPosition(position, trackClientRect);
+  const valueDiff = maxValue - minValue;
 
-  return value;
+  return minValue + (valueDiff * sizePerc);
 }
 
 /**
  * Extract values from props
- * @param {InputRange} inputRange
- * @param {Point} [props=inputRange.props]
+ * @param {Object} props
+ * @param {boolean} isMultiValue
  * @return {Range} Range values
  */
-export function valuesFromProps(inputRange, { props } = inputRange) {
-  if (inputRange.isMultiValue()) {
+export function valuesFromProps(props, isMultiValue) {
+  if (isMultiValue) {
     let values = props.value;
 
     if (isEmpty(values) || !objectOf(values, isNumber)) {
@@ -54,42 +55,44 @@ export function valuesFromProps(inputRange, { props } = inputRange) {
 
 /**
  * Convert value into percentage value
- * @param {InputRange} inputRange
  * @param {number} value
+ * @param {number} minValue
+ * @param {number} maxValue
  * @return {number} Percentage value
  */
-export function percentageFromValue(inputRange, value) {
-  const validValue = clamp(value, inputRange.props.minValue, inputRange.props.maxValue);
-  const valueDiff = inputRange.props.maxValue - inputRange.props.minValue;
-  const valuePerc = (validValue - inputRange.props.minValue) / valueDiff;
+export function percentageFromValue(value, minValue, maxValue) {
+  const validValue = clamp(value, minValue, maxValue);
+  const valueDiff = maxValue - minValue;
+  const valuePerc = (validValue - minValue) / valueDiff;
 
   return valuePerc || 0;
 }
 
 /**
  * Convert values into percentage values
- * @param {InputRange} inputRange
  * @param {Range} values
+ * @param {number} minValue
+ * @param {number} maxValue
  * @return {Range} Percentage values
  */
-export function percentagesFromValues(inputRange, values) {
-  const percentages = {
-    min: percentageFromValue(inputRange, values.min),
-    max: percentageFromValue(inputRange, values.max),
+export function percentagesFromValues(values, minValue, maxValue) {
+  return {
+    min: percentageFromValue(values.min, minValue, maxValue),
+    max: percentageFromValue(values.max, minValue, maxValue),
   };
-
-  return percentages;
 }
 
 /**
  * Convert value into position
- * @param {InputRange} inputRange
  * @param {number} value
+ * @param {number} minValue
+ * @param {number} maxValue
+ * @param {ClientRect} trackClientRect
  * @return {Point} Position
  */
-export function positionFromValue(inputRange, value) {
-  const length = inputRange.getTrackClientRect().width;
-  const valuePerc = percentageFromValue(inputRange, value);
+export function positionFromValue(value, minValue, maxValue, trackClientRect) {
+  const length = trackClientRect.width;
+  const valuePerc = percentageFromValue(value, minValue, maxValue);
   const positionValue = valuePerc * length;
 
   return {
@@ -100,43 +103,41 @@ export function positionFromValue(inputRange, value) {
 
 /**
  * Convert a range of values into positions
- * @param {InputRange} inputRange
  * @param {Range} values
+ * @param {number} minValue
+ * @param {number} maxValue
+ * @param {ClientRect} trackClientRect
  * @return {Object<string, Point>}
  */
-export function positionsFromValues(inputRange, values) {
-  const positions = {
-    min: positionFromValue(inputRange, values.min),
-    max: positionFromValue(inputRange, values.max),
+export function positionsFromValues(values, minValue, maxValue, trackClientRect) {
+  return {
+    min: positionFromValue(values.min, minValue, maxValue, trackClientRect),
+    max: positionFromValue(values.max, minValue, maxValue, trackClientRect),
   };
-
-  return positions;
 }
 
 /**
  * Extract a position from an event
- * @param {InputRange} inputRange
  * @param {Event} event
+ * @param {ClientRect} trackClientRect
  * @return {Point}
  */
-export function positionFromEvent(inputRange, event) {
-  const trackClientRect = inputRange.getTrackClientRect();
+export function positionFromEvent(event, trackClientRect) {
   const length = trackClientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
-  const position = {
+
+  return {
     x: clamp(clientX - trackClientRect.left, 0, length),
     y: 0,
   };
-
-  return position;
 }
 
 /**
  * Convert a value into a step value
- * @param {InputRange} inputRange
  * @param {number} value
+ * @param {number} valuePerStep
  * @return {number} Step value
  */
-export function stepValueFromValue(inputRange, value) {
-  return Math.round(value / inputRange.props.step) * inputRange.props.step;
+export function stepValueFromValue(value, valuePerStep) {
+  return Math.round(value / valuePerStep) * valuePerStep;
 }
