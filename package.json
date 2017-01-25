@@ -73,6 +73,7 @@
     "build:scss": "NODE_ENV=production node-sass src/scss --recursive --source-map true --output lib/css",
     "changelog": "conventional-changelog --preset angular --infile CHANGELOG.md --same-file",
     "dev": "webpack-dev-server --inline --config webpack-example.config.js --content-base example",
+    "doc": "esdoc",
     "lint": "npm run lint:js && npm run lint:scss",
     "lint:js": "eslint src",
     "lint:scss": "sass-lint --verbose --no-exit",

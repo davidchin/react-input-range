@@ -1,6 +1,7 @@
 {
   "source": "./src",
   "destination": "./doc",
+  "includes": ["\\.(jsx?)$"],
   "plugins": [
     {
       "name": "esdoc-importpath-plugin",
