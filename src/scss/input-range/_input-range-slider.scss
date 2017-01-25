@@ -31,5 +31,6 @@
 }
 
 .input-range__slider-container {
+  transform: translateZ(0px);
   transition: $input-range-slider-container-transition;
 }

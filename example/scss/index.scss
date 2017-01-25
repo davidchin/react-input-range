@@ -1,10 +1,12 @@
 .form {
-  height: 200px;
   margin: 0 auto;
-  padding-top: 100px;
-  width: 60%;
+  padding: 100px 30px 0;
+
+  @media (min-width: 800px) {
+    max-width: 60%;
+  }
 }
 
 .input-range {
-  margin-bottom: 10rem;
+  margin-bottom: 160px;
 }
