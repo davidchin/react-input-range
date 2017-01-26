@@ -3,11 +3,13 @@ import Label from './label';
 import { autobind } from '../utils';
 
 /**
+ * @ignore
  * Slider React component
  */
 export default class Slider extends React.Component {
   /**
    * Accepted propTypes of Slider
+   * @override
    * @return {Object}
    * @property {Function} ariaLabelledby
    * @property {Function} ariaControls
@@ -44,6 +46,12 @@ export default class Slider extends React.Component {
   constructor(props) {
     super(props);
 
+    /**
+     * @private
+     * @type {?Component}
+     */
+    this.node = null;
+
     autobind([
       'handleMouseDown',
       'handleMouseUp',
@@ -57,6 +65,7 @@ export default class Slider extends React.Component {
 
   /**
    * Get the owner document of slider
+   * @private
    * @return {Document} Document
    */
   getDocument() {
@@ -65,6 +74,7 @@ export default class Slider extends React.Component {
 
   /**
    * Get the style of slider based on its props
+   * @private
    * @return {Object} CSS styles
    */
   getStyle() {
@@ -79,6 +89,8 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any mousedown event received by the component
+   * @private
+   * @return {void}
    */
   handleMouseDown() {
     const document = this.getDocument();
@@ -90,6 +102,8 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any mouseup event received by the component
+   * @private
+   * @return {void}
    */
   handleMouseUp() {
     const document = this.getDocument();
@@ -101,7 +115,9 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any mousemove event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleMouseMove(event) {
     this.props.onSliderMouseMove(event, this.props.type);
@@ -109,7 +125,9 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any touchstart event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleTouchStart(event) {
     const document = this.getDocument();
@@ -122,7 +140,9 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any touchmove event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleTouchMove(event) {
     this.props.onSliderMouseMove(event, this.props.type);
@@ -130,6 +150,8 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any touchend event received by the component
+   * @private
+   * @return {void}
    */
   handleTouchEnd(event) {
     const document = this.getDocument();
@@ -142,7 +164,9 @@ export default class Slider extends React.Component {
 
   /**
    * Handle any keydown event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleKeyDown(event) {
     this.props.onSliderKeyDown(event, this.props.type);
@@ -150,6 +174,7 @@ export default class Slider extends React.Component {
 
   /**
    * Render method of the component
+   * @override
    * @return {string} Component JSX
    */
   render() {

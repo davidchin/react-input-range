@@ -2,6 +2,7 @@ import { clamp, isEmpty, isNumber, objectOf } from '../utils';
 
 /**
  * Convert position into percentage value
+ * @ignore
  * @param {Point} position
  * @param {ClientRect} trackClientRect
  * @return {number} Percentage value
@@ -15,6 +16,7 @@ export function percentageFromPosition(position, trackClientRect) {
 
 /**
  * Convert position into model value
+ * @ignore
  * @param {Point} position
  * @param {number} minValue
  * @param {number} maxValue
@@ -30,6 +32,7 @@ export function valueFromPosition(position, minValue, maxValue, trackClientRect)
 
 /**
  * Extract values from props
+ * @ignore
  * @param {Object} props
  * @param {boolean} isMultiValue
  * @return {Range} Range values
@@ -55,6 +58,7 @@ export function valuesFromProps(props, isMultiValue) {
 
 /**
  * Convert value into percentage value
+ * @ignore
  * @param {number} value
  * @param {number} minValue
  * @param {number} maxValue
@@ -70,6 +74,7 @@ export function percentageFromValue(value, minValue, maxValue) {
 
 /**
  * Convert values into percentage values
+ * @ignore
  * @param {Range} values
  * @param {number} minValue
  * @param {number} maxValue
@@ -84,6 +89,7 @@ export function percentagesFromValues(values, minValue, maxValue) {
 
 /**
  * Convert value into position
+ * @ignore
  * @param {number} value
  * @param {number} minValue
  * @param {number} maxValue
@@ -103,6 +109,7 @@ export function positionFromValue(value, minValue, maxValue, trackClientRect) {
 
 /**
  * Convert a range of values into positions
+ * @ignore
  * @param {Range} values
  * @param {number} minValue
  * @param {number} maxValue
@@ -118,6 +125,7 @@ export function positionsFromValues(values, minValue, maxValue, trackClientRect)
 
 /**
  * Extract a position from an event
+ * @ignore
  * @param {Event} event
  * @param {ClientRect} trackClientRect
  * @return {Point}
@@ -134,6 +142,7 @@ export function positionFromEvent(event, trackClientRect) {
 
 /**
  * Convert a value into a step value
+ * @ignore
  * @param {number} value
  * @param {number} valuePerStep
  * @return {number} Step value

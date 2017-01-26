@@ -14,22 +14,9 @@ import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 export default class InputRange extends React.Component {
   /**
    * Accepted propTypes of InputRange
+   * @ignore
+   * @override
    * @return {Object}
-   * @property {Function} ariaLabelledby
-   * @property {Function} ariaControls
-   * @property {Function} classNames
-   * @property {Function} defaultValue
-   * @property {Function} disabled
-   * @property {Function} formatLabel
-   * @property {Function} labelPrefix
-   * @property {Function} labelSuffix
-   * @property {Function} maxValue
-   * @property {Function} minValue
-   * @property {Function} name
-   * @property {Function} onChange
-   * @property {Function} onChangeComplete
-   * @property {Function} step
-   * @property {Function} value
    */
   static get propTypes() {
     return {
@@ -53,16 +40,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Default props of InputRange
+   * @ignore
+   * @override
    * @return {Object}
-   * @property {Object<string, string>} classNames
-   * @property {Range|number} defaultValue
-   * @property {boolean} disabled
-   * @property {string} labelPrefix
-   * @property {string} labelSuffix
-   * @property {number} maxValue
-   * @property {number} minValue
-   * @property {number} step
-   * @property {Range|number} value
    */
   static get defaultProps() {
     return {
@@ -81,9 +61,42 @@ export default class InputRange extends React.Component {
   /**
    * InputRange constructor
    * @param {Object} props - React component props
+   * @param {string} [props.ariaLabelledby]
+   * @param {string} [props.ariaControls]
+   * @param {Object<string, string>} [props.classNames = DEFAULT_CLASS_NAMES]
+   * @param {number|Range} [props.defaultValue = 0]
+   * @param {boolean} [props.disabled = false]
+   * @param {Function} [props.formatLabel]
+   * @param {string} [props.labelPrefix = '']
+   * @param {string} [props.labelSuffix = '']
+   * @param {number|Range} [props.maxValue = 10]
+   * @param {number|Range} [props.minValue = 0]
+   * @param {string} [props.name]
+   * @param {string} props.onChange
+   * @param {Function} [props.onChangeComplete]
+   * @param {number} [props.step = 1]
+   * @param {number|Range} [props.value = null]
    */
   constructor(props) {
     super(props);
+
+    /**
+     * @private
+     * @type {?number}
+     */
+    this.startValue = null;
+
+    /**
+     * @private
+     * @type {?Component}
+     */
+    this.node = null;
+
+    /**
+     * @private
+     * @type {?Component}
+     */
+    this.trackNode = null;
 
     autobind([
       'formatLabel',
@@ -103,6 +116,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get the class name(s) of inputRange based on its props
+   * @private
    * @return {string} A list of class names delimited with spaces
    */
   getComponentClassName() {
@@ -115,6 +129,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Return the clientRect of the component's track
+   * @private
    * @return {ClientRect}
    */
   getTrackClientRect() {
@@ -132,6 +147,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get the owner document of inputRange
+   * @private
    * @return {Document} Document
    */
   getDocument() {
@@ -140,6 +156,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get the key name of a slider that's the closest to a point
+   * @private
    * @param {Point} position - x/y
    * @return {string} Key name
    */
@@ -161,6 +178,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get all slider keys of inputRange
+   * @private
    * @return {string[]} Key names
    */
   getKeys() {
@@ -174,6 +192,7 @@ export default class InputRange extends React.Component {
   /**
    * Check if the difference between values and the current values of inputRange
    * is greater or equal to its step amount
+   * @private
    * @param {Range} values - Min/max value of sliders
    * @return {boolean} True if difference is greater or equal to step amount
    */
@@ -186,6 +205,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Return true if the component accepts a range of values
+   * @private
    * @return {boolean}
    */
   isMultiValue() {
@@ -194,6 +214,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Check if values are within the max and min range of inputRange
+   * @private
    * @param {Range} values - Min/max value of sliders
    * @return {boolean} True if within range
    */
@@ -209,6 +230,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Check if inputRange should update with new values
+   * @private
    * @param {Range} values - Min/max value of sliders
    * @return {boolean} True if inputRange should update
    */
@@ -218,8 +240,10 @@ export default class InputRange extends React.Component {
 
   /**
    * Update the position of a slider by key
+   * @private
    * @param {string} key - min/max
    * @param {Point} position x/y
+   * @return {void}
    */
   updatePosition(key, position) {
     const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
@@ -232,9 +256,11 @@ export default class InputRange extends React.Component {
 
   /**
    * Update the position of sliders
+   * @private
    * @param {Object} positions
    * @param {Point} positions.min
    * @param {Point} positions.max
+   * @return {void}
    */
   updatePositions(positions) {
     const values = {
@@ -252,8 +278,10 @@ export default class InputRange extends React.Component {
 
   /**
    * Update the value of a slider by key
+   * @private
    * @param {string} key - max/min
    * @param {number} value - New value
+   * @return {void}
    */
   updateValue(key, value) {
     const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
@@ -265,7 +293,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Update the values of all sliders
+   * @private
    * @param {Object|number} values - Object if multi-value, number if single-value
+   * @return {void}
    */
   updateValues(values) {
     if (!this.shouldUpdate(values)) {
@@ -281,7 +311,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Increment the value of a slider by key name
+   * @private
    * @param {string} key - max/min
+   * @return {void}
    */
   incrementValue(key) {
     const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
@@ -292,7 +324,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Decrement the value of a slider by key name
+   * @private
    * @param {string} key - max/min
+   * @return {void}
    */
   decrementValue(key) {
     const values = valueTransformer.valuesFromProps(this.props, this.isMultiValue());
@@ -303,6 +337,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Format label
+   * @private
    * @param {number} labelValue - Label value
    * @return {string} Formatted label value
    */
@@ -318,8 +353,10 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any mousemove event received by the slider
+   * @private
    * @param {SyntheticEvent} event - User event
    * @param {string} key - Slider type
+   * @return {void}
    */
   handleSliderMouseMove(event, key) {
     if (this.props.disabled) {
@@ -333,9 +370,10 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any keydown event received by the slider
+   * @private
    * @param {SyntheticEvent} event - User event
    * @param {string} key - Slider type
-   * @param {Slider} slider - React component
+   * @return {void}
    */
   handleSliderKeyDown(event, key) {
     if (this.props.disabled) {
@@ -362,8 +400,10 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any mousedown event received by the track
+   * @private
    * @param {SyntheticEvent} event - User event
    * @param {Point} position - Mousedown position
+   * @return {void}
    */
   handleTrackMouseDown(event, position) {
     if (this.props.disabled) {
@@ -377,6 +417,8 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle the start of any user-triggered event
+   * @private
+   * @return {void}
    */
   handleInteractionStart() {
     if (!this.props.onChangeComplete || isDefined(this.startValue)) {
@@ -388,6 +430,8 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle the end of any user-triggered event
+   * @private
+   * @return {void}
    */
   handleInteractionEnd() {
     if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
@@ -403,7 +447,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any keydown event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleKeyDown(event) {
     this.handleInteractionStart(event);
@@ -411,7 +457,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any keyup event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleKeyUp(event) {
     this.handleInteractionEnd(event);
@@ -419,7 +467,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any mousedown event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleMouseDown(event) {
     const document = this.getDocument();
@@ -431,6 +481,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any mouseup event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp(event) {
@@ -443,7 +494,9 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any touchstart event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
+   * @return {void}
    */
   handleTouchStart(event) {
     const document = this.getDocument();
@@ -455,6 +508,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Handle any touchend event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
@@ -467,6 +521,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get an array of slider HTML for rendering
+   * @private
    * @return {string[]} Array of HTML
    */
   renderSliders() {
@@ -509,6 +564,7 @@ export default class InputRange extends React.Component {
 
   /**
    * Get an array of hidden input HTML for rendering
+   * @private
    * @return {string[]} Array of HTML
    */
   renderHiddenInputs() {
@@ -531,6 +587,8 @@ export default class InputRange extends React.Component {
 
   /**
    * Render method of the component
+   * @ignore
+   * @override
    * @return {string} Component JSX
    */
   render() {

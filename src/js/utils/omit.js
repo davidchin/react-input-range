@@ -2,6 +2,7 @@ import include from './include';
 
 /**
  * Return a new object without the specified keys
+ * @ignore
  * @param {Object} obj
  * @param {string[]} omitKeys
  * @return {Object}

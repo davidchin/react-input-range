@@ -2,6 +2,7 @@ import isObject from './is-object';
 
 /**
  * Check if all items in an object match a predicate
+ * @ignore
  * @param {Object} object
  * @param {predicateFn} predicate
  * @param {string[]} keys

@@ -1,5 +1,6 @@
 /**
  * Check if a value is an object
+ * @ignore
  * @param {*} value
  * @return {Boolean}
  */

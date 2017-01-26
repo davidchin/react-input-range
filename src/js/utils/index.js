@@ -1,5 +1,5 @@
 /**
- * @callback predicateFn
+ * @type {Function} predicateFn
  * @param {*} value
  * @return {boolean}
  */

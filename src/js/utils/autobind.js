@@ -1,5 +1,6 @@
 /**
  * Bind all methods of an object to itself
+ * @ignore
  * @param {Function[]} methodNames
  * @param {Object} instance
  */

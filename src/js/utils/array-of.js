@@ -1,5 +1,6 @@
 /**
  * Check if all items in an array match a predicate
+ * @ignore
  * @param {Array} array
  * @param {predicateFn} predicate
  * @return {Boolean}

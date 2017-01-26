@@ -1,5 +1,6 @@
 /**
  * Clamp a value between a min and max value
+ * @ignore
  * @param {number} value
  * @param {number} min
  * @param {number} max

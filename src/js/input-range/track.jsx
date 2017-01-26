@@ -2,11 +2,13 @@ import React from 'react';
 import { autobind } from '../utils';
 
 /**
+ * @ignore
  * Track React component
  */
 export default class Track extends React.Component {
   /**
    * Accepted propTypes of Track
+   * @override
    * @return {Object}
    * @property {Function} children
    * @property {Function} classNames
@@ -29,6 +31,12 @@ export default class Track extends React.Component {
   constructor(props) {
     super(props);
 
+    /**
+     * @private
+     * @type {?Component}
+     */
+    this.node = null;
+
     autobind([
       'handleMouseDown',
       'handleTouchStart',
@@ -37,6 +45,7 @@ export default class Track extends React.Component {
 
   /**
    * Return the clientRect of the component
+   * @private
    * @return {ClientRect}
    */
   getClientRect() {
@@ -45,6 +54,7 @@ export default class Track extends React.Component {
 
   /**
    * Get the CSS styles for an active track
+   * @private
    * @return {Object} CSS styles
    */
   getActiveTrackStyle() {
@@ -56,6 +66,7 @@ export default class Track extends React.Component {
 
   /**
    * Handle any mousedown event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
@@ -71,6 +82,7 @@ export default class Track extends React.Component {
 
   /**
    * Handle any touchstart event received by the component
+   * @private
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
@@ -81,6 +93,7 @@ export default class Track extends React.Component {
 
   /**
    * Render method of the component
+   * @override
    * @return {string} Component JSX
    */
   render() {

@@ -1,5 +1,6 @@
 /**
  * Calculate the absolute difference between two numbers
+ * @ignore
  * @param {number} numA
  * @param {number} numB
  * @return {number}

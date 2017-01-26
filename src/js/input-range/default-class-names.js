@@ -1,5 +1,6 @@
 /**
 * An object containing class names
+* @ignore
 * @type {Object}
 * @property {string} component
 * @property {string} labelContainer

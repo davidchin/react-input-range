@@ -1,5 +1,6 @@
 /**
  * Captialize a string
+ * @ignore
  * @param {string} string
  * @return {string}
  */

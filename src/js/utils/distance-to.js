@@ -1,5 +1,6 @@
 /**
  * Calculate the distance between pointA and pointB
+ * @ignore
  * @param {Point} pointA
  * @param {Point} pointB
  * @return {number} Distance

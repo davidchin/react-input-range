@@ -1,6 +1,7 @@
 import React from 'react';
 
 /**
+ * @ignore
  * Label React component
  */
 export default function Label(props) {

@@ -2,6 +2,7 @@ import { isNumber, objectOf } from '../utils';
 
 /**
  * A prop type accepting a range of numeric values or a single numeric value
+ * @ignore
  * @param {Object} props - React component props
  * @return {?Error} Return Error if validation fails
  */

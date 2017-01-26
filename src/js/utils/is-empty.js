@@ -1,5 +1,6 @@
 /**
  * Check if an object is empty
+ * @ignore
  * @param {Object|Array} obj
  * @return {Boolean}
  */
