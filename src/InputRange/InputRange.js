@@ -550,7 +550,7 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames, Label, Track, children } = this.props;
+    const { classNames, Label, Track, children, showLabel } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -564,12 +564,14 @@ export default class InputRange extends React.Component {
         onKeyUp={ this.handleKeyUp }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }>
-        <Label
-          className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.minValue }
-        </Label>
+        {showLabel && (
+          <Label
+            className={ classNames.labelMin }
+            containerClassName={ classNames.labelContainer }
+            formatLabel={ this.formatLabel }>
+            { this.props.minValue }
+          </Label>
+        )}
 
         <Track
           classNames={ classNames }
@@ -580,12 +582,14 @@ export default class InputRange extends React.Component {
           { renderSliders(this) }
         </Track>
 
-        <Label
-          className={ classNames.labelMax }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.maxValue }
-        </Label>
+        {showLabel && (
+          <Label
+            className={ classNames.labelMax }
+            containerClassName={ classNames.labelContainer }
+            formatLabel={ this.formatLabel }>
+            { this.props.maxValue }
+          </Label>
+        )}
 
         { children }
 
@@ -598,17 +602,17 @@ export default class InputRange extends React.Component {
 /**
  * Accepted propTypes of InputRange
  * @static {Object}
- * @property {Function} ariaLabelledby
+ * @property {String} ariaLabelledby
  * @property {Function} ariaControls
- * @property {Function} classNames
- * @property {Function} defaultValue
- * @property {Function} disabled
+ * @property {Object} classNames
+ * @property {String|Number} defaultValue
+ * @property {Boolean} disabled
  * @property {Function} formatLabel
  * @property {Function} labelPrefix
  * @property {Function} labelSuffix
- * @property {Function} maxValue
- * @property {Function} minValue
- * @property {Function} name
+ * @property {Number} maxValue
+ * @property {Number} minValue
+ * @property {String} name
  * @property {Function} onChange
  * @property {Function} onChangeComplete
  * @property {Function} step
@@ -617,6 +621,7 @@ export default class InputRange extends React.Component {
  * @property {Function} Slider
  * @property {Function} Label
  * @property {Function} children
+ * @property {Boolean} showLabel
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -638,6 +643,7 @@ InputRange.propTypes = {
   Slider: React.PropTypes.func,
   Label: React.PropTypes.func,
   children: React.PropTypes.any,
+  showLabel: React.PropTypes.bool,
 };
 
 /**
@@ -669,4 +675,5 @@ InputRange.defaultProps = {
   Track: DefaultTrack,
   Slider: DefaultSlider,
   Label: DefaultLabel,
+  showLabel: true,
 };
