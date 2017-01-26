@@ -66,7 +66,7 @@ export default class Track extends React.Component {
       y: 0,
     };
 
-    this.props.onTrackMouseDown(event, this, position);
+    this.props.onTrackMouseDown(event, position);
   }
 
   /**

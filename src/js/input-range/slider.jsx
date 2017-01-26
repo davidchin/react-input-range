@@ -18,6 +18,7 @@ export default class Slider extends React.Component {
    * @property {Function} onSliderKeyDown
    * @property {Function} onSliderMouseMove
    * @property {Function} percentage
+   * @property {Function} type
    * @property {Function} value
    */
   static get propTypes() {
@@ -31,6 +32,7 @@ export default class Slider extends React.Component {
       onSliderKeyDown: React.PropTypes.func.isRequired,
       onSliderMouseMove: React.PropTypes.func.isRequired,
       percentage: React.PropTypes.number.isRequired,
+      type: React.PropTypes.string.isRequired,
       value: React.PropTypes.number.isRequired,
     };
   }
@@ -102,7 +104,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseMove(event) {
-    this.props.onSliderMouseMove(event, this);
+    this.props.onSliderMouseMove(event, this.props.type);
   }
 
   /**
@@ -123,7 +125,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchMove(event) {
-    this.props.onSliderMouseMove(event, this);
+    this.props.onSliderMouseMove(event, this.props.type);
   }
 
   /**
@@ -143,7 +145,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleKeyDown(event) {
-    this.props.onSliderKeyDown(event, this);
+    this.props.onSliderKeyDown(event, this.props.type);
   }
 
   /**

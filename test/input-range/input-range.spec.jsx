@@ -78,7 +78,7 @@ describe('InputRange', () => {
       it('should call `onChange` callback', () => {
         inputRange.updateValues(newValues);
 
-        expect(onChange).toHaveBeenCalledWith(inputRange, newValues);
+        expect(onChange).toHaveBeenCalledWith(newValues);
       });
     });
 
@@ -92,7 +92,7 @@ describe('InputRange', () => {
       it('should call `onChange` callback', () => {
         inputRange.updateValues(newValues);
 
-        expect(onChange).toHaveBeenCalledWith(inputRange, newValues.max);
+        expect(onChange).toHaveBeenCalledWith(newValues.max);
       });
     });
   });
@@ -219,12 +219,10 @@ describe('InputRange', () => {
   describe('handleSliderMouseMove', () => {
     let event;
     let requestAnimationFrame;
-    let slider;
 
     beforeEach(() => {
       spyOn(inputRange, 'updatePosition');
 
-      slider = inputRange.sliderMaxNode;
       event = {
         clientX: 100,
         clientY: 200,
@@ -241,7 +239,7 @@ describe('InputRange', () => {
     });
 
     it('should set the position of a slider according to mouse event', () => {
-      inputRange.handleSliderMouseMove(event, slider);
+      inputRange.handleSliderMouseMove(event, 'max');
       jasmine.clock().tick(0);
 
       expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
@@ -250,7 +248,7 @@ describe('InputRange', () => {
     it('should not set the position of a slider if disabled', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
       spyOn(inputRange, 'updatePosition');
-      inputRange.handleSliderMouseMove(event, slider);
+      inputRange.handleSliderMouseMove(event, 'max');
       jasmine.clock().tick(0);
 
       expect(inputRange.updatePosition).not.toHaveBeenCalled();
@@ -258,14 +256,12 @@ describe('InputRange', () => {
   });
 
   describe('handleSliderKeyDown', () => {
-    let slider;
     let event;
 
     describe('when pressing left arrow key', () => {
       beforeEach(() => {
         spyOn(inputRange, 'decrementValue');
 
-        slider = inputRange.sliderMaxNode;
         event = {
           keyCode: 37,
           preventDefault: jasmine.createSpy('preventDefault'),
@@ -273,13 +269,13 @@ describe('InputRange', () => {
       });
 
       it('should decrement value', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(event.preventDefault).toHaveBeenCalledWith();
       });
@@ -287,7 +283,7 @@ describe('InputRange', () => {
       it('should not decrement value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.decrementValue).not.toHaveBeenCalled();
       });
@@ -297,7 +293,6 @@ describe('InputRange', () => {
       beforeEach(() => {
         spyOn(inputRange, 'decrementValue');
 
-        slider = inputRange.sliderMaxNode;
         event = {
           keyCode: 40,
           preventDefault: jasmine.createSpy('preventDefault'),
@@ -305,13 +300,13 @@ describe('InputRange', () => {
       });
 
       it('should decrement value', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(event.preventDefault).toHaveBeenCalledWith();
       });
@@ -319,7 +314,7 @@ describe('InputRange', () => {
       it('should not decrement value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.decrementValue).not.toHaveBeenCalled();
       });
@@ -329,7 +324,6 @@ describe('InputRange', () => {
       beforeEach(() => {
         spyOn(inputRange, 'incrementValue');
 
-        slider = inputRange.sliderMaxNode;
         event = {
           keyCode: 39,
           preventDefault: jasmine.createSpy('preventDefault'),
@@ -337,13 +331,13 @@ describe('InputRange', () => {
       });
 
       it('should increment value', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(event.preventDefault).toHaveBeenCalledWith();
       });
@@ -351,7 +345,7 @@ describe('InputRange', () => {
       it('should not increment value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'incrementValue');
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.incrementValue).not.toHaveBeenCalled();
       });
@@ -361,7 +355,6 @@ describe('InputRange', () => {
       beforeEach(() => {
         spyOn(inputRange, 'incrementValue');
 
-        slider = inputRange.sliderMaxNode;
         event = {
           keyCode: 38,
           preventDefault: jasmine.createSpy('preventDefault'),
@@ -369,13 +362,13 @@ describe('InputRange', () => {
       });
 
       it('should increment value', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
       });
 
       it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(event.preventDefault).toHaveBeenCalledWith();
       });
@@ -383,7 +376,7 @@ describe('InputRange', () => {
       it('should not increment value if disabled', () => {
         inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
         spyOn(inputRange, 'incrementValue');
-        inputRange.handleSliderKeyDown(event, slider);
+        inputRange.handleSliderKeyDown(event, 'max');
 
         expect(inputRange.incrementValue).not.toHaveBeenCalled();
       });
@@ -411,14 +404,14 @@ describe('InputRange', () => {
     });
 
     it('should call event.preventDefault if not disabled', () => {
-      inputRange.handleTrackMouseDown(event, track, position);
+      inputRange.handleTrackMouseDown(event, position);
 
       expect(event.preventDefault).toHaveBeenCalledWith();
     });
 
     it('should not call event.preventDefault if disabled', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-      inputRange.handleTrackMouseDown(event, track, position);
+      inputRange.handleTrackMouseDown(event, position);
 
       expect(event.preventDefault).not.toHaveBeenCalledWith();
     });
@@ -426,7 +419,7 @@ describe('InputRange', () => {
     it('should not set a new position if disabled', () => {
       inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
       spyOn(inputRange, 'updatePosition');
-      inputRange.handleTrackMouseDown(event, track, position);
+      inputRange.handleTrackMouseDown(event, position);
 
       expect(inputRange.updatePosition).not.toHaveBeenCalled();
     });
@@ -435,7 +428,7 @@ describe('InputRange', () => {
       describe('if the new position is closer to `min` slider', () => {
         it('should set the position of the `min` slider', () => {
           position.x = 100;
-          inputRange.handleTrackMouseDown(event, track, position);
+          inputRange.handleTrackMouseDown(event, position);
 
           expect(inputRange.updatePosition).toHaveBeenCalledWith('min', position);
         });
@@ -444,7 +437,7 @@ describe('InputRange', () => {
       describe('if the new position is closer to `max` slider', () => {
         it('should set the position of the `max` slider', () => {
           position.x = 400;
-          inputRange.handleTrackMouseDown(event, track, position);
+          inputRange.handleTrackMouseDown(event, position);
 
           expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
         });
@@ -461,7 +454,7 @@ describe('InputRange', () => {
 
       it('should set the position of the `max` slider', () => {
         position.x = 100;
-        inputRange.handleTrackMouseDown(event, track, position);
+        inputRange.handleTrackMouseDown(event, position);
 
         expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
       });
@@ -496,7 +489,7 @@ describe('InputRange', () => {
       );
       slider.dispatchEvent(mouseUpEvent);
 
-      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+      expect(onChangeComplete).toHaveBeenCalledWith(value);
     });
 
     it('should call onChangeComplete if value has changed since the start of interaction when only defaultValue was provided', () => {
@@ -513,7 +506,7 @@ describe('InputRange', () => {
       );
       slider.dispatchEvent(mouseUpEvent);
 
-      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+      expect(onChangeComplete).toHaveBeenCalledWith(value);
     });
 
     it('should not call onChangeComplete if value has not changed since the start of interaction', () => {

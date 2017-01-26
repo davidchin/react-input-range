@@ -40,7 +40,7 @@ declare namespace ReactInputRange {
     maxValue?: number;
     minValue?: number;
     name?: string;
-    onChange: (element: this, value: (number | IRange)) => void;
+    onChange: (value: (number | IRange)) => void;
     onChangeComplete?: () => void;
     step?: number;
     value: number | IRange;

@@ -160,19 +160,6 @@ export default class InputRange extends React.Component {
   }
 
   /**
-   * Get the key name of a slider
-   * @param {Slider} slider - React component
-   * @return {string} Key name
-   */
-  getKeyFromSlider(slider) {
-    if (slider === this.sliderMinNode) {
-      return 'min';
-    }
-
-    return 'max';
-  }
-
-  /**
    * Get all slider keys of inputRange
    * @return {string[]} Key names
    */
@@ -286,9 +273,9 @@ export default class InputRange extends React.Component {
     }
 
     if (this.isMultiValue()) {
-      this.props.onChange(this, values);
+      this.props.onChange(values);
     } else {
-      this.props.onChange(this, values.max);
+      this.props.onChange(values.max);
     }
   }
 
@@ -332,14 +319,13 @@ export default class InputRange extends React.Component {
   /**
    * Handle any mousemove event received by the slider
    * @param {SyntheticEvent} event - User event
-   * @param {Slider} slider - React component
+   * @param {string} key - Slider type
    */
-  handleSliderMouseMove(event, slider) {
+  handleSliderMouseMove(event, key) {
     if (this.props.disabled) {
       return;
     }
 
-    const key = this.getKeyFromSlider(slider);
     const position = valueTransformer.positionFromEvent(event, this.getTrackClientRect());
 
     requestAnimationFrame(() => this.updatePosition(key, position));
@@ -348,14 +334,13 @@ export default class InputRange extends React.Component {
   /**
    * Handle any keydown event received by the slider
    * @param {SyntheticEvent} event - User event
+   * @param {string} key - Slider type
    * @param {Slider} slider - React component
    */
-  handleSliderKeyDown(event, slider) {
+  handleSliderKeyDown(event, key) {
     if (this.props.disabled) {
       return;
     }
-
-    const key = this.getKeyFromSlider(slider);
 
     switch (event.keyCode) {
     case LEFT_ARROW:
@@ -378,10 +363,9 @@ export default class InputRange extends React.Component {
   /**
    * Handle any mousedown event received by the track
    * @param {SyntheticEvent} event - User event
-   * @param {Track} track - React component
    * @param {Point} position - Mousedown position
    */
-  handleTrackMouseDown(event, track, position) {
+  handleTrackMouseDown(event, position) {
     if (this.props.disabled) {
       return;
     }
@@ -411,7 +395,7 @@ export default class InputRange extends React.Component {
     }
 
     if (this.startValue !== this.props.value) {
-      this.props.onChangeComplete(this, this.props.value);
+      this.props.onChangeComplete(this.props.value);
     }
 
     this.startValue = null;
@@ -525,11 +509,11 @@ export default class InputRange extends React.Component {
 
   /**
    * Get an array of hidden input HTML for rendering
-   * @return {?string[]} Array of HTML
+   * @return {string[]} Array of HTML
    */
   renderHiddenInputs() {
     if (!this.props.name) {
-      return;
+      return [];
     }
 
     const isMultiValue = this.isMultiValue();
