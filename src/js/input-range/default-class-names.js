@@ -11,7 +11,7 @@
 * @property {string} trackActive
 * @property {string} trackContainer
 */
-const defaultClassNames = {
+const DEFAULT_CLASS_NAMES = {
   component: 'input-range',
   disabled: 'input-range--disabled',
   labelContainer: 'input-range__label-container',
@@ -24,4 +24,4 @@ const defaultClassNames = {
   trackContainer: 'input-range__track input-range__track--container',
 };
 
-export default defaultClassNames;
+export default DEFAULT_CLASS_NAMES;

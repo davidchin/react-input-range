@@ -1,6 +1,6 @@
 import React from 'react';
 import * as valueTransformer from './value-transformer';
-import defaultClassNames from './default-class-names';
+import DEFAULT_CLASS_NAMES from './default-class-names';
 import Label from './label';
 import rangePropType from './range-prop-type';
 import Slider from './slider';
@@ -54,7 +54,7 @@ export default class InputRange extends React.Component {
   /**
    * Default props of InputRange
    * @return {Object}
-   * @property {Object<string, string>} defaultClassNames
+   * @property {Object<string, string>} classNames
    * @property {Range|number} defaultValue
    * @property {boolean} disabled
    * @property {string} labelPrefix
@@ -66,7 +66,7 @@ export default class InputRange extends React.Component {
    */
   static get defaultProps() {
     return {
-      classNames: defaultClassNames,
+      classNames: DEFAULT_CLASS_NAMES,
       defaultValue: 0,
       disabled: false,
       labelPrefix: '',
