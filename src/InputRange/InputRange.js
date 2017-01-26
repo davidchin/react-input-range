@@ -77,18 +77,6 @@ function shouldUpdate(inputRange, values) {
 }
 
 /**
- * Get the owner document of inputRange
- * @private
- * @param {InputRange} inputRange - React component
- * @return {Document} Document
- */
-function getDocument(inputRange) {
-  const { inputRange: { ownerDocument } } = inputRange.refs;
-
-  return ownerDocument;
-}
-
-/**
  * Get the class name(s) of inputRange based on its props
  * @private
  * @param {InputRange} inputRange - React component
@@ -502,8 +490,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
-    const document = getDocument(this);
-
     this.handleInteractionStart(event);
 
     document.addEventListener('mouseup', this.handleMouseUp);
@@ -514,8 +500,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp(event) {
-    const document = getDocument(this);
-
     this.handleInteractionEnd(event);
 
     document.removeEventListener('mouseup', this.handleMouseUp);
@@ -526,8 +510,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
-
     this.handleInteractionStart(event);
 
     document.addEventListener('touchend', this.handleTouchEnd);
@@ -538,8 +520,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
-
     this.handleInteractionEnd(event);
 
     document.removeEventListener('touchend', this.handleTouchEnd);

@@ -7,18 +7,6 @@ import { default as DefaultLabel } from './Label';
 import { autobind } from './util';
 
 /**
- * Get the owner document of slider
- * @private
- * @param {Slider} slider - React component
- * @return {Document} Document
- */
-function getDocument(slider) {
-  const { slider: { ownerDocument } } = slider.refs;
-
-  return ownerDocument;
-}
-
-/**
  * Get the style of slider based on its props
  * @private
  * @param {Slider} slider - React component
@@ -70,8 +58,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown() {
-    const document = getDocument(this);
-
     // Event
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
@@ -82,8 +68,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp() {
-    const document = getDocument(this);
-
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
@@ -102,8 +86,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
-
     event.preventDefault();
 
     document.addEventListener('touchmove', this.handleTouchMove);
@@ -123,8 +105,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
-
     event.preventDefault();
 
     document.removeEventListener('touchmove', this.handleTouchMove);
