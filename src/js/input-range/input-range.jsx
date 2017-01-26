@@ -3,6 +3,7 @@ import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
 import Label from './label';
 import rangePropType from './range-prop-type';
+import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
@@ -23,7 +24,7 @@ export default class InputRange extends React.Component {
       ariaLabelledby: React.PropTypes.string,
       ariaControls: React.PropTypes.string,
       classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      defaultValue: rangePropType,
+      defaultValue: valuePropType,
       disabled: React.PropTypes.bool,
       formatLabel: React.PropTypes.func,
       labelPrefix: React.PropTypes.string,
@@ -34,7 +35,7 @@ export default class InputRange extends React.Component {
       onChange: React.PropTypes.func.isRequired,
       onChangeComplete: React.PropTypes.func,
       step: React.PropTypes.number,
-      value: rangePropType,
+      value: valuePropType,
     };
   }
 
@@ -115,6 +116,17 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Callback to fire when the component is about to unmount
+   * @ignore
+   * @override
+   * @return {void}
+   */
+  componentWillUnmount() {
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+  }
+
+  /**
    * Get the class name(s) of inputRange based on its props
    * @private
    * @return {string} A list of class names delimited with spaces
@@ -146,22 +158,13 @@ export default class InputRange extends React.Component {
   }
 
   /**
-   * Get the owner document of inputRange
-   * @private
-   * @return {Document} Document
-   */
-  getDocument() {
-    return this.node.ownerDocument;
-  }
-
-  /**
    * Get the key name of a slider that's the closest to a point
    * @private
    * @param {Point} position - x/y
    * @return {string} Key name
    */
   getKeyByPosition(position) {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     if (this.isMultiValue()) {
@@ -197,7 +200,7 @@ export default class InputRange extends React.Component {
    * @return {boolean} True if difference is greater or equal to step amount
    */
   hasStepDifference(values) {
-    const currentValues = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const currentValues = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
 
     return length(values.min, currentValues.min) >= this.props.step ||
            length(values.max, currentValues.max) >= this.props.step;
@@ -246,7 +249,7 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   updatePosition(key, position) {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     positions[key] = position;
@@ -284,7 +287,7 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   updateValue(key, value) {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
 
     values[key] = value;
 
@@ -316,7 +319,7 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   incrementValue(key) {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const value = values[key] + this.props.step;
 
     this.updateValue(key, value);
@@ -329,7 +332,7 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   decrementValue(key) {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const value = values[key] - this.props.step;
 
     this.updateValue(key, value);
@@ -472,11 +475,9 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   handleMouseDown(event) {
-    const document = this.getDocument();
-
     this.handleInteractionStart(event);
 
-    document.addEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
   }
 
   /**
@@ -485,11 +486,9 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp(event) {
-    const document = this.getDocument();
-
     this.handleInteractionEnd(event);
 
-    document.removeEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   /**
@@ -499,11 +498,9 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   handleTouchStart(event) {
-    const document = this.getDocument();
-
     this.handleInteractionStart(event);
 
-    document.addEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
@@ -512,11 +509,9 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = this.getDocument();
-
     this.handleInteractionEnd(event);
 
-    document.removeEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
@@ -525,7 +520,7 @@ export default class InputRange extends React.Component {
    * @return {string[]} Array of HTML
    */
   renderSliders() {
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return this.getKeys().map((key) => {
@@ -573,7 +568,7 @@ export default class InputRange extends React.Component {
     }
 
     const isMultiValue = this.isMultiValue();
-    const values = valueTransformer.getRangeFromProps(this.props, isMultiValue);
+    const values = valueTransformer.getValueFromProps(this.props, isMultiValue);
 
     return this.getKeys().map((key) => {
       const value = values[key];
@@ -593,7 +588,7 @@ export default class InputRange extends React.Component {
    */
   render() {
     const componentClassName = this.getComponentClassName();
-    const values = valueTransformer.getRangeFromProps(this.props, this.isMultiValue());
+    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return (

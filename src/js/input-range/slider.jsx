@@ -64,12 +64,16 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Get the owner document of slider
-   * @private
-   * @return {Document} Document
+   * Callback to fire when the component is about to unmount
+   * @ignore
+   * @override
+   * @return {void}
    */
-  getDocument() {
-    return this.node.ownerDocument;
+  componentWillUnmount() {
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchUp);
   }
 
   /**
@@ -93,11 +97,9 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   handleMouseDown() {
-    const document = this.getDocument();
-
     // Event
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
   }
 
   /**
@@ -106,11 +108,9 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   handleMouseUp() {
-    const document = this.getDocument();
-
     // Event
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   /**
@@ -130,12 +130,10 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   handleTouchStart(event) {
-    const document = this.getDocument();
-
     event.preventDefault();
 
-    document.addEventListener('touchmove', this.handleTouchMove);
-    document.addEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
@@ -154,12 +152,10 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   handleTouchEnd(event) {
-    const document = this.getDocument();
-
     event.preventDefault();
 
-    document.removeEventListener('touchmove', this.handleTouchMove);
-    document.removeEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   /**

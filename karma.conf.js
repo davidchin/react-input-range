@@ -17,6 +17,12 @@ function configureKarma(config) {
     reporters: ['mocha', 'coverage'],
     webpack: {
       devtool: 'inline-source-map',
+      externals: {
+        'cheerio': 'window',
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true,
+      },
       module: {
         loaders: [
           {
@@ -26,6 +32,10 @@ function configureKarma(config) {
               plugins: ['istanbul'],
             },
             test: /\.jsx?$/,
+          },
+          {
+            test: /\.scss$/,
+            loaders: ['style', 'css', 'postcss', 'sass'],
           },
         ],
       },

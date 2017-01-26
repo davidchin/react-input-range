@@ -1,550 +1,384 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import InputRange from '../../src/js/input-range/input-range';
-import * as valueTransformer from '../../src/js/input-range/value-transformer';
-import { renderComponent, rerenderComponent } from '../test-utils';
+import InputRange from '../../src/js';
+import { mount, shallow } from 'enzyme';
+
+let container;
+let requestAnimationFrame;
+
+beforeEach(() => {
+  requestAnimationFrame = window.requestAnimationFrame;
+  window.requestAnimationFrame = callback => callback();
+
+  container = document.createElement('div');
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  window.requestAnimationFrame = requestAnimationFrame;
+
+  document.body.removeChild(container);
+});
 
 describe('InputRange', () => {
-  let inputRange;
-  let onChange;
-  let value;
-  let values;
-
-  beforeEach(() => {
-    value = 5;
-    values = {
-      min: 2,
-      max: 10,
-    };
-
-    onChange = jasmine.createSpy('onChange');
-
-    inputRange = renderComponent(
-      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} />
+  it('updates the current value when the user tries to drag the slider', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
     );
+    const component = mount(jsx, { attachTo: container });
+    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
+    const maxSlider = component.find(`Slider [onMouseDown]`).at(1);
+
+    minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 5, max: 10 });
+
+    maxSlider.simulate('mouseDown', { clientX: 210, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 260, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 260, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 5, max: 13 });
+
+    component.detach();
   });
 
-  describe('initialize', () => {
-    it('should set default class names for its sub-components and itself', () => {
-      expect(inputRange.props.classNames).toEqual({
-        component: 'input-range',
-        disabled: 'input-range--disabled',
-        labelContainer: 'input-range__label-container',
-        labelMax: 'input-range__label input-range__label--max',
-        labelMin: 'input-range__label input-range__label--min',
-        labelValue: 'input-range__label input-range__label--value',
-        slider: 'input-range__slider',
-        sliderContainer: 'input-range__slider-container',
-        trackActive: 'input-range__track input-range__track--active',
-        trackContainer: 'input-range__track input-range__track--container',
-      });
-    });
+  it('updates the current value when the user clicks on the track', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const track = component.find(`Track [onMouseDown]`).first();
+
+    track.simulate('mouseDown', { clientX: 150, clientY: 50 });
+    component.update();
+    expect(component.props().value).toEqual({ min: 2, max: 7 });
+
+    track.simulate('mouseDown', { clientX: 20, clientY: 50 });
+    component.update();
+    expect(component.props().value).toEqual({ min: 1, max: 7 });
+
+    component.detach();
   });
 
-  describe('updateValue', () => {
-    let newValue;
+  it('updates the current value when the user touches on the track', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const track = component.find(`Track [onTouchStart]`).first();
 
-    beforeEach(() => {
-      spyOn(inputRange, 'updateValues');
-      spyOn(valueTransformer, 'getRangeFromProps').and.returnValue({ max: 10 });
+    track.simulate('touchStart', { touches: [{ clientX: 150, clientY: 50 }] });
+    component.update();
+    expect(component.props().value).toEqual({ min: 2, max: 7 });
 
-      newValue = 10;
-    });
-
-    it('should get values from props', () => {
-      inputRange.updateValue('max', newValue);
-
-      expect(valueTransformer.getRangeFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
-    });
-
-    it('should update value for key', () => {
-      inputRange.updateValue('max', newValue);
-
-      expect(inputRange.updateValues).toHaveBeenCalledWith({ max: 10 });
-    });
+    component.detach();
   });
 
-  describe('updateValues', () => {
-    let newValues;
+  it('updates the current value by a predefined increment', () => {
+    const jsx = (
+    <InputRange
+      maxValue={20}
+      minValue={0}
+      value={{ min: 2, max: 10 }}
+      onChange={value => component.setProps({ value })}
+      step={2}
+    />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
 
-    beforeEach(() => {
-      newValues = {
-        min: 2,
-        max: 11,
-      };
-    });
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 60, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 60, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
 
-    describe('if it is a multi-value slider', () => {
-      it('should call `onChange` callback', () => {
-        inputRange.updateValues(newValues);
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 70, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 70, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 4, max: 10 });
 
-        expect(onChange).toHaveBeenCalledWith(newValues);
-      });
-    });
-
-    describe('if it is not a multi-value slider', () => {
-      beforeEach(() => {
-        inputRange = renderComponent(
-          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
-        );
-      });
-
-      it('should call `onChange` callback', () => {
-        inputRange.updateValues(newValues);
-
-        expect(onChange).toHaveBeenCalledWith(newValues.max);
-      });
-    });
+    component.detach();
   });
 
-  describe('updatePositions', () => {
-    let positions;
+  it('updates the current value when the user hits one of the arrow keys', () => {
+    const jsx = (
+    <InputRange
+      maxValue={20}
+      minValue={0}
+      value={{ min: 2, max: 10 }}
+      onChange={value => component.setProps({ value })}
+    />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onKeyDown]`).first();
 
-    beforeEach(() => {
-      spyOn(inputRange, 'updateValues');
-      spyOn(valueTransformer, 'getValueFromPosition').and.callThrough();
-      spyOn(valueTransformer, 'getStepValueFromValue').and.callThrough();
+    slider.simulate('keyDown', { keyCode: 37 });
+    slider.simulate('keyUp', { keyCode: 37 });
+    component.update();
+    expect(component.props().value).toEqual({ min: 1, max: 10 });
 
-      positions = {
-        min: {
-          x: 0,
-          y: 0,
-        },
-        max: {
-          x: 100,
-          y: 0,
-        },
-      };
-    });
+    slider.simulate('keyDown', { keyCode: 39 });
+    slider.simulate('keyUp', { keyCode: 39 });
+    component.update();
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
 
-    it('should update values', () => {
-      inputRange.updatePositions(positions);
-
-      expect(inputRange.updateValues).toHaveBeenCalledWith({ min: 0, max: 5 });
-    });
-
-    it('should convert positions into values', () => {
-      inputRange.updatePositions(positions);
-
-      expect(valueTransformer.getValueFromPosition).toHaveBeenCalled();
-    });
-
-    it('should convert values into step values', () => {
-      inputRange.updatePositions(positions);
-
-      expect(valueTransformer.getStepValueFromValue).toHaveBeenCalled();
-    });
+    component.detach();
   });
 
-  describe('updatePosition', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'updatePositions');
-    });
+  it('does not update when it is disabled', () => {
+    const jsx = (
+      <InputRange
+        disabled={true}
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).at(0);
 
-    it('should set the position of the slider according to its type', () => {
-      const position = {
-        x: 100,
-        y: 0,
-      };
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
 
-      inputRange.updatePosition('min', position);
-
-      expect(inputRange.updatePositions).toHaveBeenCalledWith({
-        min: position,
-        max: { x: jasmine.any(Number), y: jasmine.any(Number) },
-      });
-    });
+    component.detach();
   });
 
-  describe('incrementValue', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'updateValue');
-    });
+  it('prevents the current value from exceeding the min/max range', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
+    const maxSlider = component.find(`Slider [onMouseDown]`).at(1);
 
-    it('should increment slider value by the step amount', () => {
-      inputRange.incrementValue('min');
+    minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: -20, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 0, max: 10 });
 
-      expect(inputRange.updateValue).toHaveBeenCalledWith('min', values.min + 1);
-    });
+    maxSlider.simulate('mouseDown', { clientX: 210, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 600, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 600, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 0, max: 20 });
+
+    component.detach();
   });
 
-  describe('decrementValue', () => {
-    beforeEach(() => {
-      spyOn(inputRange, 'updateValue');
-    });
+  it('prevents the minimum value from exceeding the maximum value', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
 
-    it('should decrement slider value by the step amount', () => {
-      inputRange.decrementValue('min');
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 190, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 190, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual({ min: 9, max: 10 });
 
-      expect(inputRange.updateValue).toHaveBeenCalledWith('min', values.min - 1);
-    });
+    component.detach();
   });
 
-  describe('formatLabel', () => {
-    it('should format label by prepending prefix label if it is provided', () => {
-      inputRange = renderComponent(
-        <InputRange labelPrefix="$" value={value} onChange={onChange} />
-      );
+  it('notifies the parent component when dragging stops', () => {
+    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChangeComplete = jasmine.createSpy('onChangeComplete');
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={onChange}
+        onChangeComplete={onChangeComplete}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
 
-      const output = inputRange.formatLabel(5);
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150, clientY: 50 }));
+    component.update();
+    expect(onChange.calls.count()).toEqual(2);
+    expect(onChangeComplete.calls.count()).toEqual(1);
 
-      expect(output).toEqual('$5');
-    });
-
-    it('should format label by appending suffix label if it is provided', () => {
-      inputRange = renderComponent(
-        <InputRange labelSuffix="kg" value={value} onChange={onChange} />
-      );
-
-      const output = inputRange.formatLabel(5);
-
-      expect(output).toEqual('5kg');
-    });
-
-    it('should format label by calling custom formatter if it provided', () => {
-      function formatLabel(labelValue) {
-        return `${labelValue} burgers`;
-      }
-
-      inputRange = renderComponent(
-        <InputRange formatLabel={formatLabel} value={value} onChange={onChange} />
-      );
-
-      const output = inputRange.formatLabel(5);
-
-      expect(output).toEqual('5 burgers');
-    });
+    component.detach();
   });
 
-  describe('handleSliderMouseMove', () => {
-    let event;
-    let requestAnimationFrame;
+  it('does not notify the parent component if there is no change', () => {
+    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChangeComplete = jasmine.createSpy('onChangeComplete');
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={onChange}
+        onChangeComplete={onChangeComplete}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
 
-    beforeEach(() => {
-      spyOn(inputRange, 'updatePosition');
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 51, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 51, clientY: 50 }));
+    component.update();
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onChangeComplete).not.toHaveBeenCalled();
 
-      event = {
-        clientX: 100,
-        clientY: 200,
-      };
-
-      requestAnimationFrame = window.requestAnimationFrame;
-      window.requestAnimationFrame = callback => window.setTimeout(callback);
-      jasmine.clock().install();
-    });
-
-    afterEach(() => {
-      window.requestAnimationFrame = requestAnimationFrame;
-      jasmine.clock().uninstall();
-    });
-
-    it('should set the position of a slider according to mouse event', () => {
-      inputRange.handleSliderMouseMove(event, 'max');
-      jasmine.clock().tick(0);
-
-      expect(inputRange.updatePosition).toHaveBeenCalledWith('max', { x: 92, y: 0 });
-    });
-
-    it('should not set the position of a slider if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
-      spyOn(inputRange, 'updatePosition');
-      inputRange.handleSliderMouseMove(event, 'max');
-      jasmine.clock().tick(0);
-
-      expect(inputRange.updatePosition).not.toHaveBeenCalled();
-    });
+    component.detach();
   });
 
-  describe('handleSliderKeyDown', () => {
-    let event;
+  it('displays the current value of the input', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        formatLabel={(value) => `${value}cm`}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx);
+    const label = component.find('Slider Label').first();
 
-    describe('when pressing left arrow key', () => {
-      beforeEach(() => {
-        spyOn(inputRange, 'decrementValue');
+    expect(label.text()).toEqual('2cm');
+  });
 
-        event = {
-          keyCode: 37,
-          preventDefault: jasmine.createSpy('preventDefault'),
-        };
-      });
+  it('displays the current value of the input for screen readers', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx);
+    const sliderHandle = component.find('Slider [role="slider"]').first();
 
-      it('should decrement value', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
+    expect(sliderHandle.getDOMNode().getAttribute('aria-valuenow')).toEqual('2');
+  });
 
-        expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
-      });
+  it('renders a pair of sliders if the input value is a range', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={() => {}}
+      />
+    );
+    const component = mount(jsx);
 
-      it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
+    expect(component.find('Slider').length).toEqual(2);
+  });
 
-        expect(event.preventDefault).toHaveBeenCalledWith();
-      });
+  it('renders a single slider if the input value is a number', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={2}
+        onChange={() => {}}
+      />
+    );
+    const component = mount(jsx);
 
-      it('should not decrement value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-        spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown(event, 'max');
+    expect(component.find('Slider').length).toEqual(1);
+  });
 
-        expect(inputRange.decrementValue).not.toHaveBeenCalled();
-      });
-    });
+  it('renders a hidden input containing the current value', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        name="price"
+        value={{ min: 2, max: 10 }}
+        onChange={() => {}}
+      />
+    );
+    const component = mount(jsx);
+    const minInput = component.find('[name="priceMin"][type="hidden"]');
+    const maxInput = component.find('[name="priceMax"][type="hidden"]');
 
-    describe('when pressing down arrow key', () => {
-      beforeEach(() => {
-        spyOn(inputRange, 'decrementValue');
+    expect(minInput.getDOMNode().getAttribute('value')).toEqual('2');
+    expect(maxInput.getDOMNode().getAttribute('value')).toEqual('10');
+  });
 
-        event = {
-          keyCode: 40,
-          preventDefault: jasmine.createSpy('preventDefault'),
-        };
-      });
+  it('returns an error if the max/min range is invalid', () => {
+    const sampleProps = [
+      { minValue: '2', maxValue: '10' },
+      { minValue: 10, maxValue: 2 },
+    ];
 
-      it('should decrement value', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.decrementValue).toHaveBeenCalledWith('max');
-      });
-
-      it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(event.preventDefault).toHaveBeenCalledWith();
-      });
-
-      it('should not decrement value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-        spyOn(inputRange, 'decrementValue');
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.decrementValue).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when pressing right arrow key', () => {
-      beforeEach(() => {
-        spyOn(inputRange, 'incrementValue');
-
-        event = {
-          keyCode: 39,
-          preventDefault: jasmine.createSpy('preventDefault'),
-        };
-      });
-
-      it('should increment value', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
-      });
-
-      it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(event.preventDefault).toHaveBeenCalledWith();
-      });
-
-      it('should not increment value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-        spyOn(inputRange, 'incrementValue');
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.incrementValue).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when pressing up arrow key', () => {
-      beforeEach(() => {
-        spyOn(inputRange, 'incrementValue');
-
-        event = {
-          keyCode: 38,
-          preventDefault: jasmine.createSpy('preventDefault'),
-        };
-      });
-
-      it('should increment value', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.incrementValue).toHaveBeenCalledWith('max');
-      });
-
-      it('should call event.preventDefault()', () => {
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(event.preventDefault).toHaveBeenCalledWith();
-      });
-
-      it('should not increment value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-        spyOn(inputRange, 'incrementValue');
-        inputRange.handleSliderKeyDown(event, 'max');
-
-        expect(inputRange.incrementValue).not.toHaveBeenCalled();
-      });
+    sampleProps.forEach(props => {
+      expect(InputRange.propTypes.minValue(props)).toEqual(jasmine.any(Error));
+      expect(InputRange.propTypes.maxValue(props)).toEqual(jasmine.any(Error));
     });
   });
 
-  describe('handleTrackMouseDown', () => {
-    let track;
-    let position;
-    let event;
+  it('returns an error if the current value is not in the expected format', () => {
+    const sampleProps = [
+      { value: { a: 3, b: 6 }, minValue: 2, maxValue: 10 },
+      { value: { min: 1, max: 6 }, minValue: 2, maxValue: 10 },
+      { value: { min: 2, max: 11 }, minValue: 2, maxValue: 10 },
+      { value: 11, minValue: 2, maxValue: 10 },
+      { value: null, minValue: 2, maxValue: 10 },
+    ];
 
-    beforeEach(() => {
-      spyOn(inputRange, 'updatePosition');
-
-      track = {};
-      position = {
-        x: 100,
-        y: 0,
-      };
-      event = {
-        clientX: 100,
-        clientY: 200,
-        preventDefault: jasmine.createSpy('preventDefault'),
-      };
-    });
-
-    it('should call event.preventDefault if not disabled', () => {
-      inputRange.handleTrackMouseDown(event, position);
-
-      expect(event.preventDefault).toHaveBeenCalledWith();
-    });
-
-    it('should not call event.preventDefault if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-      inputRange.handleTrackMouseDown(event, position);
-
-      expect(event.preventDefault).not.toHaveBeenCalledWith();
-    });
-
-    it('should not set a new position if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
-      spyOn(inputRange, 'updatePosition');
-      inputRange.handleTrackMouseDown(event, position);
-
-      expect(inputRange.updatePosition).not.toHaveBeenCalled();
-    });
-
-    describe('if it is a multi-value slider', () => {
-      describe('if the new position is closer to `min` slider', () => {
-        it('should set the position of the `min` slider', () => {
-          position.x = 100;
-          inputRange.handleTrackMouseDown(event, position);
-
-          expect(inputRange.updatePosition).toHaveBeenCalledWith('min', position);
-        });
-      });
-
-      describe('if the new position is closer to `max` slider', () => {
-        it('should set the position of the `max` slider', () => {
-          position.x = 400;
-          inputRange.handleTrackMouseDown(event, position);
-
-          expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
-        });
-      });
-    });
-
-    describe('if it is not a multi-value slider', () => {
-      beforeEach(() => {
-        inputRange = renderComponent(
-          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
-        );
-        spyOn(inputRange, 'updatePosition');
-      });
-
-      it('should set the position of the `max` slider', () => {
-        position.x = 100;
-        inputRange.handleTrackMouseDown(event, position);
-
-        expect(inputRange.updatePosition).toHaveBeenCalledWith('max', position);
-      });
+    sampleProps.forEach(props => {
+      expect(InputRange.propTypes.value(props, 'value')).toEqual(jasmine.any(Error));
     });
   });
 
-  describe('handleInteractionEnd', () => {
-    let onChangeComplete;
-    let mouseDownEvent;
-    let mouseUpEvent;
-    let slider;
+  it('returns an error if the default value is not in the expected format', () => {
+    const sampleProps = [
+      { defaultValue: { a: 3, b: 6 }, minValue: 2, maxValue: 10 },
+      { defaultValue: { min: 1, max: 6 }, minValue: 2, maxValue: 10 },
+      { defaultValue: { min: 2, max: 11 }, minValue: 2, maxValue: 10 },
+      { defaultValue: 11, minValue: 2, maxValue: 10 },
+      { defaultValue: null, minValue: 2, maxValue: 10 },
+    ];
 
-    beforeEach(() => {
-      onChangeComplete = jasmine.createSpy('onChangeComplete');
-      mouseDownEvent = document.createEvent('MouseEvent');
-      mouseUpEvent = document.createEvent('MouseEvent');
-
-      mouseDownEvent.initMouseEvent('mousedown', true);
-      mouseUpEvent.initMouseEvent('mouseup', true);
-
-      inputRange = renderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
-      );
-      slider = ReactDOM.findDOMNode(inputRange.sliderMaxNode);
-    });
-
-    it('should call onChangeComplete if value has changed since the start of interaction', () => {
-      slider.dispatchEvent(mouseDownEvent);
-      value += 2;
-      inputRange = rerenderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
-      );
-      slider.dispatchEvent(mouseUpEvent);
-
-      expect(onChangeComplete).toHaveBeenCalledWith(value);
-    });
-
-    it('should call onChangeComplete if value has changed since the start of interaction when only defaultValue was provided', () => {
-      const defaultValue = value;
-      inputRange = renderComponent(
-        <InputRange maxValue={20} minValue={0} defaultValue={defaultValue} onChange={onChange} onChangeComplete={onChangeComplete}/>
-      );
-      slider = ReactDOM.findDOMNode(inputRange.sliderMaxNode);
-
-      slider.dispatchEvent(mouseDownEvent);
-      value += 2;
-      inputRange = rerenderComponent(
-        <InputRange maxValue={20} minValue={0} defaultValue={defaultValue} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
-      );
-      slider.dispatchEvent(mouseUpEvent);
-
-      expect(onChangeComplete).toHaveBeenCalledWith(value);
-    });
-
-    it('should not call onChangeComplete if value has not changed since the start of interaction', () => {
-      slider.dispatchEvent(mouseDownEvent);
-      inputRange = rerenderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
-      );
-      slider.dispatchEvent(mouseUpEvent);
-
-      expect(onChangeComplete).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('ariaLabelledby', () => {
-    it('should call onChangeComplete if value has changed since the start of interaction', () => {
-      inputRange = renderComponent(
-        <InputRange ariaLabelledby="foobar" maxValue={20} minValue={0} value={values} onChange={onChange} />
-      );
-
-      const slider = ReactDOM.findDOMNode(inputRange.sliderMaxNode);
-      const handle = slider.querySelector('[role=slider]');
-      const ariaLabelledby = handle.getAttribute('aria-labelledby');
-
-      expect(ariaLabelledby).toEqual('foobar');
-    });
-  });
-
-  describe('ariaControls', () => {
-    it('should call onChangeComplete if value has changed since the start of interaction', () => {
-      inputRange = renderComponent(
-        <InputRange ariaControls="foobar" maxValue={20} minValue={0} value={values} onChange={onChange} />
-      );
-
-      const slider = ReactDOM.findDOMNode(inputRange.sliderMaxNode);
-      const handle = slider.querySelector('[role=slider]');
-      const ariaControls = handle.getAttribute('aria-controls');
-
-      expect(ariaControls).toEqual('foobar');
+    sampleProps.forEach(props => {
+      expect(InputRange.propTypes.defaultValue(props, 'defaultValue')).toEqual(jasmine.any(Error));
     });
   });
 });

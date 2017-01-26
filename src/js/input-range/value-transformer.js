@@ -37,7 +37,7 @@ export function getValueFromPosition(position, minValue, maxValue, trackClientRe
  * @param {boolean} isMultiValue
  * @return {Range} Range values
  */
-export function getRangeFromProps(props, isMultiValue) {
+export function getValueFromProps(props, isMultiValue) {
   if (isMultiValue) {
     let values = props.value;
 
@@ -45,7 +45,7 @@ export function getRangeFromProps(props, isMultiValue) {
       values = props.defaultValue;
     }
 
-    return Object.create(values);
+    return { ...values };
   }
 
   const value = isNumber(props.value) ? props.value : props.defaultValue;

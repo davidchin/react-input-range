@@ -1,6 +1,8 @@
 rules:
   class-methods-use-this:
     - 1
+  consistent-return:
+    - 0
   import/prefer-default-export:
     - 0
   indent:

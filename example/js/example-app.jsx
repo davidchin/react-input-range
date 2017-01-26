@@ -15,14 +15,7 @@ export default class ExampleApp extends React.Component {
         min: 5,
         max: 10,
       },
-      value5: {
-        min: null,
-        max: null,
-      },
-      value6: {
-        min: 5,
-        max: 10,
-      },
+      value5: null,
     };
 
     this.handleValueChange = this.handleValueChange.bind(this);
@@ -59,12 +52,6 @@ export default class ExampleApp extends React.Component {
   handleValue5Change(values) {
     this.setState({
       value5: values,
-    });
-  }
-
-  handleValue6Change(values) {
-    this.setState({
-      value6: values,
     });
   }
 
