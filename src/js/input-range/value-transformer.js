@@ -7,7 +7,7 @@ import { clamp, isEmpty, isNumber, objectOf } from '../utils';
  * @param {ClientRect} trackClientRect
  * @return {number} Percentage value
  */
-export function percentageFromPosition(position, trackClientRect) {
+export function getPercentageFromPosition(position, trackClientRect) {
   const length = trackClientRect.width;
   const sizePerc = position.x / length;
 
@@ -23,8 +23,8 @@ export function percentageFromPosition(position, trackClientRect) {
  * @param {ClientRect} trackClientRect
  * @return {number} Model value
  */
-export function valueFromPosition(position, minValue, maxValue, trackClientRect) {
-  const sizePerc = percentageFromPosition(position, trackClientRect);
+export function getValueFromPosition(position, minValue, maxValue, trackClientRect) {
+  const sizePerc = getPercentageFromPosition(position, trackClientRect);
   const valueDiff = maxValue - minValue;
 
   return minValue + (valueDiff * sizePerc);
@@ -37,7 +37,7 @@ export function valueFromPosition(position, minValue, maxValue, trackClientRect)
  * @param {boolean} isMultiValue
  * @return {Range} Range values
  */
-export function valuesFromProps(props, isMultiValue) {
+export function getValuesFromProps(props, isMultiValue) {
   if (isMultiValue) {
     let values = props.value;
 
@@ -64,7 +64,7 @@ export function valuesFromProps(props, isMultiValue) {
  * @param {number} maxValue
  * @return {number} Percentage value
  */
-export function percentageFromValue(value, minValue, maxValue) {
+export function getPercentageFromValue(value, minValue, maxValue) {
   const validValue = clamp(value, minValue, maxValue);
   const valueDiff = maxValue - minValue;
   const valuePerc = (validValue - minValue) / valueDiff;
@@ -80,10 +80,10 @@ export function percentageFromValue(value, minValue, maxValue) {
  * @param {number} maxValue
  * @return {Range} Percentage values
  */
-export function percentagesFromValues(values, minValue, maxValue) {
+export function getPercentagesFromValues(values, minValue, maxValue) {
   return {
-    min: percentageFromValue(values.min, minValue, maxValue),
-    max: percentageFromValue(values.max, minValue, maxValue),
+    min: getPercentageFromValue(values.min, minValue, maxValue),
+    max: getPercentageFromValue(values.max, minValue, maxValue),
   };
 }
 
@@ -96,9 +96,9 @@ export function percentagesFromValues(values, minValue, maxValue) {
  * @param {ClientRect} trackClientRect
  * @return {Point} Position
  */
-export function positionFromValue(value, minValue, maxValue, trackClientRect) {
+export function getPositionFromValue(value, minValue, maxValue, trackClientRect) {
   const length = trackClientRect.width;
-  const valuePerc = percentageFromValue(value, minValue, maxValue);
+  const valuePerc = getPercentageFromValue(value, minValue, maxValue);
   const positionValue = valuePerc * length;
 
   return {
@@ -116,10 +116,10 @@ export function positionFromValue(value, minValue, maxValue, trackClientRect) {
  * @param {ClientRect} trackClientRect
  * @return {Object<string, Point>}
  */
-export function positionsFromValues(values, minValue, maxValue, trackClientRect) {
+export function getPositionsFromValues(values, minValue, maxValue, trackClientRect) {
   return {
-    min: positionFromValue(values.min, minValue, maxValue, trackClientRect),
-    max: positionFromValue(values.max, minValue, maxValue, trackClientRect),
+    min: getPositionFromValue(values.min, minValue, maxValue, trackClientRect),
+    max: getPositionFromValue(values.max, minValue, maxValue, trackClientRect),
   };
 }
 
@@ -130,7 +130,7 @@ export function positionsFromValues(values, minValue, maxValue, trackClientRect)
  * @param {ClientRect} trackClientRect
  * @return {Point}
  */
-export function positionFromEvent(event, trackClientRect) {
+export function getPositionFromEvent(event, trackClientRect) {
   const length = trackClientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
 
@@ -147,6 +147,6 @@ export function positionFromEvent(event, trackClientRect) {
  * @param {number} valuePerStep
  * @return {number} Step value
  */
-export function stepValueFromValue(value, valuePerStep) {
+export function getStepValueFromValue(value, valuePerStep) {
   return Math.round(value / valuePerStep) * valuePerStep;
 }

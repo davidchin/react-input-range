@@ -46,7 +46,7 @@ describe('InputRange', () => {
 
     beforeEach(() => {
       spyOn(inputRange, 'updateValues');
-      spyOn(valueTransformer, 'valuesFromProps').and.returnValue({ max: 10 });
+      spyOn(valueTransformer, 'getValuesFromProps').and.returnValue({ max: 10 });
 
       newValue = 10;
     });
@@ -54,7 +54,7 @@ describe('InputRange', () => {
     it('should get values from props', () => {
       inputRange.updateValue('max', newValue);
 
-      expect(valueTransformer.valuesFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
+      expect(valueTransformer.getValuesFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
     });
 
     it('should update value for key', () => {
@@ -102,8 +102,8 @@ describe('InputRange', () => {
 
     beforeEach(() => {
       spyOn(inputRange, 'updateValues');
-      spyOn(valueTransformer, 'valueFromPosition').and.callThrough();
-      spyOn(valueTransformer, 'stepValueFromValue').and.callThrough();
+      spyOn(valueTransformer, 'getValueFromPosition').and.callThrough();
+      spyOn(valueTransformer, 'getStepValueFromValue').and.callThrough();
 
       positions = {
         min: {
@@ -126,13 +126,13 @@ describe('InputRange', () => {
     it('should convert positions into values', () => {
       inputRange.updatePositions(positions);
 
-      expect(valueTransformer.valueFromPosition).toHaveBeenCalled();
+      expect(valueTransformer.getValueFromPosition).toHaveBeenCalled();
     });
 
     it('should convert values into step values', () => {
       inputRange.updatePositions(positions);
 
-      expect(valueTransformer.stepValueFromValue).toHaveBeenCalled();
+      expect(valueTransformer.getStepValueFromValue).toHaveBeenCalled();
     });
   });
 
