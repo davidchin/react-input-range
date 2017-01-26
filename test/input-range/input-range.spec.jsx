@@ -46,7 +46,7 @@ describe('InputRange', () => {
 
     beforeEach(() => {
       spyOn(inputRange, 'updateValues');
-      spyOn(valueTransformer, 'getValuesFromProps').and.returnValue({ max: 10 });
+      spyOn(valueTransformer, 'getRangeFromProps').and.returnValue({ max: 10 });
 
       newValue = 10;
     });
@@ -54,7 +54,7 @@ describe('InputRange', () => {
     it('should get values from props', () => {
       inputRange.updateValue('max', newValue);
 
-      expect(valueTransformer.getValuesFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
+      expect(valueTransformer.getRangeFromProps).toHaveBeenCalledWith(inputRange.props, inputRange.isMultiValue());
     });
 
     it('should update value for key', () => {
