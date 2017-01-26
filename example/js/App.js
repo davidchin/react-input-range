@@ -24,43 +24,43 @@ class App extends React.Component {
     };
   }
 
-  handleValueChange(component, value) {
+  handleValueChange(value) {
     this.setState({
       value: value || 0,
     });
   }
 
-  handleValue2Change(component, value) {
+  handleValue2Change(value) {
     this.setState({
       value2: value || 0,
     });
   }
 
-  handleValue3Change(component, value) {
+  handleValue3Change(value) {
     this.setState({
       value3: value || 0,
     });
   }
 
-  handleValue4Change(component, values) {
+  handleValue4Change(values) {
     this.setState({
       value4: values,
     });
   }
 
-  handleValue5Change(component, values) {
+  handleValue5Change(values) {
     this.setState({
       value5: values,
     });
   }
 
-  handleValue6Change(component, values) {
+  handleValue6Change(values) {
     this.setState({
       value6: values,
     });
   }
 
-  handleChangeComplete(component, value) {
+  handleChangeComplete(value) {
     console.log(value);
   }
 

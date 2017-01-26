@@ -78,7 +78,7 @@ describe('InputRange', () => {
       it('should call `onChange` callback', () => {
         inputRange.updateValues(newValues);
 
-        expect(onChange).toHaveBeenCalledWith(inputRange, newValues);
+        expect(onChange).toHaveBeenCalledWith(newValues);
       });
     });
 
@@ -92,7 +92,7 @@ describe('InputRange', () => {
       it('should call `onChange` callback', () => {
         inputRange.updateValues(newValues);
 
-        expect(onChange).toHaveBeenCalledWith(inputRange, newValues.max);
+        expect(onChange).toHaveBeenCalledWith(newValues.max);
       });
     });
   });
@@ -484,7 +484,7 @@ describe('InputRange', () => {
       );
       slider.dispatchEvent(mouseUpEvent);
 
-      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+      expect(onChangeComplete).toHaveBeenCalledWith(value);
     });
 
     it('should call onChangeComplete if value has changed since the start of interaction when only defaultValue was provided', () => {
@@ -501,7 +501,7 @@ describe('InputRange', () => {
       );
       slider.dispatchEvent(mouseUpEvent);
 
-      expect(onChangeComplete).toHaveBeenCalledWith(inputRange, value);
+      expect(onChangeComplete).toHaveBeenCalledWith(value);
     });
 
     it('should not call onChangeComplete if value has not changed since the start of interaction', () => {

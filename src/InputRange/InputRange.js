@@ -342,9 +342,9 @@ export default class InputRange extends React.Component {
     }
 
     if (this.isMultiValue) {
-      this.props.onChange(this, values);
+      this.props.onChange(values);
     } else {
-      this.props.onChange(this, values.max);
+      this.props.onChange(values.max);
     }
   }
 
@@ -475,7 +475,7 @@ export default class InputRange extends React.Component {
     }
 
     if (_this.startValue !== this.props.value) {
-      this.props.onChangeComplete(this, this.props.value);
+      this.props.onChangeComplete(this.props.value);
     }
 
     _this.startValue = null;
