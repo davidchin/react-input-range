@@ -3,6 +3,7 @@
 * @ignore
 * @type {Object}
 * @property {string} component
+* @property {string} componentDisabled
 * @property {string} labelContainer
 * @property {string} labelMax
 * @property {string} labelMin
@@ -14,7 +15,7 @@
 */
 const DEFAULT_CLASS_NAMES = {
   component: 'input-range',
-  disabled: 'input-range--disabled',
+  componentDisabled: 'input-range input-range--disabled',
   labelContainer: 'input-range__label-container',
   labelMax: 'input-range__label input-range__label--max',
   labelMin: 'input-range__label input-range__label--min',
