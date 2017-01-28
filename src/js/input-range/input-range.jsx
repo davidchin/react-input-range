@@ -295,11 +295,7 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    if (this.isMultiValue()) {
-      this.props.onChange(values);
-    } else {
-      this.props.onChange(values.max);
-    }
+    this.props.onChange(this.isMultiValue() ? values : values.max);
   }
 
   /**
