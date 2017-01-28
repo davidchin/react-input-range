@@ -1,6 +1,6 @@
 {
   "source": "./src",
-  "destination": "./doc",
+  "destination": "./docs",
   "includes": ["\\.(jsx?)$"],
   "plugins": [
     {

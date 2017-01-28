@@ -1,6 +1,6 @@
 *.log
 build
 coverage
-doc
+docs
 lib
 node_modules
