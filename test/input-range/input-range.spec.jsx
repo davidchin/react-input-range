@@ -165,7 +165,7 @@ describe('InputRange', () => {
     component.detach();
   });
 
-  it('prevents the current value from exceeding the min/max range', () => {
+  it('prevents the min/max value from exceeding the min/max range', () => {
     const jsx = (
       <InputRange
         maxValue={20}
@@ -189,6 +189,33 @@ describe('InputRange', () => {
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 600, clientY: 50 }));
     component.update();
     expect(component.props().value).toEqual({ min: 0, max: 20 });
+
+    component.detach();
+  });
+
+  it('prevents the current value from exceeding the min/max range', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={2}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: -20, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual(0);
+
+    slider.simulate('mouseDown', { clientX: 0, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 600, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 600, clientY: 50 }));
+    component.update();
+    expect(component.props().value).toEqual(20);
 
     component.detach();
   });
