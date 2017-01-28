@@ -496,7 +496,6 @@ export default class InputRange extends React.Component {
     return this.getKeys().map((key) => {
       const value = values[key];
       const percentage = percentages[key];
-      const ref = `slider${captialize(key)}Node`;
 
       let { maxValue, minValue } = this.props;
 
@@ -518,7 +517,6 @@ export default class InputRange extends React.Component {
           onSliderKeyDown={this.handleSliderKeyDown}
           onSliderMouseMove={this.handleSliderMouseMove}
           percentage={percentage}
-          ref={(node) => { this[ref] = node; }}
           type={key}
           value={value} />
       );
