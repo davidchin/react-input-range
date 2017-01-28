@@ -1,4 +1,4 @@
-import { clamp, isEmpty, isNumber, objectOf } from '../utils';
+import { clamp } from '../utils';
 
 /**
  * Convert position into percentage value
@@ -39,20 +39,12 @@ export function getValueFromPosition(position, minValue, maxValue, trackClientRe
  */
 export function getValueFromProps(props, isMultiValue) {
   if (isMultiValue) {
-    let values = props.value;
-
-    if (isEmpty(values) || !objectOf(values, isNumber)) {
-      values = props.defaultValue;
-    }
-
-    return { ...values };
+    return { ...props.value };
   }
-
-  const value = isNumber(props.value) ? props.value : props.defaultValue;
 
   return {
     min: props.minValue,
-    max: value,
+    max: props.value,
   };
 }
 

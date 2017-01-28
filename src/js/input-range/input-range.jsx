@@ -24,11 +24,8 @@ export default class InputRange extends React.Component {
       ariaLabelledby: React.PropTypes.string,
       ariaControls: React.PropTypes.string,
       classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      defaultValue: valuePropType,
       disabled: React.PropTypes.bool,
       formatLabel: React.PropTypes.func,
-      labelPrefix: React.PropTypes.string,
-      labelSuffix: React.PropTypes.string,
       maxValue: rangePropType,
       minValue: rangePropType,
       name: React.PropTypes.string,
@@ -48,10 +45,7 @@ export default class InputRange extends React.Component {
   static get defaultProps() {
     return {
       classNames: DEFAULT_CLASS_NAMES,
-      defaultValue: 0,
       disabled: false,
-      labelPrefix: '',
-      labelSuffix: '',
       maxValue: 10,
       minValue: 0,
       step: 1,
@@ -65,11 +59,8 @@ export default class InputRange extends React.Component {
    * @param {string} [props.ariaLabelledby]
    * @param {string} [props.ariaControls]
    * @param {Object<string, string>} [props.classNames = DEFAULT_CLASS_NAMES]
-   * @param {number|Range} [props.defaultValue = 0]
    * @param {boolean} [props.disabled = false]
    * @param {Function} [props.formatLabel]
-   * @param {string} [props.labelPrefix = '']
-   * @param {string} [props.labelSuffix = '']
    * @param {number|Range} [props.maxValue = 10]
    * @param {number|Range} [props.minValue = 0]
    * @param {string} [props.name]
@@ -100,7 +91,6 @@ export default class InputRange extends React.Component {
     this.trackNode = null;
 
     autobind([
-      'formatLabel',
       'handleInteractionEnd',
       'handleInteractionStart',
       'handleKeyDown',
@@ -212,7 +202,7 @@ export default class InputRange extends React.Component {
    * @return {boolean}
    */
   isMultiValue() {
-    return isObject(this.props.value) || isObject(this.props.defaultValue);
+    return isObject(this.props.value);
   }
 
   /**
@@ -339,22 +329,6 @@ export default class InputRange extends React.Component {
   }
 
   /**
-   * Format label
-   * @private
-   * @param {number} labelValue - Label value
-   * @return {string} Formatted label value
-   */
-  formatLabel(labelValue) {
-    const { formatLabel, labelPrefix, labelSuffix } = this.props;
-
-    if (formatLabel) {
-      return formatLabel(labelValue, { labelPrefix, labelSuffix });
-    }
-
-    return `${labelPrefix}${labelValue}${labelSuffix}`;
-  }
-
-  /**
    * Handle any mousemove event received by the slider
    * @private
    * @param {SyntheticEvent} event - User event
@@ -428,7 +402,7 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    this.startValue = this.props.value || this.props.defaultValue;
+    this.startValue = this.props.value;
   }
 
   /**
@@ -541,7 +515,7 @@ export default class InputRange extends React.Component {
           ariaLabelledby={this.props.ariaLabelledby}
           ariaControls={this.props.ariaControls}
           classNames={this.props.classNames}
-          formatLabel={this.formatLabel}
+          formatLabel={this.props.formatLabel}
           key={key}
           maxValue={maxValue}
           minValue={minValue}
@@ -602,7 +576,7 @@ export default class InputRange extends React.Component {
         onTouchStart={this.handleTouchStart}>
         <Label
           classNames={this.props.classNames}
-          formatLabel={this.formatLabel}
+          formatLabel={this.props.formatLabel}
           type="min">
           {this.props.minValue}
         </Label>
@@ -618,7 +592,7 @@ export default class InputRange extends React.Component {
 
         <Label
           classNames={this.props.classNames}
-          formatLabel={this.formatLabel}
+          formatLabel={this.props.formatLabel}
           type="max">
           {this.props.maxValue}
         </Label>

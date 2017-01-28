@@ -367,18 +367,4 @@ describe('InputRange', () => {
       expect(InputRange.propTypes.value(props, 'value')).toEqual(jasmine.any(Error));
     });
   });
-
-  it('returns an error if the default value is not in the expected format', () => {
-    const sampleProps = [
-      { defaultValue: { a: 3, b: 6 }, minValue: 2, maxValue: 10 },
-      { defaultValue: { min: 1, max: 6 }, minValue: 2, maxValue: 10 },
-      { defaultValue: { min: 2, max: 11 }, minValue: 2, maxValue: 10 },
-      { defaultValue: 11, minValue: 2, maxValue: 10 },
-      { defaultValue: null, minValue: 2, maxValue: 10 },
-    ];
-
-    sampleProps.forEach(props => {
-      expect(InputRange.propTypes.defaultValue(props, 'defaultValue')).toEqual(jasmine.any(Error));
-    });
-  });
 });

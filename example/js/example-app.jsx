@@ -9,75 +9,42 @@ export default class ExampleApp extends React.Component {
 
     this.state = {
       value: 5,
-      value2: null,
+      value2: 10,
       value3: 10,
       value4: {
         min: 5,
         max: 10,
       },
-      value5: null,
     };
-
-    this.handleValueChange = this.handleValueChange.bind(this);
-    this.handleValue2Change = this.handleValue2Change.bind(this);
-    this.handleValue3Change = this.handleValue3Change.bind(this);
-    this.handleValue4Change = this.handleValue4Change.bind(this);
-    this.handleValue5Change = this.handleValue5Change.bind(this);
-  }
-
-  handleValueChange(value) {
-    this.setState({
-      value: value || 0,
-    });
-  }
-
-  handleValue2Change(value) {
-    this.setState({
-      value2: value || 0,
-    });
-  }
-
-  handleValue3Change(value) {
-    this.setState({
-      value3: value || 0,
-    });
-  }
-
-  handleValue4Change(values) {
-    this.setState({
-      value4: values,
-    });
-  }
-
-  handleValue5Change(values) {
-    this.setState({
-      value5: values,
-    });
-  }
-
-  handleChangeComplete(value) {
-    console.log(value);
-  }
-
-  formatLabel(labelValue) {
-    return labelValue.toFixed(2);
   }
 
   render() {
-    const defaultValue = 2;
-    const defaultValue2 = {
-      min: 2,
-      max: 8,
-    };
-
     return (
       <form className="form">
         <InputRange
           maxValue={20}
           minValue={0}
           value={this.state.value}
-          onChange={this.handleValueChange}
-          onChangeComplete={this.handleChangeComplete}
+          onChange={value => this.setState({ value })}
+          onChangeComplete={value => console.log(value)}
+        />
+
+        <InputRange
+          maxValue={20}
+          minValue={0}
+          disabled
+          value={this.state.value2}
+          onChange={value => this.setState({ value })}
+          onChangeComplete={value => console.log(value)}
+        />
+
+        <InputRange
+          maxValue={20}
+          minValue={0}
+          formatLabel={value => value.toFixed(2)}
+          value={this.state.value3}
+          onChange={value => this.setState({ value3: value })}
+          onChangeComplete={value => console.log(value)}
         />
 
         <InputRange
@@ -85,33 +52,8 @@ export default class ExampleApp extends React.Component {
           minValue={0}
           labelSuffix="kg"
           value={this.state.value4}
-          onChange={this.handleValue4Change}
-          onChangeComplete={this.handleChangeComplete}
-        />
-
-        <InputRange
-          maxValue={10}
-          minValue={-10}
-          formatLabel={this.formatLabel}
-          value={this.state.value2}
-          defaultValue={defaultValue}
-          onChange={this.handleValue2Change}
-        />
-
-        <InputRange
-          maxValue={10}
-          minValue={-10}
-          value={this.state.value5}
-          defaultValue={defaultValue2}
-          onChange={this.handleValue5Change}
-        />
-
-        <InputRange
-          maxValue={20}
-          minValue={0}
-          disabled
-          value={this.state.value3}
-          onChange={this.handleValue3Change}
+          onChange={value => this.setState({ value4: value })}
+          onChangeComplete={value => console.log(value)}
         />
       </form>
     );

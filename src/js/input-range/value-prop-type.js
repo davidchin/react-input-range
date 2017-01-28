@@ -1,4 +1,4 @@
-import { isDefined, isNumber, isObject } from '../utils';
+import { isNumber, isObject } from '../utils';
 
 /**
  * @ignore
@@ -8,10 +8,6 @@ import { isDefined, isNumber, isObject } from '../utils';
 export default function valuePropType(props, propName) {
   const { maxValue, minValue } = props;
   const value = props[propName];
-
-  if (!isDefined(value) && (isDefined(props.defaultValue) || isDefined(props.value))) {
-    return;
-  }
 
   if (!isNumber(value) && (!isObject(value) || !isNumber(value.min) || !isNumber(value.max))) {
     return new Error(`"${propName}" must be a number or a range object`);

@@ -5,7 +5,7 @@ import React from 'react';
  * Label React component
  */
 export default function Label(props) {
-  const labelValue = props.formatLabel ? props.formatLabel(props.children) : props.children;
+  const labelValue = props.formatLabel ? props.formatLabel(props.children, props.type) : props.children;
 
   return (
     <span className={props.classNames[`${props.type}Label`]}>
