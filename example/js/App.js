@@ -16,7 +16,11 @@ class App extends React.Component {
       value5: {
         min: null,
         max: null,
-      }
+      },
+      value6: {
+        min: 5,
+        max: 10,
+      },
     };
   }
 
@@ -47,6 +51,12 @@ class App extends React.Component {
   handleValue5Change(component, values) {
     this.setState({
       value5: values,
+    });
+  }
+
+  handleValue6Change(component, values) {
+    this.setState({
+      value6: values,
     });
   }
 
