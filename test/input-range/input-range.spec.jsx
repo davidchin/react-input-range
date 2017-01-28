@@ -92,13 +92,13 @@ describe('InputRange', () => {
 
   it('updates the current value by a predefined increment', () => {
     const jsx = (
-    <InputRange
-      maxValue={20}
-      minValue={0}
-      value={{ min: 2, max: 10 }}
-      onChange={value => component.setProps({ value })}
-      step={2}
-    />
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+        step={2}
+      />
     );
     const component = mount(jsx, { attachTo: container });
     const slider = component.find(`Slider [onMouseDown]`).first();
@@ -120,12 +120,12 @@ describe('InputRange', () => {
 
   it('updates the current value when the user hits one of the arrow keys', () => {
     const jsx = (
-    <InputRange
-      maxValue={20}
-      minValue={0}
-      value={{ min: 2, max: 10 }}
-      onChange={value => component.setProps({ value })}
-    />
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
     );
     const component = mount(jsx, { attachTo: container });
     const slider = component.find(`Slider [onKeyDown]`).first();
@@ -143,7 +143,7 @@ describe('InputRange', () => {
     component.detach();
   });
 
-  it('does not update when it is disabled', () => {
+  it('does not respond to mouse event when it is disabled', () => {
     const jsx = (
       <InputRange
         disabled={true}
@@ -161,6 +161,27 @@ describe('InputRange', () => {
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
     component.update();
     expect(component.props().value).toEqual({ min: 2, max: 10 });
+
+    component.detach();
+  });
+
+  it('does not respond to keyboard event when it is disabled', () => {
+    const jsx = (
+      <InputRange
+        disabled={true}
+        maxValue={20}
+        minValue={0}
+        value={2}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onKeyDown]`).first();
+
+    slider.simulate('keyDown', { keyCode: 37 });
+    slider.simulate('keyUp', { keyCode: 37 });
+    component.update();
+    expect(component.props().value).toEqual(2);
 
     component.detach();
   });
