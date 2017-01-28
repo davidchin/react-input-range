@@ -3,11 +3,9 @@ import { autobind } from '../utils';
 
 /**
  * @ignore
- * Track React component
  */
 export default class Track extends React.Component {
   /**
-   * Accepted propTypes of Track
    * @override
    * @return {Object}
    * @property {Function} children
@@ -25,8 +23,10 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Track constructor
-   * @param {Object} props - React component props
+   * @param {Object} props
+   * @param {InputRangeClassNames} props.classNames
+   * @param {Function} props.onTrackMouseDown
+   * @param {number} props.percentages
    */
   constructor(props) {
     super(props);
@@ -44,7 +44,6 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Return the clientRect of the component
    * @private
    * @return {ClientRect}
    */
@@ -53,7 +52,6 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Get the CSS styles for an active track
    * @private
    * @return {Object} CSS styles
    */
@@ -65,7 +63,6 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Handle any mousedown event received by the component
    * @private
    * @param {SyntheticEvent} event - User event
    */
@@ -81,7 +78,6 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Handle any touchstart event received by the component
    * @private
    * @param {SyntheticEvent} event - User event
    */
@@ -92,9 +88,8 @@ export default class Track extends React.Component {
   }
 
   /**
-   * Render method of the component
    * @override
-   * @return {string} Component JSX
+   * @return {JSX.Element}
    */
   render() {
     const activeTrackStyle = this.getActiveTrackStyle();

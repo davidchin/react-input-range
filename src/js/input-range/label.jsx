@@ -2,7 +2,10 @@ import React from 'react';
 
 /**
  * @ignore
- * Label React component
+ * @param {Object} props
+ * @param {InputRangeClassNames} props.classNames
+ * @param {Function} props.formatLabel
+ * @param {string} props.type
  */
 export default function Label(props) {
   const labelValue = props.formatLabel ? props.formatLabel(props.children, props.type) : props.children;
@@ -17,7 +20,6 @@ export default function Label(props) {
 }
 
 /**
- * Accepted propTypes of Label
  * @type {Object}
  * @property {Function} children
  * @property {Function} classNames

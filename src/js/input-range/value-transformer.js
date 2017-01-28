@@ -1,41 +1,41 @@
 import { clamp } from '../utils';
 
 /**
- * Convert position into percentage value
+ * Convert a point into a percentage value
  * @ignore
  * @param {Point} position
- * @param {ClientRect} trackClientRect
+ * @param {ClientRect} clientRect
  * @return {number} Percentage value
  */
-export function getPercentageFromPosition(position, trackClientRect) {
-  const length = trackClientRect.width;
+export function getPercentageFromPosition(position, clientRect) {
+  const length = clientRect.width;
   const sizePerc = position.x / length;
 
   return sizePerc || 0;
 }
 
 /**
- * Convert position into model value
+ * Convert a point into a model value
  * @ignore
  * @param {Point} position
  * @param {number} minValue
  * @param {number} maxValue
- * @param {ClientRect} trackClientRect
- * @return {number} Model value
+ * @param {ClientRect} clientRect
+ * @return {number}
  */
-export function getValueFromPosition(position, minValue, maxValue, trackClientRect) {
-  const sizePerc = getPercentageFromPosition(position, trackClientRect);
+export function getValueFromPosition(position, minValue, maxValue, clientRect) {
+  const sizePerc = getPercentageFromPosition(position, clientRect);
   const valueDiff = maxValue - minValue;
 
   return minValue + (valueDiff * sizePerc);
 }
 
 /**
- * Extract values from props
+ * Convert props into a range value
  * @ignore
  * @param {Object} props
  * @param {boolean} isMultiValue
- * @return {Range} Range values
+ * @return {Range}
  */
 export function getValueFromProps(props, isMultiValue) {
   if (isMultiValue) {
@@ -49,12 +49,12 @@ export function getValueFromProps(props, isMultiValue) {
 }
 
 /**
- * Convert value into percentage value
+ * Convert a model value into a percentage value
  * @ignore
  * @param {number} value
  * @param {number} minValue
  * @param {number} maxValue
- * @return {number} Percentage value
+ * @return {number}
  */
 export function getPercentageFromValue(value, minValue, maxValue) {
   const validValue = clamp(value, minValue, maxValue);
@@ -65,12 +65,12 @@ export function getPercentageFromValue(value, minValue, maxValue) {
 }
 
 /**
- * Convert values into percentage values
+ * Convert model values into percentage values
  * @ignore
  * @param {Range} values
  * @param {number} minValue
  * @param {number} maxValue
- * @return {Range} Percentage values
+ * @return {Range}
  */
 export function getPercentagesFromValues(values, minValue, maxValue) {
   return {
@@ -80,16 +80,16 @@ export function getPercentagesFromValues(values, minValue, maxValue) {
 }
 
 /**
- * Convert value into position
+ * Convert a value into a point
  * @ignore
  * @param {number} value
  * @param {number} minValue
  * @param {number} maxValue
- * @param {ClientRect} trackClientRect
+ * @param {ClientRect} clientRect
  * @return {Point} Position
  */
-export function getPositionFromValue(value, minValue, maxValue, trackClientRect) {
-  const length = trackClientRect.width;
+export function getPositionFromValue(value, minValue, maxValue, clientRect) {
+  const length = clientRect.width;
   const valuePerc = getPercentageFromValue(value, minValue, maxValue);
   const positionValue = valuePerc * length;
 
@@ -100,34 +100,34 @@ export function getPositionFromValue(value, minValue, maxValue, trackClientRect)
 }
 
 /**
- * Convert a range of values into positions
+ * Convert a range of values into points
  * @ignore
  * @param {Range} values
  * @param {number} minValue
  * @param {number} maxValue
- * @param {ClientRect} trackClientRect
- * @return {Object<string, Point>}
+ * @param {ClientRect} clientRect
+ * @return {Range}
  */
-export function getPositionsFromValues(values, minValue, maxValue, trackClientRect) {
+export function getPositionsFromValues(values, minValue, maxValue, clientRect) {
   return {
-    min: getPositionFromValue(values.min, minValue, maxValue, trackClientRect),
-    max: getPositionFromValue(values.max, minValue, maxValue, trackClientRect),
+    min: getPositionFromValue(values.min, minValue, maxValue, clientRect),
+    max: getPositionFromValue(values.max, minValue, maxValue, clientRect),
   };
 }
 
 /**
- * Extract a position from an event
+ * Convert an event into a point
  * @ignore
  * @param {Event} event
- * @param {ClientRect} trackClientRect
+ * @param {ClientRect} clientRect
  * @return {Point}
  */
-export function getPositionFromEvent(event, trackClientRect) {
-  const length = trackClientRect.width;
+export function getPositionFromEvent(event, clientRect) {
+  const length = clientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
 
   return {
-    x: clamp(clientX - trackClientRect.left, 0, length),
+    x: clamp(clientX - clientRect.left, 0, length),
     y: 0,
   };
 }
@@ -137,7 +137,7 @@ export function getPositionFromEvent(event, trackClientRect) {
  * @ignore
  * @param {number} value
  * @param {number} valuePerStep
- * @return {number} Step value
+ * @return {number}
  */
 export function getStepValueFromValue(value, valuePerStep) {
   return Math.round(value / valuePerStep) * valuePerStep;

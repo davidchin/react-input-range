@@ -2,7 +2,7 @@ import { isNumber, isObject } from '../utils';
 
 /**
  * @ignore
- * @param {Object} props - React component props
+ * @param {Object} props
  * @return {?Error} Return Error if validation fails
  */
 export default function valuePropType(props, propName) {

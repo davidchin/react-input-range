@@ -4,7 +4,6 @@ import { autobind } from '../utils';
 
 /**
  * @ignore
- * Slider React component
  */
 export default class Slider extends React.Component {
   /**
@@ -40,8 +39,18 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Slider constructor
-   * @param {Object} props - React component props
+   * @param {Object} props
+   * @param {string} [props.ariaLabelledby]
+   * @param {string} [props.ariaControls]
+   * @param {InputRangeClassNames} props.classNames
+   * @param {Function} [props.formatLabel]
+   * @param {number} [props.maxValue]
+   * @param {number} [props.minValue]
+   * @param {Function} props.onSliderKeyDown
+   * @param {Function} props.onSliderMouseMove
+   * @param {number} props.percentage
+   * @param {number} props.type
+   * @param {number} props.value
    */
   constructor(props) {
     super(props);
@@ -64,7 +73,6 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Callback to fire when the component is about to unmount
    * @ignore
    * @override
    * @return {void}
@@ -77,9 +85,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Get the style of slider based on its props
    * @private
-   * @return {Object} CSS styles
+   * @return {Object}
    */
   getStyle() {
     const perc = (this.props.percentage || 0) * 100;
@@ -92,7 +99,6 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any mousedown event received by the component
    * @private
    * @return {void}
    */
@@ -103,7 +109,6 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any mouseup event received by the component
    * @private
    * @return {void}
    */
@@ -114,9 +119,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any mousemove event received by the component
    * @private
-   * @param {SyntheticEvent} event - User event
+   * @param {SyntheticEvent} event
    * @return {void}
    */
   handleMouseMove(event) {
@@ -124,9 +128,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any touchstart event received by the component
    * @private
-   * @param {SyntheticEvent} event - User event
+   * @param {SyntheticEvent} event
    * @return {void}
    */
   handleTouchStart(event) {
@@ -137,9 +140,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any touchmove event received by the component
    * @private
-   * @param {SyntheticEvent} event - User event
+   * @param {SyntheticEvent} event
    * @return {void}
    */
   handleTouchMove(event) {
@@ -147,7 +149,6 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any touchend event received by the component
    * @private
    * @return {void}
    */
@@ -159,9 +160,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Handle any keydown event received by the component
    * @private
-   * @param {SyntheticEvent} event - User event
+   * @param {SyntheticEvent} event
    * @return {void}
    */
   handleKeyDown(event) {
@@ -169,9 +169,8 @@ export default class Slider extends React.Component {
   }
 
   /**
-   * Render method of the component
    * @override
-   * @return {string} Component JSX
+   * @return {JSX.Element}
    */
   render() {
     const style = this.getStyle();

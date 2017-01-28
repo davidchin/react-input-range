@@ -1,17 +1,7 @@
 /**
-* An object containing class names
+* Default CSS class names
 * @ignore
-* @type {Object}
-* @property {string} activeTrack
-* @property {string} disabledInputRange
-* @property {string} inputRange
-* @property {string} labelContainer
-* @property {string} maxLabel
-* @property {string} minLabel
-* @property {string} slider
-* @property {string} sliderContainer
-* @property {string} track
-* @property {string} valueLabel
+* @type {InputRangeClassNames}
 */
 const DEFAULT_CLASS_NAMES = {
   activeTrack: 'input-range__track input-range__track--active',
