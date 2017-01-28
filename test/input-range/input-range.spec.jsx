@@ -265,7 +265,22 @@ describe('InputRange', () => {
     component.detach();
   });
 
-  it('displays the current value of the input', () => {
+  it('displays the current value as a label', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx);
+    const label = component.find('Slider Label').first();
+
+    expect(label.text()).toEqual('2');
+  });
+
+  it('displays the current value as a formatted label', () => {
     const jsx = (
       <InputRange
         maxValue={20}
@@ -281,7 +296,7 @@ describe('InputRange', () => {
     expect(label.text()).toEqual('2cm');
   });
 
-  it('displays the current value of the input for screen readers', () => {
+  it('displays the current value for screen readers', () => {
     const jsx = (
       <InputRange
         maxValue={20}
