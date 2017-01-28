@@ -18,5 +18,8 @@
         ]
       }
     }
-  ]
+  ],
+  "experimentalProposal": {
+    "objectRestSpread": true
+  }
 }
