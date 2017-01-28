@@ -1,48 +1,41 @@
-// usage from react:
-//   import InputRange = require('react-input-range');
-//   <InputRange value={this.state.sliderValue} onChange={(a, b) => this.setState({sliderValue})} />
-// The legacy 'require'-syntax  is preferred, since the module isn't
-// ES6-Standard.
+import * as React from 'react';
 
-/// <reference types="react" />
+declare interface Range {
+  max: number;
+  min: number;
+}
 
-import {ClassicComponentClass} from 'react';
+declare interface InputRangeClassNames {
+  activeTrack: string;
+  disabledInputRange: string;
+  inputRange: string;
+  labelContainer: string;
+  maxLabel: string;
+  minLabel: string;
+  slider: string;
+  sliderContainer: string;
+  track: string;
+  valueLabel: string;
+}
 
-declare let InputRange: ClassicComponentClass<ReactInputRange.IInputRangeProps>;
-export = InputRange;
+declare interface InputRangeProps {
+  ariaLabelledby?: string;
+  ariaControls?: string;
+  classNames?: InputRangeClassNames;
+  defaultValue?: Range | number;
+  disabled?: boolean;
+  formatLabel?: (value: number) => string;
+  labelPrefix?: string;
+  labelSuffix?: string;
+  maxValue?: number;
+  minValue?: number;
+  name?: string;
+  onChange: (value: Range | number) => void;
+  onChangeComplete?: (value: Range | number) => void;
+  step?: number;
+  value: Range | number;
+}
 
-declare namespace ReactInputRange {
-  interface IRange {
-    min: number;
-    max: number;
-  }
+declare class InputRange extends React.Component<InputRangeProps, any> {
 
-  interface IInputRangeProps {
-    classNames?: {
-      component?: string;
-      labelContainer?: string;
-      labelMax?: string;
-      labelMin?: string;
-      labelValue?: string;
-      slider?: string;
-      sliderContainer?: string;
-      trackActive?: string;
-      trackContainer?: string;
-    };
-
-    ariaLabelledby?: string;
-    ariaControls?: string;
-    defaultValue?: number;
-    disabled?: boolean;
-    formatLabel?: (labelValue: string, parameters: {labelPrefix: string, labelSuffix: string}) => string;
-    labelPrefix?: string;
-    labelSuffix?: string;
-    maxValue?: number;
-    minValue?: number;
-    name?: string;
-    onChange: (value: (number | IRange)) => void;
-    onChangeComplete?: () => void;
-    step?: number;
-    value: number | IRange;
-  }
 }
