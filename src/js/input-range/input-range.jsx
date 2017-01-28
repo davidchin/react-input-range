@@ -133,10 +133,10 @@ export default class InputRange extends React.Component {
    */
   getComponentClassName() {
     if (!this.props.disabled) {
-      return this.props.classNames.component;
+      return this.props.classNames.inputRange;
     }
 
-    return this.props.classNames.componentDisabled;
+    return this.props.classNames.disabledInputRange;
   }
 
   /**
@@ -601,9 +601,9 @@ export default class InputRange extends React.Component {
         onMouseDown={this.handleMouseDown}
         onTouchStart={this.handleTouchStart}>
         <Label
-          className={this.props.classNames.labelMin}
-          containerClassName={this.props.classNames.labelContainer}
-          formatLabel={this.formatLabel}>
+          classNames={this.props.classNames}
+          formatLabel={this.formatLabel}
+          type="min">
           {this.props.minValue}
         </Label>
 
@@ -617,9 +617,9 @@ export default class InputRange extends React.Component {
         </Track>
 
         <Label
-          className={this.props.classNames.labelMax}
-          containerClassName={this.props.classNames.labelContainer}
-          formatLabel={this.formatLabel}>
+          classNames={this.props.classNames}
+          formatLabel={this.formatLabel}
+          type="max">
           {this.props.maxValue}
         </Label>
 
