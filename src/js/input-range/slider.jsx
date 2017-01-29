@@ -1,6 +1,6 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import Label from './label';
-import { autobind } from '../utils';
 
 /**
  * @ignore
@@ -60,16 +60,6 @@ export default class Slider extends React.Component {
      * @type {?Component}
      */
     this.node = null;
-
-    autobind([
-      'handleMouseDown',
-      'handleMouseUp',
-      'handleMouseMove',
-      'handleTouchStart',
-      'handleTouchEnd',
-      'handleTouchMove',
-      'handleKeyDown',
-    ], this);
   }
 
   /**
@@ -102,8 +92,10 @@ export default class Slider extends React.Component {
    * @private
    * @return {void}
    */
+  @autobind
   handleMouseDown() {
-    // Event
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
     this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
     this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
   }
@@ -112,8 +104,8 @@ export default class Slider extends React.Component {
    * @private
    * @return {void}
    */
+  @autobind
   handleMouseUp() {
-    // Event
     this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
     this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
   }
@@ -123,18 +115,19 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleMouseMove(event) {
     this.props.onSliderMouseMove(event, this.props.type);
   }
 
   /**
    * @private
-   * @param {SyntheticEvent} event
    * @return {void}
    */
-  handleTouchStart(event) {
-    event.preventDefault();
-
+  @autobind
+  handleTouchStart() {
+    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
     this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove);
     this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
   }
@@ -144,6 +137,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleTouchMove(event) {
     this.props.onSliderMouseMove(event, this.props.type);
   }
@@ -152,9 +146,8 @@ export default class Slider extends React.Component {
    * @private
    * @return {void}
    */
-  handleTouchEnd(event) {
-    event.preventDefault();
-
+  @autobind
+  handleTouchEnd() {
     this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
     this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
   }
@@ -164,6 +157,7 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleKeyDown(event) {
     this.props.onSliderKeyDown(event, this.props.type);
   }

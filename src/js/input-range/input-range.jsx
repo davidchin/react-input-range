@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
 import Label from './label';
@@ -6,7 +7,7 @@ import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
-import { autobind, captialize, distanceTo, isDefined, isObject, length } from '../utils';
+import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 
 /**
@@ -86,20 +87,6 @@ export default class InputRange extends React.Component {
      * @type {?Component}
      */
     this.trackNode = null;
-
-    autobind([
-      'handleInteractionEnd',
-      'handleInteractionStart',
-      'handleKeyDown',
-      'handleKeyUp',
-      'handleMouseDown',
-      'handleMouseUp',
-      'handleSliderKeyDown',
-      'handleSliderMouseMove',
-      'handleTouchStart',
-      'handleTouchEnd',
-      'handleTrackMouseDown',
-    ], this);
   }
 
   /**
@@ -327,6 +314,7 @@ export default class InputRange extends React.Component {
    * @param {string} key
    * @return {void}
    */
+  @autobind
   handleSliderMouseMove(event, key) {
     if (this.props.disabled) {
       return;
@@ -344,6 +332,7 @@ export default class InputRange extends React.Component {
    * @param {string} key
    * @return {void}
    */
+  @autobind
   handleSliderKeyDown(event, key) {
     if (this.props.disabled) {
       return;
@@ -374,6 +363,7 @@ export default class InputRange extends React.Component {
    * @param {Point} position
    * @return {void}
    */
+  @autobind
   handleTrackMouseDown(event, position) {
     if (this.props.disabled) {
       return;
@@ -389,6 +379,7 @@ export default class InputRange extends React.Component {
    * @private
    * @return {void}
    */
+  @autobind
   handleInteractionStart() {
     if (!this.props.onChangeComplete || isDefined(this.startValue)) {
       return;
@@ -402,6 +393,7 @@ export default class InputRange extends React.Component {
    * @private
    * @return {void}
    */
+  @autobind
   handleInteractionEnd() {
     if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
       return;
@@ -420,6 +412,7 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleKeyDown(event) {
     this.handleInteractionStart(event);
   }
@@ -430,6 +423,7 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleKeyUp(event) {
     this.handleInteractionEnd(event);
   }
@@ -440,9 +434,11 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleMouseDown(event) {
     this.handleInteractionStart(event);
 
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
     this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
   }
 
@@ -451,6 +447,7 @@ export default class InputRange extends React.Component {
    * @private
    * @param {SyntheticEvent} event
    */
+  @autobind
   handleMouseUp(event) {
     this.handleInteractionEnd(event);
 
@@ -463,9 +460,11 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
+  @autobind
   handleTouchStart(event) {
     this.handleInteractionStart(event);
 
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
     this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
   }
 
@@ -474,6 +473,7 @@ export default class InputRange extends React.Component {
    * @private
    * @param {SyntheticEvent} event
    */
+  @autobind
   handleTouchEnd(event) {
     this.handleInteractionEnd(event);
 

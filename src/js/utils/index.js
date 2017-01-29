@@ -1,4 +1,3 @@
-export { default as autobind } from './autobind';
 export { default as captialize } from './captialize';
 export { default as clamp } from './clamp';
 export { default as distanceTo } from './distance-to';

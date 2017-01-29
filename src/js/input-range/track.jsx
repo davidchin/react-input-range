@@ -1,5 +1,5 @@
 import React from 'react';
-import { autobind } from '../utils';
+import autobind from 'autobind-decorator';
 
 /**
  * @ignore
@@ -36,11 +36,6 @@ export default class Track extends React.Component {
      * @type {?Component}
      */
     this.node = null;
-
-    autobind([
-      'handleMouseDown',
-      'handleTouchStart',
-    ], this);
   }
 
   /**
@@ -66,6 +61,7 @@ export default class Track extends React.Component {
    * @private
    * @param {SyntheticEvent} event - User event
    */
+  @autobind
   handleMouseDown(event) {
     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
     const trackClientRect = this.getClientRect();
@@ -81,6 +77,7 @@ export default class Track extends React.Component {
    * @private
    * @param {SyntheticEvent} event - User event
    */
+  @autobind
   handleTouchStart(event) {
     event.preventDefault();
 

@@ -36,13 +36,11 @@ describe('InputRange', () => {
     minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 5, max: 10 });
 
     maxSlider.simulate('mouseDown', { clientX: 210, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 260, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 260, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 5, max: 13 });
 
     component.detach();
@@ -61,11 +59,9 @@ describe('InputRange', () => {
     const track = component.find(`Track [onMouseDown]`).first();
 
     track.simulate('mouseDown', { clientX: 150, clientY: 50 });
-    component.update();
     expect(component.props().value).toEqual({ min: 2, max: 7 });
 
     track.simulate('mouseDown', { clientX: 20, clientY: 50 });
-    component.update();
     expect(component.props().value).toEqual({ min: 1, max: 7 });
 
     component.detach();
@@ -84,7 +80,6 @@ describe('InputRange', () => {
     const track = component.find(`Track [onTouchStart]`).first();
 
     track.simulate('touchStart', { touches: [{ clientX: 150, clientY: 50 }] });
-    component.update();
     expect(component.props().value).toEqual({ min: 2, max: 7 });
 
     component.detach();
@@ -106,13 +101,11 @@ describe('InputRange', () => {
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 60, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 60, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 2, max: 10 });
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 70, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 70, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 4, max: 10 });
 
     component.detach();
@@ -132,12 +125,10 @@ describe('InputRange', () => {
 
     slider.simulate('keyDown', { keyCode: 37 });
     slider.simulate('keyUp', { keyCode: 37 });
-    component.update();
     expect(component.props().value).toEqual({ min: 1, max: 10 });
 
     slider.simulate('keyDown', { keyCode: 39 });
     slider.simulate('keyUp', { keyCode: 39 });
-    component.update();
     expect(component.props().value).toEqual({ min: 2, max: 10 });
 
     component.detach();
@@ -159,7 +150,6 @@ describe('InputRange', () => {
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 2, max: 10 });
 
     component.detach();
@@ -180,7 +170,6 @@ describe('InputRange', () => {
 
     slider.simulate('keyDown', { keyCode: 37 });
     slider.simulate('keyUp', { keyCode: 37 });
-    component.update();
     expect(component.props().value).toEqual(2);
 
     component.detach();
@@ -202,13 +191,11 @@ describe('InputRange', () => {
     minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: -20, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 0, max: 10 });
 
     maxSlider.simulate('mouseDown', { clientX: 210, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 600, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 600, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 0, max: 20 });
 
     component.detach();
@@ -229,13 +216,11 @@ describe('InputRange', () => {
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: -20, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual(0);
 
     slider.simulate('mouseDown', { clientX: 0, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 600, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 600, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual(20);
 
     component.detach();
@@ -256,7 +241,6 @@ describe('InputRange', () => {
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 190, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 190, clientY: 50 }));
-    component.update();
     expect(component.props().value).toEqual({ min: 9, max: 10 });
 
     component.detach();
@@ -281,7 +265,6 @@ describe('InputRange', () => {
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150, clientY: 50 }));
-    component.update();
     expect(onChange.calls.count()).toEqual(2);
     expect(onChangeComplete.calls.count()).toEqual(1);
 
@@ -306,7 +289,6 @@ describe('InputRange', () => {
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 51, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 51, clientY: 50 }));
-    component.update();
     expect(onChange).not.toHaveBeenCalled();
     expect(onChangeComplete).not.toHaveBeenCalled();
 
