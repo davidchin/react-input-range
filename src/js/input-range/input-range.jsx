@@ -95,8 +95,8 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   componentWillUnmount() {
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+    this.removeDocumentMouseUpListener();
+    this.removeDocumentTouchEndListener();
   }
 
   /**
@@ -308,6 +308,44 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Listen to mouseup event
+   * @private
+   * @return {void}
+   */
+  addDocumentMouseUpListener() {
+    this.removeDocumentMouseUpListener();
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * Listen to touchend event
+   * @private
+   * @return {void}
+   */
+  addDocumentTouchEndListener() {
+    this.removeDocumentTouchEndListener();
+    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
+  }
+
+  /**
+   * Stop listening to mouseup event
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseUpListener() {
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * Stop listening to touchend event
+   * @private
+   * @return {void}
+   */
+  removeDocumentTouchEndListener() {
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+  }
+
+  /**
    * Handle any "mousemove" event received by the slider
    * @private
    * @param {SyntheticEvent} event
@@ -437,9 +475,7 @@ export default class InputRange extends React.Component {
   @autobind
   handleMouseDown(event) {
     this.handleInteractionStart(event);
-
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
-    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+    this.addDocumentMouseUpListener();
   }
 
   /**
@@ -450,8 +486,7 @@ export default class InputRange extends React.Component {
   @autobind
   handleMouseUp(event) {
     this.handleInteractionEnd(event);
-
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    this.removeDocumentMouseUpListener();
   }
 
   /**
@@ -463,9 +498,7 @@ export default class InputRange extends React.Component {
   @autobind
   handleTouchStart(event) {
     this.handleInteractionStart(event);
-
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
-    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
+    this.addDocumentTouchEndListener();
   }
 
   /**
@@ -476,8 +509,7 @@ export default class InputRange extends React.Component {
   @autobind
   handleTouchEnd(event) {
     this.handleInteractionEnd(event);
-
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+    this.removeDocumentTouchEndListener();
   }
 
   /**

@@ -68,10 +68,10 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   componentWillUnmount() {
-    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
-    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchUp);
+    this.removeDocumentMouseMoveListener();
+    this.removeDocumentMouseUpListener();
+    this.removeDocumentTouchEndListener();
+    this.removeDocumentTouchMoveListener();
   }
 
   /**
@@ -89,15 +89,85 @@ export default class Slider extends React.Component {
   }
 
   /**
+   * Listen to mousemove event
+   * @private
+   * @return {void}
+   */
+  addDocumentMouseMoveListener() {
+    this.removeDocumentMouseMoveListener();
+    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
+  }
+
+  /**
+   * Listen to mouseup event
+   * @private
+   * @return {void}
+   */
+  addDocumentMouseUpListener() {
+    this.removeDocumentMouseUpListener();
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * Listen to touchmove event
+   * @private
+   * @return {void}
+   */
+  addDocumentTouchMoveListener() {
+    this.removeDocumentTouchMoveListener();
+    this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove);
+  }
+
+  /**
+   * Listen to touchend event
+   * @private
+   * @return {void}
+   */
+  addDocumentTouchEndListener() {
+    this.removeDocumentTouchEndListener();
+    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseMoveListener() {
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseUpListener() {
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentTouchMoveListener() {
+    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentTouchEndListener() {
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchUp);
+  }
+
+  /**
    * @private
    * @return {void}
    */
   @autobind
   handleMouseDown() {
-    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
-    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
-    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+    this.addDocumentMouseMoveListener();
+    this.addDocumentMouseUpListener();
   }
 
   /**
@@ -106,8 +176,8 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleMouseUp() {
-    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    this.removeDocumentMouseMoveListener();
+    this.removeDocumentMouseUpListener();
   }
 
   /**
@@ -126,10 +196,8 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleTouchStart() {
-    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
-    this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove);
-    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
+    this.addDocumentTouchEndListener();
+    this.addDocumentTouchMoveListener();
   }
 
   /**
@@ -148,8 +216,8 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleTouchEnd() {
-    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+    this.removeDocumentTouchMoveListener();
+    this.removeDocumentTouchEndListener();
   }
 
   /**
