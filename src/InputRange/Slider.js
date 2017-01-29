@@ -155,8 +155,14 @@ export default class Slider extends React.Component {
         <Label
           className={ classNames.labelValue }
           containerClassName={ classNames.labelContainer }
-          formatLabel={ this.props.formatLabel }>
-          { this.props.value }
+          formatLabel={null}>
+          {
+            /*
+             * Hide label according to Ud design
+             * this.props.value
+             */
+            ""
+          }
         </Label>
 
         <a
