@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import Label from './Label';
+import { default as DefaultLabel } from './Label';
 import { autobind } from './util';
 
 /**
@@ -144,7 +144,7 @@ export default class Slider extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const classNames = this.props.classNames;
+    const { classNames, Label, children } = this.props;
     const style = getStyle(this);
 
     return (
@@ -174,6 +174,8 @@ export default class Slider extends React.Component {
           onTouchStart={ this.handleTouchStart }
           role="slider">
         </a>
+
+        { children }
       </span>
     );
   }
@@ -193,6 +195,8 @@ export default class Slider extends React.Component {
  * @property {Function} percentage
  * @property {Function} type
  * @property {Function} value
+ * @property {Function} Label
+ * @property {Function} children
  */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -206,4 +210,13 @@ Slider.propTypes = {
   percentage: React.PropTypes.number.isRequired,
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
+  Label: React.PropTypes.func,
+  children: React.PropTypes.any,
+};
+
+/**
+ * @property {Function} Label
+ */
+Slider.defaultProps = {
+  Label: DefaultLabel,
 };

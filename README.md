@@ -85,6 +85,9 @@ onChange                |Function                            |`onChange` callbac
 onChangeComplete        |Function                            |`onChangeComplete` callback
 step                    |number                              |Increment/decrement value
 value                   |number &vert; Object.&lt;number&gt; |Current value(s) (required)
+Track                   |Function                            |Override default Track Component
+Slider                  |Function                            |Override default Slider Component
+Label                   |Function                            |Override default Label Component
 
 ## Development
 
