@@ -200,20 +200,6 @@ function renderSliders(inputRange) {
  * @param {InputRange} inputRange - React component
  * @return {Array.<string>} Array of HTML
  */
-function renderHiddenInputs(inputRange) {
-  const inputs = [];
-  const keys = getKeys(inputRange);
-
-  for (const key of keys) {
-    const name = inputRange.isMultiValue ? `${inputRange.props.name}${captialize(key)}` : inputRange.props.name;
-
-    const input = (
-      <input type="hidden" name={ name }/>
-    );
-  }
-
-  return inputs;
-}
 
 /**
  * InputRange React component
@@ -530,7 +516,14 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames, Label, Track, children, showLabel } = this.props;
+    const {
+      classNames,
+      Label,
+      Track,
+      children,
+      showLabel,
+      renderHiddenInputs,
+    } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -573,7 +566,11 @@ export default class InputRange extends React.Component {
 
         { children }
 
-        { renderHiddenInputs(this) }
+        { renderHiddenInputs && getKeys(this).map((key) => {
+          const name = this.isMultiValue ? `${this.props.name}${captialize(key)}` : this.props.name;
+          const value = this.isMultiValue ? this.props.value[key] : this.props.value;
+          return <input key={ name } type="hidden" name={ name } value={ value } />;
+        }) }
       </div>
     );
   }
@@ -614,7 +611,7 @@ InputRange.propTypes = {
   labelSuffix: React.PropTypes.string,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
-  name: React.PropTypes.string,
+  name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
@@ -624,6 +621,7 @@ InputRange.propTypes = {
   Label: React.PropTypes.func,
   children: React.PropTypes.any,
   showLabel: React.PropTypes.bool,
+  renderHiddenInputs: React.PropTypes.bool,
 };
 
 /**
@@ -656,4 +654,5 @@ InputRange.defaultProps = {
   Slider: DefaultSlider,
   Label: DefaultLabel,
   showLabel: true,
+  renderHiddenInputs: true,
 };
