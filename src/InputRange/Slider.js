@@ -140,6 +140,19 @@ export default class Slider extends React.Component {
   }
 
   /**
+   * @param classNames
+   * @returns {XML} Component JSX
+   */
+  getLabel(classNames) {
+    return (<Label
+        className={ classNames.labelValue }
+        containerClassName={ classNames.labelContainer }
+        formatLabel={ this.props.formatLabel }>
+      { this.props.value }
+    </Label>);
+  }
+
+  /**
    * Render method of the component
    * @return {string} Component JSX
    */
@@ -152,12 +165,7 @@ export default class Slider extends React.Component {
         className={ classNames.sliderContainer }
         ref="slider"
         style={ style }>
-        <Label
-          className={ classNames.labelValue }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.props.formatLabel }>
-          { this.props.value }
-        </Label>
+        { !this.props.showLabelInSlider ? this.getLabel(classNames) : null }
 
         <a
           aria-labelledby={ this.props.ariaLabelledby }
@@ -173,6 +181,7 @@ export default class Slider extends React.Component {
           onMouseDown={ this.handleMouseDown }
           onTouchStart={ this.handleTouchStart }
           role="slider">
+          { this.props.showLabelInSlider ? this.getLabel(classNames) : null }
         </a>
       </span>
     );
@@ -206,4 +215,5 @@ Slider.propTypes = {
   percentage: React.PropTypes.number.isRequired,
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
+  showLabelInSlider: React.PropTypes.bool,
 };
