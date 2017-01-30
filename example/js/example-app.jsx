@@ -26,8 +26,7 @@ export default class ExampleApp extends React.Component {
           minValue={0}
           value={this.state.value}
           onChange={value => this.setState({ value })}
-          onChangeComplete={value => console.log(value)}
-        />
+          onChangeComplete={value => console.log(value)} />
 
         <InputRange
           maxValue={20}
@@ -35,8 +34,7 @@ export default class ExampleApp extends React.Component {
           disabled
           value={this.state.value2}
           onChange={value => this.setState({ value })}
-          onChangeComplete={value => console.log(value)}
-        />
+          onChangeComplete={value => console.log(value)} />
 
         <InputRange
           maxValue={20}
@@ -44,8 +42,7 @@ export default class ExampleApp extends React.Component {
           formatLabel={value => value.toFixed(2)}
           value={this.state.value3}
           onChange={value => this.setState({ value3: value })}
-          onChangeComplete={value => console.log(value)}
-        />
+          onChangeComplete={value => console.log(value)} />
 
         <InputRange
           maxValue={20}
@@ -53,8 +50,7 @@ export default class ExampleApp extends React.Component {
           labelSuffix="kg"
           value={this.state.value4}
           onChange={value => this.setState({ value4: value })}
-          onChangeComplete={value => console.log(value)}
-        />
+          onChangeComplete={value => console.log(value)} />
       </form>
     );
   }
