@@ -344,7 +344,7 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   @autobind
-  handleSliderMouseMove(event, key) {
+  handleSliderDrag(event, key) {
     if (this.props.disabled) {
       return;
     }
@@ -533,8 +533,8 @@ export default class InputRange extends React.Component {
           key={key}
           maxValue={maxValue}
           minValue={minValue}
+          onSliderDrag={this.handleSliderDrag}
           onSliderKeyDown={this.handleSliderKeyDown}
-          onSliderMouseMove={this.handleSliderMouseMove}
           percentage={percentage}
           type={key}
           value={value} />

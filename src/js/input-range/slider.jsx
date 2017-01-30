@@ -16,8 +16,8 @@ export default class Slider extends React.Component {
    * @property {Function} formatLabel
    * @property {Function} maxValue
    * @property {Function} minValue
+   * @property {Function} onSliderDrag
    * @property {Function} onSliderKeyDown
-   * @property {Function} onSliderMouseMove
    * @property {Function} percentage
    * @property {Function} type
    * @property {Function} value
@@ -30,8 +30,8 @@ export default class Slider extends React.Component {
       formatLabel: React.PropTypes.func,
       maxValue: React.PropTypes.number,
       minValue: React.PropTypes.number,
+      onSliderDrag: React.PropTypes.func.isRequired,
       onSliderKeyDown: React.PropTypes.func.isRequired,
-      onSliderMouseMove: React.PropTypes.func.isRequired,
       percentage: React.PropTypes.number.isRequired,
       type: React.PropTypes.string.isRequired,
       value: React.PropTypes.number.isRequired,
@@ -47,7 +47,7 @@ export default class Slider extends React.Component {
    * @param {number} [props.maxValue]
    * @param {number} [props.minValue]
    * @param {Function} props.onSliderKeyDown
-   * @param {Function} props.onSliderMouseMove
+   * @param {Function} props.onSliderDrag
    * @param {number} props.percentage
    * @param {number} props.type
    * @param {number} props.value
@@ -187,7 +187,7 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleMouseMove(event) {
-    this.props.onSliderMouseMove(event, this.props.type);
+    this.props.onSliderDrag(event, this.props.type);
   }
 
   /**
@@ -207,7 +207,7 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleTouchMove(event) {
-    this.props.onSliderMouseMove(event, this.props.type);
+    this.props.onSliderDrag(event, this.props.type);
   }
 
   /**
