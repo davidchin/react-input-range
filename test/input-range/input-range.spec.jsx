@@ -120,7 +120,7 @@ describe('InputRange', () => {
         onChange={value => component.setProps({ value })}
       />
     );
-    const component = mount(jsx, { attachTo: container });
+    const component = mount(jsx);
     const slider = component.find(`Slider [onKeyDown]`).first();
 
     slider.simulate('keyDown', { keyCode: 37 });
@@ -130,16 +130,29 @@ describe('InputRange', () => {
     slider.simulate('keyDown', { keyCode: 39 });
     slider.simulate('keyUp', { keyCode: 39 });
     expect(component.props().value).toEqual({ min: 2, max: 10 });
+  });
 
-    component.detach();
+  it('does not respond to keyboard events other than arrow keys', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx);
+    const slider = component.find(`Slider [onKeyDown]`).first();
+
+    slider.simulate('keyDown', { keyCode: 65 });
+    slider.simulate('keyUp', { keyCode: 65 });
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
   });
 
   it('does not respond to mouse event when it is disabled', () => {
     const jsx = (
       <InputRange
         disabled={true}
-        maxValue={20}
-        minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
       />
@@ -159,20 +172,16 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         disabled={true}
-        maxValue={20}
-        minValue={0}
         value={2}
         onChange={value => component.setProps({ value })}
       />
     );
-    const component = mount(jsx, { attachTo: container });
+    const component = mount(jsx);
     const slider = component.find(`Slider [onKeyDown]`).first();
 
     slider.simulate('keyDown', { keyCode: 37 });
     slider.simulate('keyUp', { keyCode: 37 });
     expect(component.props().value).toEqual(2);
-
-    component.detach();
   });
 
   it('prevents the min/max value from exceeding the min/max range', () => {
@@ -298,8 +307,6 @@ describe('InputRange', () => {
   it('displays the current value as a label', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
       />
@@ -313,8 +320,6 @@ describe('InputRange', () => {
   it('displays the current value as a formatted label', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         value={{ min: 2, max: 10 }}
         formatLabel={(value) => `${value}cm`}
         onChange={value => component.setProps({ value })}
@@ -329,8 +334,6 @@ describe('InputRange', () => {
   it('displays the current value for screen readers', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
       />
@@ -344,8 +347,6 @@ describe('InputRange', () => {
   it('renders a pair of sliders if the input value is a range', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={() => {}}
       />
@@ -358,8 +359,6 @@ describe('InputRange', () => {
   it('renders a single slider if the input value is a number', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         value={2}
         onChange={() => {}}
       />
@@ -369,11 +368,9 @@ describe('InputRange', () => {
     expect(component.find('Slider').length).toEqual(1);
   });
 
-  it('renders a hidden input containing the current value', () => {
+  it('renders a pair of hidden inputs containing the current min/max value', () => {
     const jsx = (
       <InputRange
-        maxValue={20}
-        minValue={0}
         name="price"
         value={{ min: 2, max: 10 }}
         onChange={() => {}}
@@ -385,6 +382,20 @@ describe('InputRange', () => {
 
     expect(minInput.getDOMNode().getAttribute('value')).toEqual('2');
     expect(maxInput.getDOMNode().getAttribute('value')).toEqual('10');
+  });
+
+  it('renders a hidden input containing the current value', () => {
+    const jsx = (
+      <InputRange
+        name="price"
+        value={5}
+        onChange={() => {}}
+      />
+    );
+    const component = mount(jsx);
+    const hiddenInput = component.find('[name="price"][type="hidden"]');
+
+    expect(hiddenInput.getDOMNode().getAttribute('value')).toEqual('5');
   });
 
   it('returns an error if the max/min range is invalid', () => {
