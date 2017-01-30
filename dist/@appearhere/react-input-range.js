@@ -75,12 +75,6 @@ function shouldUpdate(inputRange, values) {
   return isWithinRange(inputRange, values) && hasStepDifference(inputRange, values);
 }
 
-function getDocument(inputRange) {
-  var ownerDocument = inputRange.refs.inputRange.ownerDocument;
-
-  return ownerDocument;
-}
-
 function getComponentClassName(inputRange) {
   var props = inputRange.props;
 
@@ -124,7 +118,10 @@ function getKeyByPosition(inputRange, position) {
 }
 
 function renderSliders(inputRange) {
-  var classNames = inputRange.props.classNames;
+  var _inputRange$props = inputRange.props;
+  var classNames = _inputRange$props.classNames;
+  var Slider = _inputRange$props.Slider;
+  var Label = _inputRange$props.Label;
 
   var sliders = [];
   var keys = getKeys(inputRange);
@@ -143,9 +140,9 @@ function renderSliders(inputRange) {
       var percentage = percentages[key];
       var ref = 'slider' + (0, _util.captialize)(key);
 
-      var _inputRange$props = inputRange.props;
-      var maxValue = _inputRange$props.maxValue;
-      var minValue = _inputRange$props.minValue;
+      var _inputRange$props2 = inputRange.props;
+      var maxValue = _inputRange$props2.maxValue;
+      var minValue = _inputRange$props2.minValue;
 
       if (key === 'min') {
         maxValue = values.max;
@@ -153,7 +150,7 @@ function renderSliders(inputRange) {
         minValue = values.min;
       }
 
-      var slider = _react2['default'].createElement(_Slider2['default'], {
+      var slider = _react2['default'].createElement(Slider, {
         ariaLabelledby: inputRange.props.ariaLabelledby,
         ariaControls: inputRange.props.ariaControls,
         classNames: classNames,
@@ -166,7 +163,8 @@ function renderSliders(inputRange) {
         percentage: percentage,
         ref: ref,
         type: key,
-        value: value });
+        value: value,
+        Label: Label });
 
       sliders.push(slider);
     }
@@ -186,40 +184,6 @@ function renderSliders(inputRange) {
   }
 
   return sliders;
-}
-
-function renderHiddenInputs(inputRange) {
-  var inputs = [];
-  var keys = getKeys(inputRange);
-
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var key = _step2.value;
-
-      var _name = inputRange.isMultiValue ? '' + inputRange.props.name + (0, _util.captialize)(key) : inputRange.props.name;
-
-      var input = _react2['default'].createElement('input', { type: 'hidden', name: _name });
-    }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-        _iterator2['return']();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-
-  return inputs;
 }
 
 var InputRange = (function (_React$Component) {
@@ -277,9 +241,9 @@ var InputRange = (function (_React$Component) {
       }
 
       if (this.isMultiValue) {
-        this.props.onChange(this, values);
+        this.props.onChange(values);
       } else {
-        this.props.onChange(this, values.max);
+        this.props.onChange(values.max);
       }
     }
   }, {
@@ -384,7 +348,7 @@ var InputRange = (function (_React$Component) {
       }
 
       if (_this.startValue !== this.props.value) {
-        this.props.onChangeComplete(this, this.props.value);
+        this.props.onChangeComplete(this.props.value);
       }
 
       _this.startValue = null;
@@ -402,8 +366,6 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleMouseDown',
     value: function handleMouseDown(event) {
-      var document = getDocument(this);
-
       this.handleInteractionStart(event);
 
       document.addEventListener('mouseup', this.handleMouseUp);
@@ -411,8 +373,6 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp(event) {
-      var document = getDocument(this);
-
       this.handleInteractionEnd(event);
 
       document.removeEventListener('mouseup', this.handleMouseUp);
@@ -420,8 +380,6 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleTouchStart',
     value: function handleTouchStart(event) {
-      var document = getDocument(this);
-
       this.handleInteractionStart(event);
 
       document.addEventListener('touchend', this.handleTouchEnd);
@@ -429,8 +387,6 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleTouchEnd',
     value: function handleTouchEnd(event) {
-      var document = getDocument(this);
-
       this.handleInteractionEnd(event);
 
       document.removeEventListener('touchend', this.handleTouchEnd);
@@ -438,7 +394,15 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var classNames = this.props.classNames;
+      var _this2 = this;
+
+      var _props2 = this.props;
+      var classNames = _props2.classNames;
+      var Label = _props2.Label;
+      var Track = _props2.Track;
+      var children = _props2.children;
+      var showLabel = _props2.showLabel;
+      var renderHiddenInputs = _props2.renderHiddenInputs;
 
       var componentClassName = getComponentClassName(this);
       var values = _valueTransformer2['default'].valuesFromProps(this);
@@ -454,8 +418,8 @@ var InputRange = (function (_React$Component) {
           onKeyUp: this.handleKeyUp,
           onMouseDown: this.handleMouseDown,
           onTouchStart: this.handleTouchStart },
-        _react2['default'].createElement(
-          _Label2['default'],
+        showLabel && _react2['default'].createElement(
+          Label,
           {
             className: classNames.labelMin,
             containerClassName: classNames.labelContainer,
@@ -463,7 +427,7 @@ var InputRange = (function (_React$Component) {
           this.props.minValue
         ),
         _react2['default'].createElement(
-          _Track2['default'],
+          Track,
           {
             classNames: classNames,
             ref: 'track',
@@ -471,15 +435,20 @@ var InputRange = (function (_React$Component) {
             onTrackMouseDown: this.handleTrackMouseDown },
           renderSliders(this)
         ),
-        _react2['default'].createElement(
-          _Label2['default'],
+        showLabel && _react2['default'].createElement(
+          Label,
           {
             className: classNames.labelMax,
             containerClassName: classNames.labelContainer,
             formatLabel: this.formatLabel },
           this.props.maxValue
         ),
-        renderHiddenInputs(this)
+        children,
+        renderHiddenInputs && getKeys(this).map(function (key) {
+          var name = _this2.isMultiValue ? '' + _this2.props.name + (0, _util.captialize)(key) : _this2.props.name;
+          var value = _this2.isMultiValue ? _this2.props.value[key] : _this2.props.value;
+          return _react2['default'].createElement('input', { key: name, type: 'hidden', name: name, value: value });
+        })
       );
     }
   }, {
@@ -521,11 +490,17 @@ InputRange.propTypes = {
   labelSuffix: _react2['default'].PropTypes.string,
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
-  name: _react2['default'].PropTypes.string,
+  name: _react2['default'].PropTypes.string.isRequired,
   onChange: _react2['default'].PropTypes.func.isRequired,
   onChangeComplete: _react2['default'].PropTypes.func,
   step: _react2['default'].PropTypes.number,
-  value: _propTypes.maxMinValuePropType
+  value: _propTypes.maxMinValuePropType,
+  Track: _react2['default'].PropTypes.func,
+  Slider: _react2['default'].PropTypes.func,
+  Label: _react2['default'].PropTypes.func,
+  children: _react2['default'].PropTypes.any,
+  showLabel: _react2['default'].PropTypes.bool,
+  renderHiddenInputs: _react2['default'].PropTypes.bool
 };
 
 InputRange.defaultProps = {
@@ -537,7 +512,12 @@ InputRange.defaultProps = {
   maxValue: 10,
   minValue: 0,
   step: 1,
-  value: null
+  value: null,
+  Track: _Track2['default'],
+  Slider: _Slider2['default'],
+  Label: _Label2['default'],
+  showLabel: true,
+  renderHiddenInputs: true
 };
 module.exports = exports['default'];
 
@@ -636,12 +616,6 @@ var _Label2 = _interopRequireDefault(_Label);
 
 var _util = require('./util');
 
-function getDocument(slider) {
-  var ownerDocument = slider.refs.slider.ownerDocument;
-
-  return ownerDocument;
-}
-
 function getStyle(slider) {
   var perc = (slider.props.percentage || 0) * 100;
   var style = {
@@ -671,16 +645,12 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleMouseDown',
     value: function handleMouseDown() {
-      var document = getDocument(this);
-
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
     }
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp() {
-      var document = getDocument(this);
-
       document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('mouseup', this.handleMouseUp);
     }
@@ -692,8 +662,6 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleTouchStart',
     value: function handleTouchStart(event) {
-      var document = getDocument(this);
-
       event.preventDefault();
 
       document.addEventListener('touchmove', this.handleTouchMove);
@@ -707,8 +675,6 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'handleTouchEnd',
     value: function handleTouchEnd(event) {
-      var document = getDocument(this);
-
       event.preventDefault();
 
       document.removeEventListener('touchmove', this.handleTouchMove);
@@ -722,7 +688,11 @@ var Slider = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var classNames = this.props.classNames;
+      var _props = this.props;
+      var classNames = _props.classNames;
+      var Label = _props.Label;
+      var children = _props.children;
+
       var style = getStyle(this);
 
       return _react2['default'].createElement(
@@ -732,7 +702,7 @@ var Slider = (function (_React$Component) {
           ref: 'slider',
           style: style },
         _react2['default'].createElement(
-          _Label2['default'],
+          Label,
           {
             className: classNames.labelValue,
             containerClassName: classNames.labelContainer,
@@ -752,7 +722,8 @@ var Slider = (function (_React$Component) {
           onKeyDown: this.handleKeyDown,
           onMouseDown: this.handleMouseDown,
           onTouchStart: this.handleTouchStart,
-          role: 'slider' })
+          role: 'slider' }),
+        children
       );
     }
   }]);
@@ -773,7 +744,13 @@ Slider.propTypes = {
   onSliderMouseMove: _react2['default'].PropTypes.func.isRequired,
   percentage: _react2['default'].PropTypes.number.isRequired,
   type: _react2['default'].PropTypes.string.isRequired,
-  value: _react2['default'].PropTypes.number.isRequired
+  value: _react2['default'].PropTypes.number.isRequired,
+  Label: _react2['default'].PropTypes.func,
+  children: _react2['default'].PropTypes.any
+};
+
+Slider.defaultProps = {
+  Label: _Label2['default']
 };
 module.exports = exports['default'];
 
@@ -1206,8 +1183,22 @@ var _InputRange = require('./InputRange');
 
 var _InputRange2 = _interopRequireDefault(_InputRange);
 
-exports['default'] = _InputRange2['default'];
-module.exports = exports['default'];
+var _Track = require('./Track');
 
-},{"./InputRange":1}]},{},[9])(9)
+var _Track2 = _interopRequireDefault(_Track);
+
+var _Slider = require('./Slider');
+
+var _Slider2 = _interopRequireDefault(_Slider);
+
+var _Label = require('./Label');
+
+var _Label2 = _interopRequireDefault(_Label);
+
+exports['default'] = _InputRange2['default'];
+exports.Track = _Track2['default'];
+exports.Slider = _Slider2['default'];
+exports.Label = _Label2['default'];
+
+},{"./InputRange":1,"./Label":2,"./Slider":3,"./Track":4}]},{},[9])(9)
 });
