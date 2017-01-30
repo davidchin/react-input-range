@@ -3,20 +3,8 @@
  */
 
 import React from 'react';
-import Label from './Label';
+import { default as DefaultLabel } from './Label';
 import { autobind } from './util';
-
-/**
- * Get the owner document of slider
- * @private
- * @param {Slider} slider - React component
- * @return {Document} Document
- */
-function getDocument(slider) {
-  const { slider: { ownerDocument } } = slider.refs;
-
-  return ownerDocument;
-}
 
 /**
  * Get the style of slider based on its props
@@ -70,8 +58,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown() {
-    const document = getDocument(this);
-
     // Event
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
@@ -82,8 +68,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp() {
-    const document = getDocument(this);
-
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
@@ -102,8 +86,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
-
     event.preventDefault();
 
     document.addEventListener('touchmove', this.handleTouchMove);
@@ -123,8 +105,6 @@ export default class Slider extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
-
     event.preventDefault();
 
     document.removeEventListener('touchmove', this.handleTouchMove);
@@ -144,7 +124,7 @@ export default class Slider extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const classNames = this.props.classNames;
+    const { classNames, Label, children } = this.props;
     const style = getStyle(this);
 
     return (
@@ -174,6 +154,8 @@ export default class Slider extends React.Component {
           onTouchStart={ this.handleTouchStart }
           role="slider">
         </a>
+
+        { children }
       </span>
     );
   }
@@ -193,6 +175,8 @@ export default class Slider extends React.Component {
  * @property {Function} percentage
  * @property {Function} type
  * @property {Function} value
+ * @property {Function} Label
+ * @property {Function} children
  */
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -206,4 +190,13 @@ Slider.propTypes = {
   percentage: React.PropTypes.number.isRequired,
   type: React.PropTypes.string.isRequired,
   value: React.PropTypes.number.isRequired,
+  Label: React.PropTypes.func,
+  children: React.PropTypes.any,
+};
+
+/**
+ * @property {Function} Label
+ */
+Slider.defaultProps = {
+  Label: DefaultLabel,
 };

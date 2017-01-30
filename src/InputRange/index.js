@@ -3,6 +3,9 @@
  */
 
 import InputRange from './InputRange';
+import Track from './Track';
+import Slider from './Slider';
+import Label from './Label';
 
 /**
  * An object describing the position of a point
@@ -19,3 +22,4 @@ import InputRange from './InputRange';
  */
 
 export default InputRange;
+export {Track, Slider, Label};

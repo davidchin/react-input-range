@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import Slider from './Slider';
-import Track from './Track';
-import Label from './Label';
+import { default as DefaultSlider } from './Slider';
+import { default as DefaultTrack } from './Track';
+import { default as DefaultLabel } from './Label';
 import defaultClassNames from './defaultClassNames';
 import valueTransformer from './valueTransformer';
 import { autobind, captialize, distanceTo, isDefined, isObject, length } from './util';
@@ -74,18 +74,6 @@ function hasStepDifference(inputRange, values) {
 function shouldUpdate(inputRange, values) {
   return isWithinRange(inputRange, values) &&
          hasStepDifference(inputRange, values);
-}
-
-/**
- * Get the owner document of inputRange
- * @private
- * @param {InputRange} inputRange - React component
- * @return {Document} Document
- */
-function getDocument(inputRange) {
-  const { inputRange: { ownerDocument } } = inputRange.refs;
-
-  return ownerDocument;
 }
 
 /**
@@ -163,7 +151,7 @@ function getKeyByPosition(inputRange, position) {
  * @return {Array.<string>} Array of HTML
  */
 function renderSliders(inputRange) {
-  const { classNames } = inputRange.props;
+  const { classNames, Slider, Label } = inputRange.props;
   const sliders = [];
   const keys = getKeys(inputRange);
   const values = valueTransformer.valuesFromProps(inputRange);
@@ -196,7 +184,8 @@ function renderSliders(inputRange) {
         percentage={ percentage }
         ref={ ref }
         type={ key }
-        value={ value } />
+        value={ value }
+        Label={ Label } />
     );
 
     sliders.push(slider);
@@ -211,20 +200,6 @@ function renderSliders(inputRange) {
  * @param {InputRange} inputRange - React component
  * @return {Array.<string>} Array of HTML
  */
-function renderHiddenInputs(inputRange) {
-  const inputs = [];
-  const keys = getKeys(inputRange);
-
-  for (const key of keys) {
-    const name = inputRange.isMultiValue ? `${inputRange.props.name}${captialize(key)}` : inputRange.props.name;
-
-    const input = (
-      <input type="hidden" name={ name }/>
-    );
-  }
-
-  return inputs;
-}
 
 /**
  * InputRange React component
@@ -341,9 +316,9 @@ export default class InputRange extends React.Component {
     }
 
     if (this.isMultiValue) {
-      this.props.onChange(this, values);
+      this.props.onChange(values);
     } else {
-      this.props.onChange(this, values.max);
+      this.props.onChange(values.max);
     }
   }
 
@@ -474,7 +449,7 @@ export default class InputRange extends React.Component {
     }
 
     if (_this.startValue !== this.props.value) {
-      this.props.onChangeComplete(this, this.props.value);
+      this.props.onChangeComplete(this.props.value);
     }
 
     _this.startValue = null;
@@ -501,8 +476,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseDown(event) {
-    const document = getDocument(this);
-
     this.handleInteractionStart(event);
 
     document.addEventListener('mouseup', this.handleMouseUp);
@@ -513,8 +486,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleMouseUp(event) {
-    const document = getDocument(this);
-
     this.handleInteractionEnd(event);
 
     document.removeEventListener('mouseup', this.handleMouseUp);
@@ -525,8 +496,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchStart(event) {
-    const document = getDocument(this);
-
     this.handleInteractionStart(event);
 
     document.addEventListener('touchend', this.handleTouchEnd);
@@ -537,8 +506,6 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleTouchEnd(event) {
-    const document = getDocument(this);
-
     this.handleInteractionEnd(event);
 
     document.removeEventListener('touchend', this.handleTouchEnd);
@@ -549,7 +516,14 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames } = this.props;
+    const {
+      classNames,
+      Label,
+      Track,
+      children,
+      showLabel,
+      renderHiddenInputs,
+    } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -563,12 +537,14 @@ export default class InputRange extends React.Component {
         onKeyUp={ this.handleKeyUp }
         onMouseDown={ this.handleMouseDown }
         onTouchStart={ this.handleTouchStart }>
-        <Label
-          className={ classNames.labelMin }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.minValue }
-        </Label>
+        {showLabel && (
+          <Label
+            className={ classNames.labelMin }
+            containerClassName={ classNames.labelContainer }
+            formatLabel={ this.formatLabel }>
+            { this.props.minValue }
+          </Label>
+        )}
 
         <Track
           classNames={ classNames }
@@ -579,14 +555,22 @@ export default class InputRange extends React.Component {
           { renderSliders(this) }
         </Track>
 
-        <Label
-          className={ classNames.labelMax }
-          containerClassName={ classNames.labelContainer }
-          formatLabel={ this.formatLabel }>
-          { this.props.maxValue }
-        </Label>
+        {showLabel && (
+          <Label
+            className={ classNames.labelMax }
+            containerClassName={ classNames.labelContainer }
+            formatLabel={ this.formatLabel }>
+            { this.props.maxValue }
+          </Label>
+        )}
 
-        { renderHiddenInputs(this) }
+        { children }
+
+        { renderHiddenInputs && getKeys(this).map((key) => {
+          const name = this.isMultiValue ? `${this.props.name}${captialize(key)}` : this.props.name;
+          const value = this.isMultiValue ? this.props.value[key] : this.props.value;
+          return <input key={ name } type="hidden" name={ name } value={ value } />;
+        }) }
       </div>
     );
   }
@@ -595,21 +579,26 @@ export default class InputRange extends React.Component {
 /**
  * Accepted propTypes of InputRange
  * @static {Object}
- * @property {Function} ariaLabelledby
+ * @property {String} ariaLabelledby
  * @property {Function} ariaControls
- * @property {Function} classNames
- * @property {Function} defaultValue
- * @property {Function} disabled
+ * @property {Object} classNames
+ * @property {String|Number} defaultValue
+ * @property {Boolean} disabled
  * @property {Function} formatLabel
  * @property {Function} labelPrefix
  * @property {Function} labelSuffix
- * @property {Function} maxValue
- * @property {Function} minValue
- * @property {Function} name
+ * @property {Number} maxValue
+ * @property {Number} minValue
+ * @property {String} name
  * @property {Function} onChange
  * @property {Function} onChangeComplete
  * @property {Function} step
  * @property {Function} value
+ * @property {Function} Track
+ * @property {Function} Slider
+ * @property {Function} Label
+ * @property {Function} children
+ * @property {Boolean} showLabel
  */
 InputRange.propTypes = {
   ariaLabelledby: React.PropTypes.string,
@@ -622,11 +611,17 @@ InputRange.propTypes = {
   labelSuffix: React.PropTypes.string,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
-  name: React.PropTypes.string,
+  name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
   onChangeComplete: React.PropTypes.func,
   step: React.PropTypes.number,
   value: maxMinValuePropType,
+  Track: React.PropTypes.func,
+  Slider: React.PropTypes.func,
+  Label: React.PropTypes.func,
+  children: React.PropTypes.any,
+  showLabel: React.PropTypes.bool,
+  renderHiddenInputs: React.PropTypes.bool,
 };
 
 /**
@@ -641,6 +636,9 @@ InputRange.propTypes = {
  * @property {number} minValue
  * @property {number} step
  * @property {Range|number} value
+ * @property {Function} Track
+ * @property {Function} Slider
+ * @property {Function} Label
  */
 InputRange.defaultProps = {
   classNames: defaultClassNames,
@@ -652,4 +650,9 @@ InputRange.defaultProps = {
   minValue: 0,
   step: 1,
   value: null,
+  Track: DefaultTrack,
+  Slider: DefaultSlider,
+  Label: DefaultLabel,
+  showLabel: true,
+  renderHiddenInputs: true,
 };
