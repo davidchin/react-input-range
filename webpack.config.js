@@ -13,7 +13,7 @@ const webpackConfig = {
   output: {
     filename: '[name]',
     path: './lib/bundle',
-    library: 'ReactInputRange',
+    library: 'InputRange',
     libraryTarget: 'umd',
   },
   module: {
