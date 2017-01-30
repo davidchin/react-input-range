@@ -88,7 +88,7 @@ function getComponentClassName(inputRange) {
     return props.classNames.component;
   }
 
-  return props.classNames.component + ' is-disabled';
+  return props.classNames.component + ' ' + props.classNames.disabled;
 }
 
 function getKeyFromSlider(inputRange, slider) {
@@ -909,7 +909,8 @@ exports['default'] = {
   slider: 'InputRange-slider',
   sliderContainer: 'InputRange-sliderContainer',
   trackActive: 'InputRange-track InputRange-track--active',
-  trackContainer: 'InputRange-track InputRange-track--container'
+  trackContainer: 'InputRange-track InputRange-track--container',
+  disabled: 'is-disabled'
 };
 module.exports = exports['default'];
 
