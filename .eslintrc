@@ -35,5 +35,8 @@ ecmaFeatures:
   experimentalObjectRestSpread: true
   modules: true
 parser: babel-eslint
+parserOptions:
+  ecmaFeatures:
+    jsx: true
 plugins:
   - react
