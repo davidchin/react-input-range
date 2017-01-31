@@ -77,7 +77,7 @@
     "prebuild": "npm run test && rm -rf lib",
     "build": "npm run build:lib && npm run build:scss && npm run build:bundle",
     "build:bundle": "NODE_ENV=production webpack",
-    "build:lib": "NODE_ENV=production babel src --out-dir lib --source-maps",
+    "build:lib": "NODE_ENV=production babel src/js --out-dir lib/js --source-maps",
     "build:scss": "NODE_ENV=production node-sass src/scss --recursive --source-map true --output lib/css",
     "changelog": "conventional-changelog --preset angular --infile CHANGELOG.md --same-file",
     "dev": "webpack-dev-server --inline --config webpack-example.config.js --content-base example",

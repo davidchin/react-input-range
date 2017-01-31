@@ -14,18 +14,28 @@ const webpackExampleConfig = {
   module: {
     loaders: [
       {
-        exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'example'),
+        ],
         loader: 'babel',
         test: /\.jsx?$/,
       },
       {
-        test: /\.scss$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'example'),
+        ],
         loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
+        test: /\.scss$/,
       },
     ],
     preLoaders: [
       {
-        exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'example'),
+        ],
         loader: 'eslint',
         test: /\.jsx?$/,
       },

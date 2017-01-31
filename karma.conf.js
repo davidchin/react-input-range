@@ -1,3 +1,5 @@
+const path = require('path');
+
 function configureKarma(config) {
   config.set({
     basePath: __dirname,
@@ -26,7 +28,10 @@ function configureKarma(config) {
       module: {
         loaders: [
           {
-            exclude: /node_modules/,
+            include: [
+              path.resolve(__dirname, 'src'),
+              path.resolve(__dirname, 'test'),
+            ],
             loader: 'babel',
             query: {
               plugins: ['istanbul'],
@@ -34,8 +39,9 @@ function configureKarma(config) {
             test: /\.jsx?$/,
           },
           {
-            test: /\.scss$/,
+            include: path.resolve(__dirname, 'src'),
             loaders: ['style', 'css', 'postcss', 'sass'],
+            test: /\.scss$/,
           },
         ],
       },

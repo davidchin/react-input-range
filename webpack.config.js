@@ -1,6 +1,7 @@
 const { optimize: { DedupePlugin, UglifyJsPlugin } } = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const SasslintPlugin = require('sasslint-webpack-plugin');
+const path = require('path');
 
 const webpackConfig = {
   context: __dirname,
@@ -19,13 +20,14 @@ const webpackConfig = {
   module: {
     loaders: [
       {
-        exclude: /node_modules/,
+        include: path.resolve(__dirname, 'src'),
         loader: 'babel',
         test: /\.jsx?$/,
       },
       {
-        test: /\.scss$/,
+        include: path.resolve(__dirname, 'src'),
         loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
+        test: /\.scss$/,
       },
     ],
   },
