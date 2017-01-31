@@ -1,3 +1,13 @@
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/davidchin/react-input-range/compare/v1.0.0...v1.0.1) (2017-01-31)
+
+
+### Bug Fixes
+
+* Fix CommonJS and global default exports ([ff39e9d](https://github.com/davidchin/react-input-range/commit/ff39e9d))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/davidchin/react-input-range/compare/v0.10.0...v1.0.0) (2017-01-30)
 
