@@ -1,3 +1,13 @@
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/davidchin/react-input-range/compare/v1.0.1...v1.0.2) (2017-02-01)
+
+
+### Bug Fixes
+
+* Fix the display glitch affecting moving sliders in Safari ([69c9511](https://github.com/davidchin/react-input-range/commit/69c9511))
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/davidchin/react-input-range/compare/v1.0.0...v1.0.1) (2017-01-31)
 
