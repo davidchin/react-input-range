@@ -26,14 +26,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      values: { min: 2, max: 10 },
+      value: { min: 2, max: 10 },
     };
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(values) {
-    this.setState({ values });
   }
 
   render() {
@@ -41,8 +35,8 @@ class App extends React.Component {
       <InputRange
         maxValue={20}
         minValue={0}
-        value={this.state.values}
-        onChange={this.handleChange} />
+        value={this.state.value}
+        onChange={value => this.setState(value)} />
     );
   }
 }
@@ -55,19 +49,31 @@ ReactDOM.render(
 
 To accept a single value:
 ```jsx
-<InputRange
-  maxValue={20}
-  minValue={0}
-  value={this.state.value}
-  onChange={this.handleChange} />
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { value: 10 };
+  }
+
+  render() {
+    return (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={this.state.value}
+        onChange={value => this.setState(value)} />
+    );
+  }
+}
 ```
 
 To format labels:
 ```jsx
 <InputRange
-  formatLabel={(value) => `${value}cm`}
+  formatLabel={value => `${value}cm`}
   value={this.state.value}
-  onChange={this.handleChange} />
+  onChange={value => this.setState(value)} />
 ```
 
 To specify the amount of increment/decrement
@@ -75,7 +81,7 @@ To specify the amount of increment/decrement
 <InputRange
   step={2}
   value={this.state.value}
-  onChange={this.handleChange} />
+  onChange={value => this.setState(value)} />
 ```
 
 ## API
