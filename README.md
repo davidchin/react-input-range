@@ -36,7 +36,7 @@ class App extends React.Component {
         maxValue={20}
         minValue={0}
         value={this.state.value}
-        onChange={value => this.setState(value)} />
+        onChange={value => this.setState({ value })} />
     );
   }
 }
@@ -62,7 +62,7 @@ class App extends React.Component {
         maxValue={20}
         minValue={0}
         value={this.state.value}
-        onChange={value => this.setState(value)} />
+        onChange={value => this.setState({ value })} />
     );
   }
 }
@@ -73,7 +73,7 @@ To format labels:
 <InputRange
   formatLabel={value => `${value}cm`}
   value={this.state.value}
-  onChange={value => this.setState(value)} />
+  onChange={value => this.setState({ value })} />
 ```
 
 To specify the amount of increment/decrement
@@ -81,7 +81,7 @@ To specify the amount of increment/decrement
 <InputRange
   step={2}
   value={this.state.value}
-  onChange={value => this.setState(value)} />
+  onChange={value => this.setState({ value })} />
 ```
 
 ## API
