@@ -26,6 +26,9 @@ export default class InputRange extends React.Component {
       ariaControls: React.PropTypes.string,
       classNames: React.PropTypes.objectOf(React.PropTypes.string),
       disabled: React.PropTypes.bool,
+      showMinLabel: React.PropTypes.bool,
+      showMaxLabel: React.PropTypes.bool,
+      showValueLabel: React.PropTypes.bool,
       formatLabel: React.PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
@@ -49,6 +52,9 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      showMaxLabel: true,
+      showMinLabel: true,
+      showValueLabel: true,
     };
   }
 
@@ -58,6 +64,9 @@ export default class InputRange extends React.Component {
    * @param {string} [props.ariaControls]
    * @param {InputRangeClassNames} [props.classNames]
    * @param {boolean} [props.disabled = false]
+   * @param {boolean} [props.showMaxLabel = true]
+   * @param {boolean} [props.showMinLabel = true]
+   * @param {boolean} [props.showValueLabel = true]
    * @param {Function} [props.formatLabel]
    * @param {number|Range} [props.maxValue = 10]
    * @param {number|Range} [props.minValue = 0]
@@ -537,7 +546,8 @@ export default class InputRange extends React.Component {
           onSliderKeyDown={this.handleSliderKeyDown}
           percentage={percentage}
           type={key}
-          value={value} />
+          value={value}
+          showValueLabel={this.props.showValueLabel} />
       );
 
       return slider;
@@ -586,12 +596,15 @@ export default class InputRange extends React.Component {
         onKeyUp={this.handleKeyUp}
         onMouseDown={this.handleMouseDown}
         onTouchStart={this.handleTouchStart}>
-        <Label
-          classNames={this.props.classNames}
-          formatLabel={this.props.formatLabel}
-          type="min">
-          {this.props.minValue}
-        </Label>
+        {
+          this.props.showMinLabel &&
+          <Label
+            classNames={this.props.classNames}
+            formatLabel={this.props.formatLabel}
+            type="min">
+            {this.props.minValue}
+          </Label>
+        }
 
         <Track
           classNames={this.props.classNames}
@@ -602,12 +615,15 @@ export default class InputRange extends React.Component {
           {this.renderSliders()}
         </Track>
 
-        <Label
-          classNames={this.props.classNames}
-          formatLabel={this.props.formatLabel}
-          type="max">
-          {this.props.maxValue}
-        </Label>
+        {
+          this.props.showMaxLabel &&
+          <Label
+            classNames={this.props.classNames}
+            formatLabel={this.props.formatLabel}
+            type="max">
+            {this.props.maxValue}
+          </Label>
+        }
 
         {this.renderHiddenInputs()}
       </div>

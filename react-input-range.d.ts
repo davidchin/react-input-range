@@ -23,6 +23,9 @@ declare interface InputRangeProps {
   ariaControls?: string;
   classNames?: InputRangeClassNames;
   disabled?: boolean;
+  showMaxLabel?: boolean;
+  showMinLabel?: boolean;
+  showValueLabel?: boolean;
   formatLabel?: (value: number, type: string) => string;
   maxValue?: number;
   minValue?: number;

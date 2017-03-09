@@ -21,6 +21,7 @@ export default class Slider extends React.Component {
    * @property {Function} percentage
    * @property {Function} type
    * @property {Function} value
+   * @property {Boolean} showValueLabel
    */
   static get propTypes() {
     return {
@@ -35,6 +36,7 @@ export default class Slider extends React.Component {
       percentage: React.PropTypes.number.isRequired,
       type: React.PropTypes.string.isRequired,
       value: React.PropTypes.number.isRequired,
+      showValueLabel: React.PropTypes.bool,
     };
   }
 
@@ -51,6 +53,7 @@ export default class Slider extends React.Component {
    * @param {number} props.percentage
    * @param {number} props.type
    * @param {number} props.value
+   * @param {Boolean} props.showValueLabel
    */
   constructor(props) {
     super(props);
@@ -242,12 +245,15 @@ export default class Slider extends React.Component {
         className={this.props.classNames.sliderContainer}
         ref={(node) => { this.node = node; }}
         style={style}>
-        <Label
-          classNames={this.props.classNames}
-          formatLabel={this.props.formatLabel}
-          type="value">
-          {this.props.value}
-        </Label>
+        {
+            this.props.showValueLabel &&
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              type="value">
+              {this.props.value}
+            </Label>
+        }
 
         <div
           aria-labelledby={this.props.ariaLabelledby}
