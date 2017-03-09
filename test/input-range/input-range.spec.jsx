@@ -268,7 +268,6 @@ describe('InputRange', () => {
       />
     );
     const component = mount(jsx, { attachTo: container });
-    // eslint-disable-next-line quotes
     const slider = component.find(`Slider [onMouseDown]`).first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
