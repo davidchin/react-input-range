@@ -259,13 +259,14 @@ describe('InputRange', () => {
     const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
     const onChangeStart = jasmine.createSpy('onChangeStart');
     const jsx = (
-  	<InputRange
-  	  maxValue={20}
-  	  minValue={0}
-  	  value={{ min: 2, max: 10 }}
-  	  onChange={onChange}
-  	  onChangeStart={onChangeStart} />
-  	);
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+        onChangeStart={onChangeStart}
+      />
+    );
     const component = mount(jsx, { attachTo: container });
     // eslint-disable-next-line quotes
     const slider = component.find(`Slider [onMouseDown]`).first();
