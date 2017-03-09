@@ -28,6 +28,7 @@ declare interface InputRangeProps {
   minValue?: number;
   name?: string;
   onChange: (value: Range | number) => void;
+  onChangeStart?: (value: Range | number) => void;
   onChangeComplete?: (value: Range | number) => void;
   step?: number;
   value: Range | number;
