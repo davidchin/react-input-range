@@ -30,6 +30,7 @@ export default class InputRange extends React.Component {
       maxValue: rangePropType,
       minValue: rangePropType,
       name: React.PropTypes.string,
+      onChangeStart: React.PropTypes.func,
       onChange: React.PropTypes.func.isRequired,
       onChangeComplete: React.PropTypes.func,
       step: React.PropTypes.number,
@@ -64,6 +65,7 @@ export default class InputRange extends React.Component {
    * @param {string} [props.name]
    * @param {string} props.onChange
    * @param {Function} [props.onChangeComplete]
+   * @param {Function} [props.onChangeStart]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
    */
@@ -414,6 +416,9 @@ export default class InputRange extends React.Component {
       return;
     }
 
+    if (this.props.onChangeStart) {
+      this.props.onChangeStart(this.props.value);
+    }
     this.startValue = this.props.value;
   }
 
