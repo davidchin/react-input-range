@@ -8,10 +8,10 @@ export default class Track extends React.Component {
   /**
    * @override
    * @return {Object}
-   * @property {Function} children
-   * @property {Function} classNames
+   * @property {Node} children
+   * @property {Object} classNames
    * @property {Function} onTrackMouseDown
-   * @property {Function} percentages
+   * @property {Object} percentages
    */
   static get propTypes() {
     return {

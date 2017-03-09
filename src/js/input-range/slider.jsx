@@ -10,17 +10,17 @@ export default class Slider extends React.Component {
    * Accepted propTypes of Slider
    * @override
    * @return {Object}
-   * @property {Function} ariaLabelledby
-   * @property {Function} ariaControls
-   * @property {Function} className
+   * @property {String} ariaLabelledby
+   * @property {String} ariaControls
+   * @property {Object} className
    * @property {Function} formatLabel
-   * @property {Function} maxValue
-   * @property {Function} minValue
+   * @property {Number} maxValue
+   * @property {Number} minValue
    * @property {Function} onSliderDrag
    * @property {Function} onSliderKeyDown
-   * @property {Function} percentage
-   * @property {Function} type
-   * @property {Function} value
+   * @property {Number} percentage
+   * @property {String} type
+   * @property {Number} value
    * @property {Boolean} showValueLabel
    */
   static get propTypes() {
