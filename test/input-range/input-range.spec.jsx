@@ -275,7 +275,7 @@ describe('InputRange', () => {
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150, clientY: 50 }));
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150, clientY: 50 }));
-    expect(onChangeStart.calls.count()).toEqual(0);
+    expect(onChangeStart.calls.count()).toEqual(1);
 
     component.detach();
   });
