@@ -419,6 +419,7 @@ export default class InputRange extends React.Component {
     if (this.props.onChangeStart) {
       this.props.onChangeStart(this.props.value);
     }
+
     this.startValue = this.props.value;
   }
 
