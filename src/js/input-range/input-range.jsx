@@ -412,15 +412,13 @@ export default class InputRange extends React.Component {
    */
   @autobind
   handleInteractionStart() {
-    if (!this.props.onChangeComplete || isDefined(this.startValue)) {
-      return;
-    }
-
     if (this.props.onChangeStart) {
       this.props.onChangeStart(this.props.value);
     }
 
-    this.startValue = this.props.value;
+    if (this.props.onChangeComplete && !isDefined(this.startValue)) {
+      this.startValue = this.props.value;
+    }
   }
 
   /**
