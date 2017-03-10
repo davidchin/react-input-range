@@ -418,6 +418,7 @@ export default class InputRange extends React.Component {
     console.log('MouseMove Values: ', value);
 
     // TODO: Add CSS to label and remove console.log
+    // Set top and left based on event.pageX and event.pageY?
 
     this.setState({
       hoverValue: value,
@@ -445,6 +446,7 @@ export default class InputRange extends React.Component {
     console.log('MouseOver Value: ', value);
 
     // TODO: Add CSS to hoverLabel and remove console.log
+    // Set top and left based on event.pageX and event.pageY?
 
     this.setState({
       hovering: true,
