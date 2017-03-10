@@ -34,6 +34,7 @@ export default class InputRange extends React.Component {
       onChangeComplete: React.PropTypes.func,
       step: React.PropTypes.number,
       value: valuePropType,
+      showHoverLabel: React.PropTypes.bool,
     };
   }
 
@@ -49,6 +50,7 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      showHoverLabel: false,
     };
   }
 
@@ -66,6 +68,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.onChangeComplete]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
+   * @param {Boolean} [props.showHoverLabel = false]
    */
   constructor(props) {
     super(props);
@@ -87,6 +90,18 @@ export default class InputRange extends React.Component {
      * @type {?Component}
      */
     this.trackNode = null;
+
+    /**
+     * @private
+     * @type {?Component}
+     */
+    this.hoverLabel = null;
+
+
+    this.state = {
+      hovering: false,
+      hoverValue: props.value,
+    };
   }
 
   /**
@@ -308,6 +323,7 @@ export default class InputRange extends React.Component {
     this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
   }
 
+
   /**
    * Listen to touchend event
    * @private
@@ -328,6 +344,33 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Stop listening to mouseover event
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseOverListener() {
+    this.node.ownerDocument.removeEventListener('mouseover', this.handleMouseOver);
+  }
+
+  /**
+   * Stop listening to mouseout event
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseOutListener() {
+    this.node.ownerDocument.removeEventListener('mouseout', this.handleMouseOut);
+  }
+
+  /**
+   * Stop listening to mousemove event
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseMoveListener() {
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  /**
    * Stop listening to touchend event
    * @private
    * @return {void}
@@ -337,7 +380,7 @@ export default class InputRange extends React.Component {
   }
 
   /**
-   * Handle any "mousemove" event received by the slider
+   * Handle drag "mousemove" event received by the slider
    * @private
    * @param {SyntheticEvent} event
    * @param {string} key
@@ -353,6 +396,90 @@ export default class InputRange extends React.Component {
 
     requestAnimationFrame(() => this.updatePosition(key, position));
   }
+
+  /**
+   * Handle any non-drag "mousemove" event received by the slider
+   * @private
+   * @param {SyntheticEvent} event
+   * @param {string} key
+   * @return {void}
+   */
+  @autobind
+  handleMouseMove(event) {
+    if (this.props.disabled) {
+      return;
+    }
+
+    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
+
+    const value = valueTransformer.getValueFromPosition(position, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+
+    console.log('MouseMove Position: ', position);
+    console.log('MouseMove Values: ', value);
+
+    // TODO: Add CSS to label and remove console.log
+
+    this.setState({
+      hoverValue: value,
+    });
+  }
+
+  /**
+   * Handle any "mouseover" event received by the slider
+   * @private
+   * @param {SyntheticEvent} event
+   * @param {string} key
+   * @return {void}
+   */
+  @autobind
+  handleMouseOver(event) {
+    if (this.props.disabled) {
+      return;
+    }
+
+    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
+
+    const value = valueTransformer.getValueFromPosition(position, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+
+    console.log('MouseOver Position: ', position);
+    console.log('MouseOver Value: ', value);
+
+    // TODO: Add CSS to hoverLabel and remove console.log
+
+    this.setState({
+      hovering: true,
+      hoverValue: value,
+    });
+  }
+
+
+  /**
+   * Handle any "mouseout" event received by the slider
+   * @private
+   * @param {SyntheticEvent} event
+   * @param {string} key
+   * @return {void}
+   */
+  @autobind
+  handleMouseOut(event) {
+    if (this.props.disabled) {
+      return;
+    }
+
+    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
+    const value = valueTransformer.getValueFromPosition(position, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+
+    console.log('MouseOut Position: ', position);
+    console.log('MouseOut Value: ', value);
+
+    // TODO: Remove CSS from hoverLabel and remove console.log
+
+    this.setState({
+      hovering: false,
+      hoverValue: value,
+    });
+  }
+
 
   /**
    * Handle any "keydown" event received by the slider
@@ -535,6 +662,9 @@ export default class InputRange extends React.Component {
           minValue={minValue}
           onSliderDrag={this.handleSliderDrag}
           onSliderKeyDown={this.handleSliderKeyDown}
+          onMouseOver={this.handleMouseOver}
+          onMouseOut={this.handleMouseOut}
+          onMouseMove={this.handleMouseMove}
           percentage={percentage}
           type={key}
           value={value} />
@@ -597,9 +727,23 @@ export default class InputRange extends React.Component {
           classNames={this.props.classNames}
           ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
-          onTrackMouseDown={this.handleTrackMouseDown}>
+          onTrackMouseDown={this.handleTrackMouseDown}
+          onTrackMouseOver={this.handleMouseOver}
+          onTrackMouseOut={this.handleMouseOut}
+          onTrackMouseMove={this.handleMouseMove} >
 
           {this.renderSliders()}
+          {
+            this.props.showHoverLabel && this.state.hovering &&
+            <Label
+              ref={(node) => { this.hoverLabel = node; }}
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              type="hover">
+              {this.state.hoverValue}
+            </Label>
+
+          }
         </Track>
 
         <Label

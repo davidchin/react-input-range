@@ -70,6 +70,8 @@ export default class Slider extends React.Component {
   componentWillUnmount() {
     this.removeDocumentMouseMoveListener();
     this.removeDocumentMouseUpListener();
+    this.removeDocumentMouseOverListener();
+    this.removeDocumentMouseOutListener();
     this.removeDocumentTouchEndListener();
     this.removeDocumentTouchMoveListener();
   }

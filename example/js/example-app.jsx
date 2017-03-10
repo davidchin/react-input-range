@@ -22,6 +22,7 @@ export default class ExampleApp extends React.Component {
     return (
       <form className="form">
         <InputRange
+          showHoverLabel
           maxValue={20}
           minValue={0}
           value={this.state.value}
