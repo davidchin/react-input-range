@@ -42,6 +42,7 @@ export default class ExampleApp extends React.Component {
           formatLabel={value => value.toFixed(2)}
           value={this.state.value3}
           onChange={value => this.setState({ value3: value })}
+          onChangeStart={value => console.log('onChangeStart with value =', value)}
           onChangeComplete={value => console.log(value)} />
 
         <InputRange

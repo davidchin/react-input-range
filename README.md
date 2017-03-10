@@ -124,6 +124,10 @@ Set a name for your form component.
 
 Whenever your user interacts with your component (i.e.: dragging a slider), this function gets called. Inside the function, you should assign the new value to your component.
 
+#### onChangeStart: (value: number | Range): void
+
+Whenever your user starts interacting with your component (i.e.: `onMouseDown`, or `onTouchStart`), this function gets called.
+
 #### onChangeComplete: (value: number | Range): void
 
 Every mouse / touch event can trigger multiple updates, therefore causing `onChange` callback to fire multiple times. On the other hand, `onChangeComplete` callback only gets called when the user stops dragging.

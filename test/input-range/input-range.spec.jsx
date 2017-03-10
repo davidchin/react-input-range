@@ -255,6 +255,30 @@ describe('InputRange', () => {
     component.detach();
   });
 
+  it('notifies the parent component when dragging starts', () => {
+    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChangeStart = jasmine.createSpy('onChangeStart');
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+        onChangeStart={onChangeStart}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150, clientY: 50 }));
+    expect(onChangeStart.calls.count()).toEqual(1);
+
+    component.detach();
+  });
+
   it('notifies the parent component when dragging stops', () => {
     const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
     const onChangeComplete = jasmine.createSpy('onChangeComplete');
