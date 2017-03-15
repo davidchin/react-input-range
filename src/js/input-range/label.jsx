@@ -1,23 +1,19 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 /**
  * @ignore
- * @param {Object} props
- * @param {InputRangeClassNames} props.classNames
- * @param {Function} props.formatLabel
- * @param {string} props.type
+ * @param {InputRangeClassNames} classNames
+ * @param {Function=} formatLabel
+ * @param {Node} children
+ * @param {string} type
  */
-export default function Label(props) {
-  const labelValue = props.formatLabel ? props.formatLabel(props.children, props.type) : props.children;
-
-  return (
-    <span className={props.classNames[`${props.type}Label`]}>
-      <span className={props.classNames.labelContainer}>
-        {labelValue}
-      </span>
+const Label = ({ formatLabel, children, type, classNames }) => (
+  <span className={classNames[`${type}Label`]}>
+    <span className={classNames.labelContainer}>
+      {formatLabel ? formatLabel(children, type) : children}
     </span>
-  );
-}
+  </span>
+);
 
 /**
  * @type {Object}
@@ -27,8 +23,10 @@ export default function Label(props) {
  * @property {Function} type
  */
 Label.propTypes = {
-  children: React.PropTypes.node.isRequired,
-  classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
-  formatLabel: React.PropTypes.func,
-  type: React.PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+  formatLabel: PropTypes.func,
+  type: PropTypes.string.isRequired,
 };
+
+export default Label;

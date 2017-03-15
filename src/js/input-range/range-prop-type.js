@@ -5,7 +5,7 @@ import { isNumber } from '../utils';
  * @param {Object} props - React component props
  * @return {?Error} Return Error if validation fails
  */
-export default function rangePropType(props) {
+const rangePropType = (props) => {
   const { maxValue, minValue } = props;
 
   if (!isNumber(minValue) || !isNumber(maxValue)) {
@@ -15,4 +15,6 @@ export default function rangePropType(props) {
   if (minValue >= maxValue) {
     return new Error('"minValue" must be smaller than "maxValue"');
   }
-}
+};
+
+export default rangePropType;

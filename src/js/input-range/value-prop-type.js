@@ -3,9 +3,10 @@ import { isNumber, isObject } from '../utils';
 /**
  * @ignore
  * @param {Object} props
+ * @param {String} propName
  * @return {?Error} Return Error if validation fails
  */
-export default function valuePropType(props, propName) {
+const valuePropType = (props, propName) => {
   const { maxValue, minValue } = props;
   const value = props[propName];
 
@@ -20,4 +21,6 @@ export default function valuePropType(props, propName) {
   if (isObject(value) && (value.min < minValue || value.min > maxValue || value.max < minValue || value.max > maxValue)) {
     return new Error(`"${propName}" must be in between "minValue" and "maxValue"`);
   }
-}
+};
+
+export default valuePropType

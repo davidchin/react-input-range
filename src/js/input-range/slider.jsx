@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import autobind from 'autobind-decorator';
 import Label from './label';
 
 /**
  * @ignore
  */
-export default class Slider extends React.Component {
+export default class Slider extends Component {
   /**
    * Accepted propTypes of Slider
    * @override
@@ -24,17 +24,17 @@ export default class Slider extends React.Component {
    */
   static get propTypes() {
     return {
-      ariaLabelledby: React.PropTypes.string,
-      ariaControls: React.PropTypes.string,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
-      formatLabel: React.PropTypes.func,
-      maxValue: React.PropTypes.number,
-      minValue: React.PropTypes.number,
-      onSliderDrag: React.PropTypes.func.isRequired,
-      onSliderKeyDown: React.PropTypes.func.isRequired,
-      percentage: React.PropTypes.number.isRequired,
-      type: React.PropTypes.string.isRequired,
-      value: React.PropTypes.number.isRequired,
+      ariaLabelledby: PropTypes.string,
+      ariaControls: PropTypes.string,
+      classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+      formatLabel: PropTypes.func,
+      maxValue: PropTypes.number,
+      minValue: PropTypes.number,
+      onSliderDrag: PropTypes.func.isRequired,
+      onSliderKeyDown: PropTypes.func.isRequired,
+      percentage: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
     };
   }
 

@@ -7,12 +7,12 @@ import { clamp } from '../utils';
  * @param {ClientRect} clientRect
  * @return {number} Percentage value
  */
-export function getPercentageFromPosition(position, clientRect) {
+export const getPercentageFromPosition = (position, clientRect) => {
   const length = clientRect.width;
   const sizePerc = position.x / length;
 
   return sizePerc || 0;
-}
+};
 
 /**
  * Convert a point into a model value
@@ -23,12 +23,12 @@ export function getPercentageFromPosition(position, clientRect) {
  * @param {ClientRect} clientRect
  * @return {number}
  */
-export function getValueFromPosition(position, minValue, maxValue, clientRect) {
+export const getValueFromPosition = (position, minValue, maxValue, clientRect) => {
   const sizePerc = getPercentageFromPosition(position, clientRect);
   const valueDiff = maxValue - minValue;
 
   return minValue + (valueDiff * sizePerc);
-}
+};
 
 /**
  * Convert props into a range value
@@ -37,7 +37,7 @@ export function getValueFromPosition(position, minValue, maxValue, clientRect) {
  * @param {boolean} isMultiValue
  * @return {Range}
  */
-export function getValueFromProps(props, isMultiValue) {
+export const getValueFromProps = (props, isMultiValue) => {
   if (isMultiValue) {
     return { ...props.value };
   }
@@ -46,7 +46,7 @@ export function getValueFromProps(props, isMultiValue) {
     min: props.minValue,
     max: props.value,
   };
-}
+};
 
 /**
  * Convert a model value into a percentage value
@@ -56,13 +56,13 @@ export function getValueFromProps(props, isMultiValue) {
  * @param {number} maxValue
  * @return {number}
  */
-export function getPercentageFromValue(value, minValue, maxValue) {
+export const getPercentageFromValue = (value, minValue, maxValue) => {
   const validValue = clamp(value, minValue, maxValue);
   const valueDiff = maxValue - minValue;
   const valuePerc = (validValue - minValue) / valueDiff;
 
   return valuePerc || 0;
-}
+};
 
 /**
  * Convert model values into percentage values
@@ -72,12 +72,10 @@ export function getPercentageFromValue(value, minValue, maxValue) {
  * @param {number} maxValue
  * @return {Range}
  */
-export function getPercentagesFromValues(values, minValue, maxValue) {
-  return {
-    min: getPercentageFromValue(values.min, minValue, maxValue),
-    max: getPercentageFromValue(values.max, minValue, maxValue),
-  };
-}
+export const getPercentagesFromValues = (values, minValue, maxValue) => ({
+  min: getPercentageFromValue(values.min, minValue, maxValue),
+  max: getPercentageFromValue(values.max, minValue, maxValue),
+});
 
 /**
  * Convert a value into a point
@@ -88,7 +86,7 @@ export function getPercentagesFromValues(values, minValue, maxValue) {
  * @param {ClientRect} clientRect
  * @return {Point} Position
  */
-export function getPositionFromValue(value, minValue, maxValue, clientRect) {
+export const getPositionFromValue = (value, minValue, maxValue, clientRect) => {
   const length = clientRect.width;
   const valuePerc = getPercentageFromValue(value, minValue, maxValue);
   const positionValue = valuePerc * length;
@@ -97,7 +95,7 @@ export function getPositionFromValue(value, minValue, maxValue, clientRect) {
     x: positionValue,
     y: 0,
   };
-}
+};
 
 /**
  * Convert a range of values into points
@@ -108,12 +106,10 @@ export function getPositionFromValue(value, minValue, maxValue, clientRect) {
  * @param {ClientRect} clientRect
  * @return {Range}
  */
-export function getPositionsFromValues(values, minValue, maxValue, clientRect) {
-  return {
-    min: getPositionFromValue(values.min, minValue, maxValue, clientRect),
-    max: getPositionFromValue(values.max, minValue, maxValue, clientRect),
-  };
-}
+export const getPositionsFromValues = (values, minValue, maxValue, clientRect) => ({
+  min: getPositionFromValue(values.min, minValue, maxValue, clientRect),
+  max: getPositionFromValue(values.max, minValue, maxValue, clientRect),
+});
 
 /**
  * Convert an event into a point
@@ -122,7 +118,7 @@ export function getPositionsFromValues(values, minValue, maxValue, clientRect) {
  * @param {ClientRect} clientRect
  * @return {Point}
  */
-export function getPositionFromEvent(event, clientRect) {
+export const getPositionFromEvent = (event, clientRect) => {
   const length = clientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
 
@@ -130,7 +126,7 @@ export function getPositionFromEvent(event, clientRect) {
     x: clamp(clientX - clientRect.left, 0, length),
     y: 0,
   };
-}
+};
 
 /**
  * Convert a value into a step value
@@ -139,6 +135,4 @@ export function getPositionFromEvent(event, clientRect) {
  * @param {number} valuePerStep
  * @return {number}
  */
-export function getStepValueFromValue(value, valuePerStep) {
-  return Math.round(value / valuePerStep) * valuePerStep;
-}
+export const getStepValueFromValue = (value, valuePerStep) => Math.round(value / valuePerStep) * valuePerStep;

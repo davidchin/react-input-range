@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
@@ -14,7 +14,7 @@ import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
  * A React component that allows users to input numeric values within a range
  * by dragging its sliders.
  */
-export default class InputRange extends React.Component {
+export default class InputRange extends Component {
   /**
    * @ignore
    * @override
@@ -22,18 +22,18 @@ export default class InputRange extends React.Component {
    */
   static get propTypes() {
     return {
-      ariaLabelledby: React.PropTypes.string,
-      ariaControls: React.PropTypes.string,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      disabled: React.PropTypes.bool,
-      formatLabel: React.PropTypes.func,
+      ariaLabelledby: PropTypes.string,
+      ariaControls: PropTypes.string,
+      classNames: PropTypes.objectOf(PropTypes.string),
+      disabled: PropTypes.bool,
+      formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
-      name: React.PropTypes.string,
-      onChangeStart: React.PropTypes.func,
-      onChange: React.PropTypes.func.isRequired,
-      onChangeComplete: React.PropTypes.func,
-      step: React.PropTypes.number,
+      name: PropTypes.string,
+      onChangeStart: PropTypes.func,
+      onChange: PropTypes.func.isRequired,
+      onChangeComplete: PropTypes.func,
+      step: PropTypes.number,
       value: valuePropType,
     };
   }
@@ -169,7 +169,7 @@ export default class InputRange extends React.Component {
     const currentValues = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
 
     return length(values.min, currentValues.min) >= this.props.step ||
-           length(values.max, currentValues.max) >= this.props.step;
+      length(values.max, currentValues.max) >= this.props.step;
   }
 
   /**
@@ -190,8 +190,8 @@ export default class InputRange extends React.Component {
   isWithinRange(values) {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
-             values.max <= this.props.maxValue &&
-             values.min < values.max;
+        values.max <= this.props.maxValue &&
+        values.min < values.max;
     }
 
     return values.max >= this.props.minValue && values.max <= this.props.maxValue;
