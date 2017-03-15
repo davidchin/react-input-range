@@ -1,22 +1,18 @@
-/* eslint-disable class-methods-use-this, no-console */
-
-import React from 'react';
+/* eslint-disable no-console */
+import React, { Component } from 'react';
 import InputRange from '../../src/js';
 
-export default class ExampleApp extends React.Component {
-  constructor(props) {
-    super(props);
+export default class ExampleApp extends Component {
 
-    this.state = {
-      value: 5,
-      value2: 10,
-      value3: 10,
-      value4: {
-        min: 5,
-        max: 10,
-      },
-    };
-  }
+  state = {
+    value: 5,
+    value2: 10,
+    value3: 10,
+    value4: {
+      min: 5,
+      max: 10,
+    },
+  };
 
   render() {
     return (
