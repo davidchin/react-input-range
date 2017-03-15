@@ -5,10 +5,10 @@ function configureKarma(config) {
     basePath: __dirname,
     browsers: ['PhantomJS'],
     coverageReporter: {
-        reporters: [
-            { type: 'html' },
-            { type: 'text' },
-        ],
+      reporters: [
+        { type: 'html' },
+        { type: 'text' },
+      ],
     },
     frameworks: ['jasmine'],
     files: ['test/index.js'],
@@ -26,13 +26,13 @@ function configureKarma(config) {
         'react/lib/ReactContext': true,
       },
       module: {
-        loaders: [
+        rules: [
           {
             include: [
               path.resolve(__dirname, 'src'),
               path.resolve(__dirname, 'test'),
             ],
-            loader: 'babel',
+            loader: 'babel-loader',
             query: {
               plugins: ['istanbul'],
             },
@@ -40,13 +40,14 @@ function configureKarma(config) {
           },
           {
             include: path.resolve(__dirname, 'src'),
-            loaders: ['style', 'css', 'postcss', 'sass'],
+            loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
             test: /\.scss$/,
           },
         ],
       },
       resolve: {
-        extensions: ['', '.js', '.jsx'],
+        modules: ['node_modules'],
+        extensions: ['.js', '.jsx'],
       },
     },
   });
