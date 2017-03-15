@@ -1,6 +1,8 @@
+/* eslint-disable no-use-before-define */
+/* global component */
 import React from 'react';
+import { mount } from 'enzyme';
 import InputRange from '../../src/js';
-import { mount, shallow } from 'enzyme';
 
 let container;
 let requestAnimationFrame;
@@ -26,12 +28,11 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
-    const maxSlider = component.find(`Slider [onMouseDown]`).at(1);
+    const minSlider = component.find('Slider [onMouseDown]').at(0);
+    const maxSlider = component.find('Slider [onMouseDown]').at(1);
 
     minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
@@ -52,11 +53,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const track = component.find(`Track [onMouseDown]`).first();
+    const track = component.find('Track [onMouseDown]').first();
 
     track.simulate('mouseDown', { clientX: 150, clientY: 50 });
     expect(component.props().value).toEqual({ min: 2, max: 7 });
@@ -73,11 +73,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const track = component.find(`Track [onTouchStart]`).first();
+    const track = component.find('Track [onTouchStart]').first();
 
     track.simulate('touchStart', { touches: [{ clientX: 150, clientY: 50 }] });
     expect(component.props().value).toEqual({ min: 2, max: 7 });
@@ -92,11 +91,10 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
-        step={2}
-      />
+        step={2} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 60, clientY: 50 }));
@@ -117,11 +115,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
-    const slider = component.find(`Slider [onKeyDown]`).first();
+    const slider = component.find('Slider [onKeyDown]').first();
 
     slider.simulate('keyDown', { keyCode: 37 });
     slider.simulate('keyUp', { keyCode: 37 });
@@ -138,11 +135,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
-    const slider = component.find(`Slider [onKeyDown]`).first();
+    const slider = component.find('Slider [onKeyDown]').first();
 
     slider.simulate('keyDown', { keyCode: 65 });
     slider.simulate('keyUp', { keyCode: 65 });
@@ -152,13 +148,12 @@ describe('InputRange', () => {
   it('does not respond to mouse event when it is disabled', () => {
     const jsx = (
       <InputRange
-        disabled={true}
+        disabled
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).at(0);
+    const slider = component.find('Slider [onMouseDown]').at(0);
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
@@ -171,13 +166,12 @@ describe('InputRange', () => {
   it('does not respond to keyboard event when it is disabled', () => {
     const jsx = (
       <InputRange
-        disabled={true}
+        disabled
         value={2}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
-    const slider = component.find(`Slider [onKeyDown]`).first();
+    const slider = component.find('Slider [onKeyDown]').first();
 
     slider.simulate('keyDown', { keyCode: 37 });
     slider.simulate('keyUp', { keyCode: 37 });
@@ -190,12 +184,11 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
-    const maxSlider = component.find(`Slider [onMouseDown]`).at(1);
+    const minSlider = component.find('Slider [onMouseDown]').at(0);
+    const maxSlider = component.find('Slider [onMouseDown]').at(1);
 
     minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
@@ -216,11 +209,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={2}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: -20, clientY: 50 }));
@@ -241,11 +233,10 @@ describe('InputRange', () => {
         maxValue={20}
         minValue={0}
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 190, clientY: 50 }));
@@ -256,7 +247,9 @@ describe('InputRange', () => {
   });
 
   it('notifies the parent component when dragging starts', () => {
-    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChange = jasmine.createSpy('onChange')
+      .and
+      .callFake(value => component.setProps({ value }));
     const onChangeStart = jasmine.createSpy('onChangeStart');
     const jsx = (
       <InputRange
@@ -264,11 +257,10 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
-        onChangeStart={onChangeStart}
-      />
+        onChangeStart={onChangeStart} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
@@ -280,7 +272,9 @@ describe('InputRange', () => {
   });
 
   it('notifies the parent component when dragging stops', () => {
-    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChange = jasmine.createSpy('onChange')
+      .and
+      .callFake(value => component.setProps({ value }));
     const onChangeComplete = jasmine.createSpy('onChangeComplete');
     const jsx = (
       <InputRange
@@ -288,11 +282,10 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={onChange}
-        onChangeComplete={onChangeComplete}
-      />
+        onChangeComplete={onChangeComplete} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
@@ -305,7 +298,9 @@ describe('InputRange', () => {
   });
 
   it('does not notify the parent component if there is no change', () => {
-    const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
+    const onChange = jasmine.createSpy('onChange')
+      .and
+      .callFake(value => component.setProps({ value }));
     const onChangeComplete = jasmine.createSpy('onChangeComplete');
     const jsx = (
       <InputRange
@@ -313,11 +308,10 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={onChange}
-        onChangeComplete={onChangeComplete}
-      />
+        onChangeComplete={onChangeComplete} />
     );
     const component = mount(jsx, { attachTo: container });
-    const slider = component.find(`Slider [onMouseDown]`).first();
+    const slider = component.find('Slider [onMouseDown]').first();
 
     slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 51, clientY: 50 }));
@@ -332,8 +326,7 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
     const label = component.find('Slider Label').first();
@@ -345,9 +338,8 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         value={{ min: 2, max: 10 }}
-        formatLabel={(value) => `${value}cm`}
-        onChange={value => component.setProps({ value })}
-      />
+        formatLabel={value => `${value}cm`}
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
     const label = component.find('Slider Label').first();
@@ -359,8 +351,7 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         value={{ min: 2, max: 10 }}
-        onChange={value => component.setProps({ value })}
-      />
+        onChange={value => component.setProps({ value })} />
     );
     const component = mount(jsx);
     const sliderHandle = component.find('Slider [role="slider"]').first();
@@ -372,8 +363,7 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         value={{ min: 2, max: 10 }}
-        onChange={() => {}}
-      />
+        onChange={() => {}} />
     );
     const component = mount(jsx);
 
@@ -384,8 +374,7 @@ describe('InputRange', () => {
     const jsx = (
       <InputRange
         value={2}
-        onChange={() => {}}
-      />
+        onChange={() => {}} />
     );
     const component = mount(jsx);
 
@@ -397,8 +386,7 @@ describe('InputRange', () => {
       <InputRange
         name="price"
         value={{ min: 2, max: 10 }}
-        onChange={() => {}}
-      />
+        onChange={() => {}} />
     );
     const component = mount(jsx);
     const minInput = component.find('[name="priceMin"][type="hidden"]');
@@ -413,8 +401,7 @@ describe('InputRange', () => {
       <InputRange
         name="price"
         value={5}
-        onChange={() => {}}
-      />
+        onChange={() => {}} />
     );
     const component = mount(jsx);
     const hiddenInput = component.find('[name="price"][type="hidden"]');
@@ -428,7 +415,7 @@ describe('InputRange', () => {
       { minValue: 10, maxValue: 2 },
     ];
 
-    sampleProps.forEach(props => {
+    sampleProps.forEach((props) => {
       expect(InputRange.propTypes.minValue(props)).toEqual(jasmine.any(Error));
       expect(InputRange.propTypes.maxValue(props)).toEqual(jasmine.any(Error));
     });
@@ -443,7 +430,7 @@ describe('InputRange', () => {
       { value: null, minValue: 2, maxValue: 10 },
     ];
 
-    sampleProps.forEach(props => {
+    sampleProps.forEach((props) => {
       expect(InputRange.propTypes.value(props, 'value')).toEqual(jasmine.any(Error));
     });
   });
