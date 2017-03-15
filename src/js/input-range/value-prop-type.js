@@ -23,4 +23,4 @@ const valuePropType = (props, propName) => {
   }
 };
 
-export default valuePropType
+export default valuePropType;
