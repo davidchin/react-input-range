@@ -1,5 +1,4 @@
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 /**
  * @ignore
@@ -13,14 +12,12 @@ export default class Track extends React.Component {
    * @property {Function} onTrackMouseDown
    * @property {Function} percentages
    */
-  static get propTypes() {
-    return {
-      children: React.PropTypes.node.isRequired,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
-      onTrackMouseDown: React.PropTypes.func.isRequired,
-      percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
-    };
-  }
+  static propTypes = {
+    children: React.PropTypes.node.isRequired,
+    classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
+    onTrackMouseDown: React.PropTypes.func.isRequired,
+    percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
+  };
 
   /**
    * @param {Object} props
@@ -61,8 +58,7 @@ export default class Track extends React.Component {
    * @private
    * @param {SyntheticEvent} event - User event
    */
-  @autobind
-  handleMouseDown(event) {
+  handleMouseDown = (event) => {
     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
     const trackClientRect = this.getClientRect();
     const position = {
@@ -71,18 +67,17 @@ export default class Track extends React.Component {
     };
 
     this.props.onTrackMouseDown(event, position);
-  }
+  };
 
   /**
    * @private
    * @param {SyntheticEvent} event - User event
    */
-  @autobind
-  handleTouchStart(event) {
+  handleTouchStart = (event) => {
     event.preventDefault();
 
     this.handleMouseDown(event);
-  }
+  };
 
   /**
    * @override

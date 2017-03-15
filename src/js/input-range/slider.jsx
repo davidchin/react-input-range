@@ -1,5 +1,4 @@
 import React from 'react';
-import autobind from 'autobind-decorator';
 import Label from './label';
 
 /**
@@ -22,21 +21,19 @@ export default class Slider extends React.Component {
    * @property {Function} type
    * @property {Function} value
    */
-  static get propTypes() {
-    return {
-      ariaLabelledby: React.PropTypes.string,
-      ariaControls: React.PropTypes.string,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
-      formatLabel: React.PropTypes.func,
-      maxValue: React.PropTypes.number,
-      minValue: React.PropTypes.number,
-      onSliderDrag: React.PropTypes.func.isRequired,
-      onSliderKeyDown: React.PropTypes.func.isRequired,
-      percentage: React.PropTypes.number.isRequired,
-      type: React.PropTypes.string.isRequired,
-      value: React.PropTypes.number.isRequired,
-    };
-  }
+  static propTypes = {
+    ariaLabelledby: React.PropTypes.string,
+    ariaControls: React.PropTypes.string,
+    classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
+    formatLabel: React.PropTypes.func,
+    maxValue: React.PropTypes.number,
+    minValue: React.PropTypes.number,
+    onSliderDrag: React.PropTypes.func.isRequired,
+    onSliderKeyDown: React.PropTypes.func.isRequired,
+    percentage: React.PropTypes.number.isRequired,
+    type: React.PropTypes.string.isRequired,
+    value: React.PropTypes.number.isRequired,
+  };
 
   /**
    * @param {Object} props
@@ -164,71 +161,64 @@ export default class Slider extends React.Component {
    * @private
    * @return {void}
    */
-  @autobind
-  handleMouseDown() {
+  handleMouseDown = () => {
     this.addDocumentMouseMoveListener();
     this.addDocumentMouseUpListener();
-  }
+  };
 
   /**
    * @private
    * @return {void}
    */
-  @autobind
-  handleMouseUp() {
+  handleMouseUp = () => {
     this.removeDocumentMouseMoveListener();
     this.removeDocumentMouseUpListener();
-  }
+  };
 
   /**
    * @private
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleMouseMove(event) {
+  handleMouseMove = (event) => {
     this.props.onSliderDrag(event, this.props.type);
-  }
+  };
 
   /**
    * @private
    * @return {void}
    */
-  @autobind
-  handleTouchStart() {
+  handleTouchStart = () => {
     this.addDocumentTouchEndListener();
     this.addDocumentTouchMoveListener();
-  }
+  };
 
   /**
    * @private
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleTouchMove(event) {
+  handleTouchMove = (event) => {
     this.props.onSliderDrag(event, this.props.type);
-  }
+  };
 
   /**
    * @private
    * @return {void}
    */
-  @autobind
-  handleTouchEnd() {
+  handleTouchEnd = () => {
     this.removeDocumentTouchMoveListener();
     this.removeDocumentTouchEndListener();
-  }
+  };
 
   /**
    * @private
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     this.props.onSliderKeyDown(event, this.props.type);
-  }
+  };
 
   /**
    * @override

@@ -2,7 +2,7 @@
   "plugins": [
     "add-module-exports",
     "transform-object-rest-spread",
-    "transform-decorators-legacy",
+    "transform-class-properties",
     "transform-react-jsx"
   ],
   "presets": ["es2015", "es2016", "react"]

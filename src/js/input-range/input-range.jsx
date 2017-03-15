@@ -1,5 +1,4 @@
 import React from 'react';
-import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
 import Label from './label';
@@ -20,38 +19,34 @@ export default class InputRange extends React.Component {
    * @override
    * @return {Object}
    */
-  static get propTypes() {
-    return {
-      ariaLabelledby: React.PropTypes.string,
-      ariaControls: React.PropTypes.string,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      disabled: React.PropTypes.bool,
-      formatLabel: React.PropTypes.func,
-      maxValue: rangePropType,
-      minValue: rangePropType,
-      name: React.PropTypes.string,
-      onChangeStart: React.PropTypes.func,
-      onChange: React.PropTypes.func.isRequired,
-      onChangeComplete: React.PropTypes.func,
-      step: React.PropTypes.number,
-      value: valuePropType,
-    };
-  }
+  static propTypes = {
+    ariaLabelledby: React.PropTypes.string,
+    ariaControls: React.PropTypes.string,
+    classNames: React.PropTypes.objectOf(React.PropTypes.string),
+    disabled: React.PropTypes.bool,
+    formatLabel: React.PropTypes.func,
+    maxValue: rangePropType,
+    minValue: rangePropType,
+    name: React.PropTypes.string,
+    onChangeStart: React.PropTypes.func,
+    onChange: React.PropTypes.func.isRequired,
+    onChangeComplete: React.PropTypes.func,
+    step: React.PropTypes.number,
+    value: valuePropType,
+  };
 
   /**
    * @ignore
    * @override
    * @return {Object}
    */
-  static get defaultProps() {
-    return {
-      classNames: DEFAULT_CLASS_NAMES,
-      disabled: false,
-      maxValue: 10,
-      minValue: 0,
-      step: 1,
-    };
-  }
+  static defaultProps = {
+    classNames: DEFAULT_CLASS_NAMES,
+    disabled: false,
+    maxValue: 10,
+    minValue: 0,
+    step: 1,
+  };
 
   /**
    * @param {Object} props
@@ -169,7 +164,7 @@ export default class InputRange extends React.Component {
     const currentValues = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
 
     return length(values.min, currentValues.min) >= this.props.step ||
-           length(values.max, currentValues.max) >= this.props.step;
+      length(values.max, currentValues.max) >= this.props.step;
   }
 
   /**
@@ -190,8 +185,8 @@ export default class InputRange extends React.Component {
   isWithinRange(values) {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
-             values.max <= this.props.maxValue &&
-             values.min < values.max;
+        values.max <= this.props.maxValue &&
+        values.min < values.max;
     }
 
     return values.max >= this.props.minValue && values.max <= this.props.maxValue;
@@ -345,8 +340,7 @@ export default class InputRange extends React.Component {
    * @param {string} key
    * @return {void}
    */
-  @autobind
-  handleSliderDrag(event, key) {
+  handleSliderDrag = (event, key) => {
     if (this.props.disabled) {
       return;
     }
@@ -354,7 +348,7 @@ export default class InputRange extends React.Component {
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
 
     requestAnimationFrame(() => this.updatePosition(key, position));
-  }
+  };
 
   /**
    * Handle any "keydown" event received by the slider
@@ -363,8 +357,7 @@ export default class InputRange extends React.Component {
    * @param {string} key
    * @return {void}
    */
-  @autobind
-  handleSliderKeyDown(event, key) {
+  handleSliderKeyDown = (event, key) => {
     if (this.props.disabled) {
       return;
     }
@@ -385,7 +378,7 @@ export default class InputRange extends React.Component {
     default:
       break;
     }
-  }
+  };
 
   /**
    * Handle any "mousedown" event received by the track
@@ -394,8 +387,7 @@ export default class InputRange extends React.Component {
    * @param {Point} position
    * @return {void}
    */
-  @autobind
-  handleTrackMouseDown(event, position) {
+  handleTrackMouseDown = (event, position) => {
     if (this.props.disabled) {
       return;
     }
@@ -403,15 +395,14 @@ export default class InputRange extends React.Component {
     event.preventDefault();
 
     this.updatePosition(this.getKeyByPosition(position), position);
-  }
+  };
 
   /**
    * Handle the start of any mouse/touch event
    * @private
    * @return {void}
    */
-  @autobind
-  handleInteractionStart() {
+  handleInteractionStart = () => {
     if (this.props.onChangeStart) {
       this.props.onChangeStart(this.props.value);
     }
@@ -419,15 +410,14 @@ export default class InputRange extends React.Component {
     if (this.props.onChangeComplete && !isDefined(this.startValue)) {
       this.startValue = this.props.value;
     }
-  }
+  };
 
   /**
    * Handle the end of any mouse/touch event
    * @private
    * @return {void}
    */
-  @autobind
-  handleInteractionEnd() {
+  handleInteractionEnd = () => {
     if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
       return;
     }
@@ -437,7 +427,7 @@ export default class InputRange extends React.Component {
     }
 
     this.startValue = null;
-  }
+  };
 
   /**
    * Handle any "keydown" event received by the component
@@ -445,10 +435,9 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     this.handleInteractionStart(event);
-  }
+  };
 
   /**
    * Handle any "keyup" event received by the component
@@ -456,10 +445,9 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleKeyUp(event) {
+  handleKeyUp = (event) => {
     this.handleInteractionEnd(event);
-  }
+  };
 
   /**
    * Handle any "mousedown" event received by the component
@@ -467,22 +455,20 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleMouseDown(event) {
+  handleMouseDown = (event) => {
     this.handleInteractionStart(event);
     this.addDocumentMouseUpListener();
-  }
+  };
 
   /**
    * Handle any "mouseup" event received by the component
    * @private
    * @param {SyntheticEvent} event
    */
-  @autobind
-  handleMouseUp(event) {
+  handleMouseUp = (event) => {
     this.handleInteractionEnd(event);
     this.removeDocumentMouseUpListener();
-  }
+  };
 
   /**
    * Handle any "touchstart" event received by the component
@@ -490,22 +476,20 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event
    * @return {void}
    */
-  @autobind
-  handleTouchStart(event) {
+  handleTouchStart = (event) => {
     this.handleInteractionStart(event);
     this.addDocumentTouchEndListener();
-  }
+  };
 
   /**
    * Handle any "touchend" event received by the component
    * @private
    * @param {SyntheticEvent} event
    */
-  @autobind
-  handleTouchEnd(event) {
+  handleTouchEnd = (event) => {
     this.handleInteractionEnd(event);
     this.removeDocumentTouchEndListener();
-  }
+  };
 
   /**
    * Return JSX of sliders
