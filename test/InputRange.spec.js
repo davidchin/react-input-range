@@ -33,6 +33,7 @@ describe('InputRange', () => {
         labelMin: 'InputRange-label InputRange-label--min',
         labelValue: 'InputRange-label InputRange-label--value',
         slider: 'InputRange-slider',
+        sliderActive: 'InputRange-slider--active',
         sliderContainer: 'InputRange-sliderContainer',
         trackActive: 'InputRange-track InputRange-track--active',
         trackContainer: 'InputRange-track InputRange-track--container',

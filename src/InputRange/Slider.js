@@ -43,6 +43,10 @@ export default class Slider extends React.Component {
       'handleTouchMove',
       'handleKeyDown',
     ], this);
+
+    this.state = {
+      active: false,
+    };
   }
 
   /**
@@ -61,6 +65,7 @@ export default class Slider extends React.Component {
     // Event
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
+    this.setState({ active: true });
   }
 
   /**
@@ -71,6 +76,7 @@ export default class Slider extends React.Component {
     // Event
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
+    this.setState({ active: false });
   }
 
   /**
@@ -90,6 +96,7 @@ export default class Slider extends React.Component {
 
     document.addEventListener('touchmove', this.handleTouchMove);
     document.addEventListener('touchend', this.handleTouchEnd);
+    this.setState({ active: true });
   }
 
   /**
@@ -109,6 +116,7 @@ export default class Slider extends React.Component {
 
     document.removeEventListener('touchmove', this.handleTouchMove);
     document.removeEventListener('touchend', this.handleTouchEnd);
+    this.setState({ active: false });
   }
 
   /**
@@ -125,7 +133,13 @@ export default class Slider extends React.Component {
    */
   render() {
     const { classNames, Label, children } = this.props;
+    const { active } = this.state;
     const style = getStyle(this);
+
+    const anchorClassName = [
+      classNames.slider,
+      active ? classNames.sliderActive : null,
+    ].join(' ');
 
     return (
       <span
@@ -145,7 +159,7 @@ export default class Slider extends React.Component {
           aria-valuemax={ this.props.maxValue }
           aria-valuemin={ this.props.minValue }
           aria-valuenow={ this.props.formatLabel ? this.props.formatLabel( this.props.value ) : this.props.value }
-          className={ classNames.slider }
+          className={ anchorClassName }
           draggable="false"
           href="#"
           onClick={ this.handleClick }
