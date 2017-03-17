@@ -1,10 +1,12 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const SasslintPlugin = require('sasslint-webpack-plugin');
-const path = require('path');
+/* eslint-disable import/no-extraneous-dependencies */
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import SasslintPlugin from 'sasslint-webpack-plugin';
+import path from 'path';
 
 const webpackExampleConfig = {
   context: __dirname,
   devtool: 'source-map',
+  target: 'web',
   entry: {
     example: './example/js/index.jsx',
   },
@@ -12,32 +14,32 @@ const webpackExampleConfig = {
     filename: '[name].js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         include: [
           path.resolve(__dirname, 'src'),
           path.resolve(__dirname, 'example'),
         ],
-        loader: 'babel',
+        loader: 'babel-loader',
         test: /\.jsx?$/,
-      },
-      {
+      }, {
         include: [
           path.resolve(__dirname, 'src'),
           path.resolve(__dirname, 'example'),
         ],
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'postcss-loader', 'sass-loader'],
+        }),
         test: /\.scss$/,
-      },
-    ],
-    preLoaders: [
-      {
+      }, {
         include: [
           path.resolve(__dirname, 'src'),
           path.resolve(__dirname, 'example'),
         ],
-        loader: 'eslint',
+        loader: 'eslint-loader',
         test: /\.jsx?$/,
+        enforce: 'pre',
       },
     ],
   },
@@ -49,8 +51,9 @@ const webpackExampleConfig = {
     }),
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    modules: ['node_modules'],
+    extensions: ['.js', '.jsx'],
   },
 };
 
-module.exports = webpackExampleConfig;
+export default webpackExampleConfig;

@@ -1,11 +1,10 @@
-const { optimize: { DedupePlugin, UglifyJsPlugin } } = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const SasslintPlugin = require('sasslint-webpack-plugin');
-const path = require('path');
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import path from 'path';
 
 const webpackConfig = {
   context: __dirname,
   devtool: 'source-map',
+  target: 'web',
   entry: {
     'react-input-range.css': './src/scss/index.scss',
     'react-input-range.js': './src/js/index.js',
@@ -18,29 +17,30 @@ const webpackConfig = {
     libraryTarget: 'umd',
   },
   module: {
-    loaders: [
+    rules: [
       {
         include: path.resolve(__dirname, 'src'),
-        loader: 'babel',
+        loader: 'babel-loader',
         test: /\.jsx?$/,
       },
       {
         include: path.resolve(__dirname, 'src'),
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'postcss-loader', 'sass-loader'],
+        }),
         test: /\.scss$/,
       },
     ],
   },
   plugins: [
-    new DedupePlugin(),
     new ExtractTextPlugin('[name]'),
-    new UglifyJsPlugin({
-      test: /\.min\.js$/,
-    }),
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    modules: ['node_modules'],
+    extensions: ['.js', '.jsx'],
   },
+  externals: ['react', 'react-dom'],
 };
 
-module.exports = webpackConfig;
+export default webpackConfig;
