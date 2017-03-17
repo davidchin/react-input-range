@@ -635,6 +635,10 @@ var Slider = (function (_React$Component) {
     _get(Object.getPrototypeOf(Slider.prototype), 'constructor', this).call(this, props);
 
     (0, _util.autobind)(['handleClick', 'handleMouseDown', 'handleMouseUp', 'handleMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTouchMove', 'handleKeyDown'], this);
+
+    this.state = {
+      active: false
+    };
   }
 
   _createClass(Slider, [{
@@ -647,12 +651,14 @@ var Slider = (function (_React$Component) {
     value: function handleMouseDown() {
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
+      this.setState({ active: true });
     }
   }, {
     key: 'handleMouseUp',
     value: function handleMouseUp() {
       document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('mouseup', this.handleMouseUp);
+      this.setState({ active: false });
     }
   }, {
     key: 'handleMouseMove',
@@ -666,6 +672,7 @@ var Slider = (function (_React$Component) {
 
       document.addEventListener('touchmove', this.handleTouchMove);
       document.addEventListener('touchend', this.handleTouchEnd);
+      this.setState({ active: true });
     }
   }, {
     key: 'handleTouchMove',
@@ -679,6 +686,7 @@ var Slider = (function (_React$Component) {
 
       document.removeEventListener('touchmove', this.handleTouchMove);
       document.removeEventListener('touchend', this.handleTouchEnd);
+      this.setState({ active: false });
     }
   }, {
     key: 'handleKeyDown',
@@ -692,8 +700,11 @@ var Slider = (function (_React$Component) {
       var classNames = _props.classNames;
       var Label = _props.Label;
       var children = _props.children;
+      var active = this.state.active;
 
       var style = getStyle(this);
+
+      var anchorClassName = [classNames.slider, active ? classNames.sliderActive : null].join(' ');
 
       return _react2['default'].createElement(
         'span',
@@ -715,7 +726,7 @@ var Slider = (function (_React$Component) {
           'aria-valuemax': this.props.maxValue,
           'aria-valuemin': this.props.minValue,
           'aria-valuenow': this.props.formatLabel ? this.props.formatLabel(this.props.value) : this.props.value,
-          className: classNames.slider,
+          className: anchorClassName,
           draggable: 'false',
           href: '#',
           onClick: this.handleClick,
@@ -884,6 +895,7 @@ exports['default'] = {
   labelMin: 'InputRange-label InputRange-label--min',
   labelValue: 'InputRange-label InputRange-label--value',
   slider: 'InputRange-slider',
+  sliderActive: 'InputRange-slider--active',
   sliderContainer: 'InputRange-sliderContainer',
   trackActive: 'InputRange-track InputRange-track--active',
   trackContainer: 'InputRange-track InputRange-track--container',
