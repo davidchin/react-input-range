@@ -74,19 +74,19 @@
     "react-dom": "^15.0.0"
   },
   "scripts": {
-    "prebuild": "yarn test && rm -rf lib",
-    "build": "yarn build:lib && yarn build:scss && yarn build:bundle",
+    "prebuild": "npm test && rm -rf lib",
+    "build": "npm run build:lib && npm run build:scss && npm run build:bundle",
     "build:bundle": "NODE_ENV=production webpack -p",
     "build:lib": "NODE_ENV=production babel src/js --out-dir lib/js --source-maps",
     "build:scss": "NODE_ENV=production node-sass src/scss --recursive --source-map true --output lib/css",
     "changelog": "conventional-changelog --preset angular --infile CHANGELOG.md --same-file",
     "dev": "webpack-dev-server --inline --config webpack-example.config.babel.js --content-base example",
     "docs": "esdoc",
-    "lint": "yarn lint:js && yarn lint:scss",
+    "lint": "npm run lint:js && npm run lint:scss",
     "lint:js": "eslint src/js/ --ext .js --ext .jsx",
     "lint:scss": "sass-lint --verbose --no-exit",
-    "prepublish": "yarn build",
-    "pretest": "yarn lint",
+    "prepublish": "npm run build",
+    "pretest": "npm run lint",
     "test": "karma start --single-run"
   },
   "dependencies": {
