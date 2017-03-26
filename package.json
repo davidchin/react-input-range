@@ -1,6 +1,6 @@
 {
   "name": "react-input-range",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "React component for inputting numeric values within a range",
   "keywords": [
     "react",

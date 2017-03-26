@@ -1,3 +1,13 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/davidchin/react-input-range/compare/v1.0.2...v1.1.0) (2017-03-26)
+
+
+### Features
+
+* Add a callback prop responsible for notifying the start of any interaction ([#66](https://github.com/davidchin/react-input-range/issues/66)) ([4ca6ea2](https://github.com/davidchin/react-input-range/commit/4ca6ea2))
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/davidchin/react-input-range/compare/v1.0.1...v1.0.2) (2017-02-01)
 
