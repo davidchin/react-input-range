@@ -12,7 +12,7 @@ const webpackConfig = {
   },
   output: {
     filename: '[name]',
-    path: './lib/bundle',
+    path: path.resolve(__dirname, 'lib/bundle'),
     library: 'InputRange',
     libraryTarget: 'umd',
   },
