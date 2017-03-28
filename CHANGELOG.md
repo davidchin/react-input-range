@@ -1,3 +1,12 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/davidchin/react-input-range/compare/v1.1.0...v1.1.1) (2017-03-28)
+
+
+### Bug Fixes
+
+* Only uglify and minify min.js files ([c73a491](https://github.com/davidchin/react-input-range/commit/c73a491))
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/davidchin/react-input-range/compare/v1.0.2...v1.1.0) (2017-03-26)
 
