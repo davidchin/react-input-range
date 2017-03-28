@@ -66,6 +66,8 @@
     "sass-loader": "^6.0.3",
     "sasslint-webpack-plugin": "^1.0.4",
     "style-loader": "^0.14.0",
+    "uglify-js": "^2.8.16",
+    "uglifyjs-webpack-plugin": "^0.3.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
   },
@@ -76,7 +78,7 @@
   "scripts": {
     "prebuild": "npm test && rm -rf lib",
     "build": "npm run build:lib && npm run build:scss && npm run build:bundle",
-    "build:bundle": "NODE_ENV=production webpack -p",
+    "build:bundle": "NODE_ENV=production webpack",
     "build:lib": "NODE_ENV=production babel src/js --out-dir lib/js --source-maps",
     "build:scss": "NODE_ENV=production node-sass src/scss --recursive --source-map true --output lib/css",
     "changelog": "conventional-changelog --preset angular --infile CHANGELOG.md --same-file",

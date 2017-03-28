@@ -1,4 +1,5 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import path from 'path';
 
 const webpackConfig = {
@@ -26,7 +27,6 @@ const webpackConfig = {
       {
         include: path.resolve(__dirname, 'src'),
         loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
           use: ['css-loader', 'postcss-loader', 'sass-loader'],
         }),
         test: /\.scss$/,
@@ -35,6 +35,10 @@ const webpackConfig = {
   },
   plugins: [
     new ExtractTextPlugin('[name]'),
+    new UglifyJsPlugin({
+      sourceMap: true,
+      test: /\.min\.js$/,
+    }),
   ],
   resolve: {
     modules: ['node_modules'],
