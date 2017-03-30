@@ -140,6 +140,18 @@ The default increment/decrement of your component is 1. You can change that by s
 
 Set the current value for your component. If only a single number is provided, only a single slider will get rendered. If a range object (min/max) is provided, two sliders will get rendered
 
+#### showMinLabel: boolean
+
+If this property is set to true, the label for *min* value will be displayed.
+
+#### showMaxLabel: boolean
+
+If this property is set to true, the label for *max* value will be displayed.
+
+#### showValueLabel: boolean
+
+If this property is set to true, the label for the *current* value will be displayed.
+
 ### Types
 
 #### InputRangeClassNames

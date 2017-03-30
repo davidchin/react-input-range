@@ -10,17 +10,18 @@ export default class Slider extends React.Component {
    * Accepted propTypes of Slider
    * @override
    * @return {Object}
-   * @property {Function} ariaLabelledby
-   * @property {Function} ariaControls
-   * @property {Function} className
+   * @property {String} ariaLabelledby
+   * @property {String} ariaControls
+   * @property {Object} className
    * @property {Function} formatLabel
-   * @property {Function} maxValue
-   * @property {Function} minValue
+   * @property {Number} maxValue
+   * @property {Number} minValue
    * @property {Function} onSliderDrag
    * @property {Function} onSliderKeyDown
-   * @property {Function} percentage
-   * @property {Function} type
-   * @property {Function} value
+   * @property {Number} percentage
+   * @property {String} type
+   * @property {Number} value
+   * @property {Boolean} showValueLabel
    */
   static get propTypes() {
     return {
@@ -35,6 +36,7 @@ export default class Slider extends React.Component {
       percentage: React.PropTypes.number.isRequired,
       type: React.PropTypes.string.isRequired,
       value: React.PropTypes.number.isRequired,
+      showValueLabel: React.PropTypes.bool,
     };
   }
 
@@ -51,6 +53,7 @@ export default class Slider extends React.Component {
    * @param {number} props.percentage
    * @param {number} props.type
    * @param {number} props.value
+   * @param {Boolean} props.showValueLabel
    */
   constructor(props) {
     super(props);
@@ -242,12 +245,15 @@ export default class Slider extends React.Component {
         className={this.props.classNames.sliderContainer}
         ref={(node) => { this.node = node; }}
         style={style}>
-        <Label
-          classNames={this.props.classNames}
-          formatLabel={this.props.formatLabel}
-          type="value">
-          {this.props.value}
-        </Label>
+        {
+            this.props.showValueLabel &&
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              type="value">
+              {this.props.value}
+            </Label>
+        }
 
         <div
           aria-labelledby={this.props.ariaLabelledby}

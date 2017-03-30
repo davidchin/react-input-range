@@ -25,6 +25,7 @@ export default class ExampleApp extends React.Component {
           maxValue={20}
           minValue={0}
           value={this.state.value}
+          showMinLabel={false}
           onChange={value => this.setState({ value })}
           onChangeComplete={value => console.log(value)} />
 
