@@ -44,7 +44,20 @@ const webpackConfig = {
     modules: ['node_modules'],
     extensions: ['.js', '.jsx'],
   },
-  externals: ['react', 'react-dom'],
+  externals: {
+    react: {
+      amd: 'react',
+      commonjs: 'react',
+      commonjs2: 'react',
+      root: 'React',
+    },
+    'react-dom': {
+      amd: 'react-dom',
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      root: 'ReactDOM',
+    },
+  },
 };
 
 export default webpackConfig;
