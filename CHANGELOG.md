@@ -1,3 +1,13 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/davidchin/react-input-range/compare/v1.1.1...v1.1.2) (2017-03-30)
+
+
+### Bug Fixes
+
+* **build:** Fix requiring React as an external dependency ([903eadb](https://github.com/davidchin/react-input-range/commit/903eadb))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/davidchin/react-input-range/compare/v1.1.0...v1.1.1) (2017-03-28)
 
