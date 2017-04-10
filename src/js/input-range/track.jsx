@@ -19,6 +19,7 @@ export default class Track extends React.Component {
       classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
       onTrackMouseDown: React.PropTypes.func.isRequired,
       percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
+      isExternal: React.PropTypes.bool.isRequired,
     };
   }
 
@@ -59,6 +60,31 @@ export default class Track extends React.Component {
 
   /**
    * @private
+   * @return {Object} CSS styles
+   */
+  @autobind
+  getActiveTrackStylePre() {
+    const width = `${(this.props.percentages.min) * 100}%`;
+    const left = '0';
+    const float = 'left';
+    return { left, width, float };
+  }
+
+
+  /**
+   * @private
+   * @return {Object} CSS styles
+   */
+  @autobind
+  getActiveTrackStylePost() {
+    const width = `${(1 - this.props.percentages.max) * 100}%`;
+    const left = `${this.props.percentages.max * 100}%`;
+
+    return { left, width };
+  }
+
+  /**
+   * @private
    * @param {SyntheticEvent} event - User event
    */
   @autobind
@@ -90,6 +116,8 @@ export default class Track extends React.Component {
    */
   render() {
     const activeTrackStyle = this.getActiveTrackStyle();
+    const activeTrackStyleExternalPre = this.getActiveTrackStylePre();
+    const activeTrackStyleExternalPost = this.getActiveTrackStylePost();
 
     return (
       <div
@@ -97,9 +125,22 @@ export default class Track extends React.Component {
         onMouseDown={this.handleMouseDown}
         onTouchStart={this.handleTouchStart}
         ref={(node) => { this.node = node; }}>
-        <div
-          style={activeTrackStyle}
-          className={this.props.classNames.activeTrack} />
+        {
+          !this.props.isExternal ? (
+            <div
+              style={activeTrackStyle}
+              className={this.props.classNames.activeTrack} />
+          ) : (
+            <div>
+              <div
+                style={activeTrackStyleExternalPre}
+                className={this.props.classNames.activeTrack} />
+              <div
+                style={activeTrackStyleExternalPost}
+                className={this.props.classNames.activeTrack} />
+            </div>
+          )
+        }
         {this.props.children}
       </div>
     );
