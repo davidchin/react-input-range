@@ -64,7 +64,7 @@ export default class Track extends React.Component {
    */
   @autobind
   getActiveTrackStylePre() {
-    const width = `${(this.props.percentages.max) * 100}%`;
+    const width = `${(this.props.percentages.min) * 100}%`;
     const left = '0';
     const float = 'left';
     return { left, width, float };
@@ -77,8 +77,8 @@ export default class Track extends React.Component {
    */
   @autobind
   getActiveTrackStylePost() {
-    const width = `${(1 - this.props.percentages.min) * 100}%`;
-    const left = `${this.props.percentages.min * 100}%`;
+    const width = `${(1 - this.props.percentages.max) * 100}%`;
+    const left = `${this.props.percentages.max * 100}%`;
 
     return { left, width };
   }
