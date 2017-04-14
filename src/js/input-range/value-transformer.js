@@ -1,4 +1,4 @@
-import { clamp } from '../utils';
+import { clamp, isObject } from '../utils';
 
 /**
  * Convert a point into a percentage value
@@ -34,11 +34,10 @@ export function getValueFromPosition(position, minValue, maxValue, clientRect) {
  * Convert props into a range value
  * @ignore
  * @param {Object} props
- * @param {boolean} isMultiValue
  * @return {Range}
  */
-export function getValueFromProps(props, isMultiValue) {
-  if (isMultiValue) {
+export function getValueFromProps(props) {
+  if (isObject(props.value)) {
     return { ...props.value };
   }
 
@@ -132,13 +131,16 @@ export function getPositionFromEvent(event, clientRect) {
   };
 }
 
-/**
- * Convert a value into a step value
- * @ignore
- * @param {number} value
- * @param {number} valuePerStep
- * @return {number}
- */
-export function getStepValueFromValue(value, valuePerStep) {
-  return Math.round(value / valuePerStep) * valuePerStep;
+export function roundToStep(val, min, max, stepSize) {
+  // round to closest step except when val is max as it could round to the lower step.
+  // (because max is a special step).
+  if (val >= max) {
+    return max;
+  }
+
+  return (Math.round((val - min) / stepSize) * stepSize) + min;
+}
+
+export function ceilToStep(val, min, step) {
+  return (Math.ceil((val - min) / step) * step) + min;
 }

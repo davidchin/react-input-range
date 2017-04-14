@@ -8,7 +8,7 @@ import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
-import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
+import { captialize, distanceTo, isDefined, isObject, length, clamp } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 
 /**
@@ -97,6 +97,11 @@ export default class InputRange extends React.Component {
      * @type {bool}
      */
     this.isSliderDragging = false;
+    this.onNewProps(props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.onNewProps(newProps);
   }
 
   /**
@@ -107,6 +112,41 @@ export default class InputRange extends React.Component {
   componentWillUnmount() {
     this.removeDocumentMouseUpListener();
     this.removeDocumentTouchEndListener();
+  }
+
+  onNewProps(props) {
+    /**
+     * Value up to which the slider may go, rounded to the upper step. (eg. step = 6, min = 5, max = 20 - slider can go up to 23).
+     * This overflow allows for simpler math and removes corner cases in the rest of the code.
+     * The value will be clamped back to props.maxValue before passing it to the client.
+     */
+    this.steppedMaxValue = valueTransformer.ceilToStep(props.maxValue, props.minValue, props.step);
+
+    // v props.minValue (=0)
+    //     v props.step (=3)
+    // |===o===o===o=|==|
+    //               ^ props.maxValue (=10)
+    //                  ^ this.steppedMaxValue (=12)
+
+    const currentValues = valueTransformer.getValueFromProps(props);
+
+    // ceil to upper so distance between two step is always >= props.step
+    // (eg. with step = 6, min = 5, max = 20. Moving slider from step 20 to 17:
+    // Without ceil: 20 - 17 = 3 => no propagation.
+    // With ceil   : 23 - 17 = 6 =>    propagation.
+    currentValues.min = valueTransformer.ceilToStep(currentValues.min, this.props.minValue, props.step);
+    currentValues.max = valueTransformer.ceilToStep(currentValues.max, this.props.minValue, props.step);
+
+    this.currentValues = currentValues;
+
+    /** currentValues, but clamped. For rendering */
+    this.clampedCurrentValues = {
+      min: clamp(currentValues.min, props.minValue, props.maxValue),
+      max: clamp(currentValues.max, props.minValue, props.maxValue),
+    };
+
+    Object.freeze(this.clampedCurrentValues);
+    Object.freeze(this.currentValues);
   }
 
   /**
@@ -138,8 +178,8 @@ export default class InputRange extends React.Component {
    * @return {string}
    */
   getKeyByPosition(position) {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-    const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+    const values = this.currentValues;
+    const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.steppedMaxValue, this.getTrackClientRect());
 
     if (this.isMultiValue()) {
       const distanceToMin = distanceTo(position, positions.min);
@@ -170,14 +210,14 @@ export default class InputRange extends React.Component {
    * Return true if the difference between the new and the current value is
    * greater or equal to the step amount of the component
    * @private
-   * @param {Range} values
+   * @param {Range} newValues
    * @return {boolean}
    */
-  hasStepDifference(values) {
-    const currentValues = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
+  hasStepDifference(newValues) {
+    const currentValues = this.currentValues;
 
-    return length(values.min, currentValues.min) >= this.props.step ||
-           length(values.max, currentValues.max) >= this.props.step;
+    return length(newValues.min, currentValues.min) >= this.props.step ||
+      length(newValues.max, currentValues.max) >= this.props.step;
   }
 
   /**
@@ -198,11 +238,11 @@ export default class InputRange extends React.Component {
   isWithinRange(values) {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
-             values.max <= this.props.maxValue &&
-             values.min < values.max;
+        values.max <= this.steppedMaxValue &&
+        values.min < values.max;
     }
 
-    return values.max >= this.props.minValue && values.max <= this.props.maxValue;
+    return values.max >= this.props.minValue && values.max <= this.steppedMaxValue;
   }
 
   /**
@@ -223,8 +263,8 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   updatePosition(key, position) {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-    const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+    const values = this.currentValues;
+    const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.steppedMaxValue, this.getTrackClientRect());
 
     positions[key] = position;
 
@@ -246,9 +286,17 @@ export default class InputRange extends React.Component {
     };
 
     const transformedValues = {
-      min: valueTransformer.getStepValueFromValue(values.min, this.props.step),
-      max: valueTransformer.getStepValueFromValue(values.max, this.props.step),
+      min: valueTransformer.roundToStep(values.min, this.props.minValue, this.props.maxValue, this.props.step),
+      max: valueTransformer.roundToStep(values.max, this.props.minValue, this.props.maxValue, this.props.step),
     };
+
+    if (transformedValues.max === this.props.maxValue) {
+      transformedValues.max = this.steppedMaxValue;
+    }
+
+    if (transformedValues.min === this.props.maxValue) {
+      transformedValues.min = this.steppedMaxValue;
+    }
 
     this.updateValues(transformedValues);
   }
@@ -261,7 +309,10 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   updateValue(key, value) {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
+    const values = {
+      min: this.currentValues.min,
+      max: this.currentValues.max,
+    };
 
     values[key] = value;
 
@@ -279,7 +330,17 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    this.props.onChange(this.isMultiValue() ? values : values.max);
+    const max = clamp(values.max, this.props.minValue, this.props.maxValue);
+
+    if (!this.isMultiValue()) {
+      this.props.onChange(max);
+      return;
+    }
+
+    this.props.onChange({
+      min: clamp(values.min, this.props.minValue, this.props.maxValue),
+      max,
+    });
   }
 
   /**
@@ -289,8 +350,8 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   incrementValue(key) {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-    const value = values[key] + this.props.step;
+    const values = this.currentValues;
+    const value = Math.min(values[key] + this.props.step, this.steppedMaxValue);
 
     this.updateValue(key, value);
   }
@@ -302,8 +363,8 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   decrementValue(key) {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-    const value = values[key] - this.props.step;
+    const values = this.currentValues;
+    const value = Math.max(values[key] - this.props.step, this.props.minValue);
 
     this.updateValue(key, value);
   }
@@ -376,25 +437,26 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    const {
-      maxValue,
-      minValue,
-      value: { max, min },
-    } = this.props;
-
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
-    const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
-    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+    const value = valueTransformer.getValueFromPosition(position, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+
+    let stepValue = valueTransformer.roundToStep(value, this.props.minValue, this.props.maxValue, this.props.step);
+    if (stepValue === this.props.maxValue) {
+      stepValue = this.steppedMaxValue;
+    }
 
     const prevPosition = valueTransformer.getPositionFromEvent(prevEvent, this.getTrackClientRect());
-    const prevValue = valueTransformer.getValueFromPosition(prevPosition, minValue, maxValue, this.getTrackClientRect());
-    const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step);
+    const prevValue = valueTransformer.getValueFromPosition(prevPosition, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+    let prevStepValue = valueTransformer.roundToStep(prevValue, this.props.minValue, this.props.maxValue, this.props.step);
+    if (prevStepValue === this.props.maxValue) {
+      prevStepValue = this.steppedMaxValue;
+    }
 
     const offset = prevStepValue - stepValue;
 
     const transformedValues = {
-      min: min - offset,
-      max: max - offset,
+      min: this.currentValues.min - offset,
+      max: this.currentValues.max - offset,
     };
 
     this.updateValues(transformedValues);
@@ -445,15 +507,17 @@ export default class InputRange extends React.Component {
     }
 
     const {
-      maxValue,
-      minValue,
       value: { max, min },
     } = this.props;
 
     event.preventDefault();
 
-    const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
-    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+    const value = valueTransformer.getValueFromPosition(position, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
+    let stepValue = valueTransformer.roundToStep(value, this.props.minValue, this.props.maxValue, this.props.step);
+
+    if (stepValue === this.props.maxValue) {
+      stepValue = this.steppedMaxValue;
+    }
 
     if (!this.props.draggableTrack || stepValue > max || stepValue < min) {
       this.updatePosition(this.getKeyByPosition(position), position);
@@ -572,7 +636,7 @@ export default class InputRange extends React.Component {
    * @return {JSX.Element}
    */
   renderSliders() {
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
+    const values = this.clampedCurrentValues;
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return this.getKeys().map((key) => {
@@ -618,7 +682,7 @@ export default class InputRange extends React.Component {
     }
 
     const isMultiValue = this.isMultiValue();
-    const values = valueTransformer.getValueFromProps(this.props, isMultiValue);
+    const values = this.clampedCurrentValues;
 
     return this.getKeys().map((key) => {
       const value = values[key];
@@ -637,13 +701,15 @@ export default class InputRange extends React.Component {
    */
   render() {
     const componentClassName = this.getComponentClassName();
-    const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
+    const values = this.clampedCurrentValues;
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
     return (
       <div
         aria-disabled={this.props.disabled}
-        ref={(node) => { this.node = node; }}
+        ref={(node) => {
+          this.node = node;
+        }}
         className={componentClassName}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}

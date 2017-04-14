@@ -19,6 +19,17 @@ export default class ExampleApp extends React.Component {
         min: 3,
         max: 7,
       },
+
+      // this will be clamped to the upper step (12)
+      value6: 7,
+
+      // this will be clamped to the upper step (11)
+      value7: 11,
+
+      value8: {
+        min: 2,
+        max: 7,
+      },
     };
   }
 
@@ -65,6 +76,30 @@ export default class ExampleApp extends React.Component {
           onChangeComplete={value => console.log(value)}
           value={this.state.value5} />
 
+        <InputRange
+          maxValue={20}
+          minValue={0}
+          step={6}
+          value={this.state.value6}
+          onChange={value => this.setState({ value6: value })}
+          onChangeComplete={value => console.log(value)} />
+
+        <InputRange
+          maxValue={20}
+          minValue={5}
+          step={6}
+          value={this.state.value7}
+          onChange={value => this.setState({ value7: value })}
+          onChangeComplete={value => console.log(value)} />
+
+        <InputRange
+          draggableTrack
+          maxValue={20}
+          minValue={1}
+          step={3}
+          value={this.state.value8}
+          onChange={value => this.setState({ value8: value })}
+          onChangeComplete={value => console.log(value)} />
       </form>
     );
   }
