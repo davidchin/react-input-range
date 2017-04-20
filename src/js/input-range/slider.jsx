@@ -89,6 +89,17 @@ export default class Slider extends React.Component {
   }
 
   /**
+  * @private
+  * @return {void}
+  */
+  setZIndex() {
+    this.node.parentElement.childNodes.forEach((child) => {
+      child.style.zIndex = '0';
+    });
+    this.node.style.zIndex = '2';
+  }
+
+  /**
    * Listen to mousemove event
    * @private
    * @return {void}
@@ -168,6 +179,7 @@ export default class Slider extends React.Component {
   handleMouseDown() {
     this.addDocumentMouseMoveListener();
     this.addDocumentMouseUpListener();
+    this.setZIndex(this.node);
   }
 
   /**
@@ -198,6 +210,7 @@ export default class Slider extends React.Component {
   handleTouchStart() {
     this.addDocumentTouchEndListener();
     this.addDocumentTouchMoveListener();
+    this.node.style.zIndex = '2';
   }
 
   /**
@@ -228,6 +241,7 @@ export default class Slider extends React.Component {
   @autobind
   handleKeyDown(event) {
     this.props.onSliderKeyDown(event, this.props.type);
+    this.node.style.zIndex = '2';
   }
 
   /**
@@ -236,7 +250,6 @@ export default class Slider extends React.Component {
    */
   render() {
     const style = this.getStyle();
-
     return (
       <span
         className={this.props.classNames.sliderContainer}
