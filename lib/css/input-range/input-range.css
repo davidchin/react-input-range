@@ -53,6 +53,10 @@
   position: relative; }
   .input-range__label--max .input-range__label-container {
     left: 50%; }
+  .input-range__label-container.marker-min {
+    left: -90%; }
+  .input-range__label-container.marker-max {
+    left: 0%; }
 
 .input-range__track {
   background: #eeeeee;
