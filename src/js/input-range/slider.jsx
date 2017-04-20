@@ -210,7 +210,7 @@ export default class Slider extends React.Component {
   handleTouchStart() {
     this.addDocumentTouchEndListener();
     this.addDocumentTouchMoveListener();
-    this.node.style.zIndex = '2';
+    this.setZIndex(this.node);
   }
 
   /**
@@ -241,7 +241,7 @@ export default class Slider extends React.Component {
   @autobind
   handleKeyDown(event) {
     this.props.onSliderKeyDown(event, this.props.type);
-    this.node.style.zIndex = '2';
+    this.setZIndex(this.node);
   }
 
   /**
