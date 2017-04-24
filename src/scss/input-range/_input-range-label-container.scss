@@ -5,4 +5,12 @@
   .input-range__label--max & {
     left: 50%;
   }
+
+  &.marker-min {
+    left: -90%;
+  }
+
+  &.marker-max {
+    left: 0%;
+  }
 }

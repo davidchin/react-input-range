@@ -245,7 +245,9 @@ export default class Slider extends React.Component {
         <Label
           classNames={this.props.classNames}
           formatLabel={this.props.formatLabel}
-          type="value">
+          type="value"
+          markerType="track"
+          markerValue={this.props.type}>
           {this.props.value}
         </Label>
 

@@ -27,6 +27,7 @@ export default class InputRange extends React.Component {
       classNames: React.PropTypes.objectOf(React.PropTypes.string),
       disabled: React.PropTypes.bool,
       formatLabel: React.PropTypes.func,
+      isExternal: React.PropTypes.bool,
       maxValue: rangePropType,
       minValue: rangePropType,
       name: React.PropTypes.string,
@@ -50,6 +51,7 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      isExternal: false,
     };
   }
 
@@ -601,8 +603,8 @@ export default class InputRange extends React.Component {
           classNames={this.props.classNames}
           ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
-          onTrackMouseDown={this.handleTrackMouseDown}>
-
+          onTrackMouseDown={this.handleTrackMouseDown}
+          isExternal={this.props.isExternal} >
           {this.renderSliders()}
         </Track>
 

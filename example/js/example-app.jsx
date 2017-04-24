@@ -49,6 +49,7 @@ export default class ExampleApp extends React.Component {
           maxValue={20}
           minValue={0}
           labelSuffix="kg"
+          isExternal
           value={this.state.value4}
           onChange={value => this.setState({ value4: value })}
           onChangeComplete={value => console.log(value)} />
