@@ -92,6 +92,7 @@
     "test": "karma start --single-run"
   },
   "dependencies": {
-    "autobind-decorator": "^1.3.4"
+    "autobind-decorator": "^1.3.4",
+    "prop-types": "^15.5.8"
   }
 }

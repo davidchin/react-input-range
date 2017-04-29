@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
@@ -22,18 +23,18 @@ export default class InputRange extends React.Component {
    */
   static get propTypes() {
     return {
-      ariaLabelledby: React.PropTypes.string,
-      ariaControls: React.PropTypes.string,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string),
-      disabled: React.PropTypes.bool,
-      formatLabel: React.PropTypes.func,
+      ariaLabelledby: PropTypes.string,
+      ariaControls: PropTypes.string,
+      classNames: PropTypes.objectOf(PropTypes.string),
+      disabled: PropTypes.bool,
+      formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
-      name: React.PropTypes.string,
-      onChangeStart: React.PropTypes.func,
-      onChange: React.PropTypes.func.isRequired,
-      onChangeComplete: React.PropTypes.func,
-      step: React.PropTypes.number,
+      name: PropTypes.string,
+      onChangeStart: PropTypes.func,
+      onChange: PropTypes.func.isRequired,
+      onChangeComplete: PropTypes.func,
+      step: PropTypes.number,
       value: valuePropType,
     };
   }

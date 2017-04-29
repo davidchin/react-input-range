@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 
 /**
@@ -15,10 +16,10 @@ export default class Track extends React.Component {
    */
   static get propTypes() {
     return {
-      children: React.PropTypes.node.isRequired,
-      classNames: React.PropTypes.objectOf(React.PropTypes.string).isRequired,
-      onTrackMouseDown: React.PropTypes.func.isRequired,
-      percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
+      children: PropTypes.node.isRequired,
+      classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+      onTrackMouseDown: PropTypes.func.isRequired,
+      percentages: PropTypes.objectOf(PropTypes.number).isRequired,
     };
   }
 
