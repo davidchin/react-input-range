@@ -1,3 +1,13 @@
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/davidchin/react-input-range/compare/v1.1.2...v1.1.3) (2017-05-03)
+
+
+### Changes
+
+* Include prop-types package to support React 15.5 ([1939f6c](https://github.com/davidchin/react-input-range/commit/1939f6c))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/davidchin/react-input-range/compare/v1.1.1...v1.1.2) (2017-03-30)
 
