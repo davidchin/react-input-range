@@ -1,3 +1,13 @@
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/davidchin/react-input-range/compare/v1.1.3...v1.1.4) (2017-05-20)
+
+
+### Bug Fixes
+
+* Remove event listener handleTouchEnd when Slider unmount ([#89](https://github.com/davidchin/react-input-range/issues/89)) ([660fa5c](https://github.com/davidchin/react-input-range/commit/660fa5c))
+
+
+
 <a name="1.1.3"></a>
 ## [1.1.3](https://github.com/davidchin/react-input-range/compare/v1.1.2...v1.1.3) (2017-05-03)
 
