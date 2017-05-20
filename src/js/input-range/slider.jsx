@@ -158,7 +158,7 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   removeDocumentTouchEndListener() {
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchUp);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
   }
 
   /**
