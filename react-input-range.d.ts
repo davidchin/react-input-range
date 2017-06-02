@@ -37,3 +37,5 @@ declare interface InputRangeProps {
 declare class InputRange extends React.Component<InputRangeProps, any> {
 
 }
+
+export default InputRange;
