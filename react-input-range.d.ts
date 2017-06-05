@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-declare interface Range {
+export declare interface Range {
   max: number;
   min: number;
 }
