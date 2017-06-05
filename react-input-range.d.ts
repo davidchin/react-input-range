@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-declare interface Range {
+export declare interface Range {
   max: number;
   min: number;
 }
@@ -37,3 +37,5 @@ declare interface InputRangeProps {
 declare class InputRange extends React.Component<InputRangeProps, any> {
 
 }
+
+export default InputRange;
