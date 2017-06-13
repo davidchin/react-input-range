@@ -18,6 +18,7 @@ export default class Track extends React.Component {
     return {
       children: PropTypes.node.isRequired,
       classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+      onTrackDrag: PropTypes.func,
       onTrackMouseDown: PropTypes.func.isRequired,
       percentages: PropTypes.objectOf(PropTypes.number).isRequired,
     };
@@ -37,6 +38,7 @@ export default class Track extends React.Component {
      * @type {?Component}
      */
     this.node = null;
+    this.trackDragEvent = null; // @TODO ????
   }
 
   /**
@@ -59,6 +61,67 @@ export default class Track extends React.Component {
   }
 
   /**
+   * Listen to mousemove event
+   * @private
+   * @return {void}
+   */
+  addDocumentMouseMoveListener() {
+    this.removeDocumentMouseMoveListener();
+    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
+  }
+
+  /**
+   * Listen to mouseup event
+   * @private
+   * @return {void}
+   */
+  addDocumentMouseUpListener() {
+    this.removeDocumentMouseUpListener();
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseMoveListener() {
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  removeDocumentMouseUpListener() {
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * @private
+   * @param {SyntheticEvent} event
+   * @return {void}
+   */
+  @autobind
+  handleMouseMove(event) {
+    if (this.trackDragEvent !== null) {
+      this.props.onTrackDrag(event, this.trackDragEvent);
+    }
+
+    this.trackDragEvent = event;
+  }
+
+  /**
+   * @private
+   * @return {void}
+   */
+  @autobind
+  handleMouseUp() {
+    // @TODO check for the dragable track prop
+    this.removeDocumentMouseMoveListener();
+    this.removeDocumentMouseUpListener();
+  }
+
+  /**
    * @private
    * @param {SyntheticEvent} event - User event
    */
@@ -72,6 +135,9 @@ export default class Track extends React.Component {
     };
 
     this.props.onTrackMouseDown(event, position);
+    // @TODO check for the dragable track prop
+    this.addDocumentMouseMoveListener();
+    this.addDocumentMouseUpListener();
   }
 
   /**
