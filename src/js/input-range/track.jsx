@@ -11,6 +11,7 @@ export default class Track extends React.Component {
    * @return {Object}
    * @property {Function} children
    * @property {Function} classNames
+   * @property {Function} onTrackDrag
    * @property {Function} onTrackMouseDown
    * @property {Function} percentages
    */
@@ -27,6 +28,7 @@ export default class Track extends React.Component {
   /**
    * @param {Object} props
    * @param {InputRangeClassNames} props.classNames
+   * @param {Function} props.onTrackDrag
    * @param {Function} props.onTrackMouseDown
    * @param {number} props.percentages
    */
@@ -38,7 +40,7 @@ export default class Track extends React.Component {
      * @type {?Component}
      */
     this.node = null;
-    this.trackDragEvent = null; // @TODO ????
+    this.trackDragEvent = null;
   }
 
   /**
@@ -119,6 +121,7 @@ export default class Track extends React.Component {
     // @TODO check for the dragable track prop
     this.removeDocumentMouseMoveListener();
     this.removeDocumentMouseUpListener();
+    this.trackDragEvent = null;
   }
 
   /**

@@ -58,7 +58,7 @@ export default class ExampleApp extends React.Component {
           onChangeComplete={value => console.log(value)} />
 
         <InputRange
-          dragBoth
+          draggableTrack
           labelSuffix="kg"
           maxValue={20}
           minValue={0}

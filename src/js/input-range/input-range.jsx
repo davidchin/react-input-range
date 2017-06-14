@@ -27,7 +27,7 @@ export default class InputRange extends React.Component {
       ariaControls: PropTypes.string,
       classNames: PropTypes.objectOf(PropTypes.string),
       disabled: PropTypes.bool,
-      dragBoth: PropTypes.bool,
+      draggableTrack: PropTypes.bool,
       formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
@@ -366,7 +366,7 @@ export default class InputRange extends React.Component {
    */
   @autobind
   handleTrackDrag(event, prev) {
-    if (this.props.disabled) {
+    if (this.props.disabled && !this.props.draggableTrack) {
       return;
     }
 
@@ -378,7 +378,6 @@ export default class InputRange extends React.Component {
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
     const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
     const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
-    // console.log(position, max, min);
 
     if (value > max || value < min) {
       return;
@@ -390,22 +389,9 @@ export default class InputRange extends React.Component {
 
     const offset = prevStepValue - stepValue;
 
-    // const maxDist = max - value;
-    // const minDist = value - min;
-
-    // console.log(valueTransformer.getPositionFromValue(offset, minValue, maxValue, this.getTrackClientRect()));
-    // console.log(event);
-    // console.log(maxDist, minDist);
-
-    // const values = {
-    //   min: valueTransformer.getValueFromPosition(positions.min, this.props.minValue, this.props.maxValue, this.getTrackClientRect()),
-    //   max: valueTransformer.getValueFromPosition(positions.max, this.props.minValue, this.props.maxValue, this.getTrackClientRect()),
-    // };
-    //
-    // const transformedValues = {
-    //   min: valueTransformer.getStepValueFromValue(values.min, this.props.step),
-    //   max: valueTransformer.getStepValueFromValue(values.max, this.props.step),
-    // };
+    if ((prevStepValue === min || prevStepValue === max) && max - 1 !== min) {
+      return;
+    }
 
     const transformedValues = {
       min: min - offset,
@@ -413,10 +399,6 @@ export default class InputRange extends React.Component {
     };
 
     this.updateValues(transformedValues);
-
-    // this.updatePosition(this.getKeyByPosition(position), position);
-
-    // requestAnimationFrame(() => this.updatePosition(key, position));
   }
 
   /**
@@ -465,7 +447,7 @@ export default class InputRange extends React.Component {
 
     event.preventDefault();
 
-    if (!this.props.dragBoth) {
+    if (!this.props.draggableTrack) {
       this.updatePosition(this.getKeyByPosition(position), position);
     }
   }
