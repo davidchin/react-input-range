@@ -365,8 +365,8 @@ export default class InputRange extends React.Component {
    * @return {void}
    */
   @autobind
-  handleTrackDrag(event, prev) {
-    if (this.props.disabled && !this.props.draggableTrack) {
+  handleTrackDrag(event, prevEvent) {
+    if (this.props.disabled || !this.props.draggableTrack) {
       return;
     }
 
@@ -375,21 +375,25 @@ export default class InputRange extends React.Component {
       minValue,
       value: { max, min },
     } = this.props;
+
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
     const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
     const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
 
-    if (value > max || value < min) {
-      return;
-    }
-
-    const prevPosition = valueTransformer.getPositionFromEvent(prev, this.getTrackClientRect());
+    const prevPosition = valueTransformer.getPositionFromEvent(prevEvent, this.getTrackClientRect());
     const prevValue = valueTransformer.getValueFromPosition(prevPosition, minValue, maxValue, this.getTrackClientRect());
     const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step);
 
+    if (prevValue > max || prevValue < min) {
+      return;
+    }
+
     const offset = prevStepValue - stepValue;
 
-    if ((prevStepValue === min || prevStepValue === max) && max - 1 !== min) {
+    const prevStepValueIsMaxOrMin = (prevStepValue === min || prevStepValue === max);
+    const maxIsOneMoreThanMin = max - this.props.step === min;
+
+    if (prevStepValueIsMaxOrMin && !maxIsOneMoreThanMin) {
       return;
     }
 
@@ -445,9 +449,18 @@ export default class InputRange extends React.Component {
       return;
     }
 
+    const {
+      maxValue,
+      minValue,
+      value: { max, min },
+    } = this.props;
+
     event.preventDefault();
 
-    if (!this.props.draggableTrack) {
+    const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
+    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+
+    if (!this.props.draggableTrack || stepValue > max || stepValue < min) {
       this.updatePosition(this.getKeyByPosition(position), position);
     }
   }
@@ -646,6 +659,7 @@ export default class InputRange extends React.Component {
 
         <Track
           classNames={this.props.classNames}
+          draggableTrack={this.props.draggableTrack}
           ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
           onTrackDrag={this.handleTrackDrag}

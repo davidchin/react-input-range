@@ -11,6 +11,7 @@ export default class Track extends React.Component {
    * @return {Object}
    * @property {Function} children
    * @property {Function} classNames
+   * @property {Boolean} draggableTrack
    * @property {Function} onTrackDrag
    * @property {Function} onTrackMouseDown
    * @property {Function} percentages
@@ -19,6 +20,7 @@ export default class Track extends React.Component {
     return {
       children: PropTypes.node.isRequired,
       classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+      draggableTrack: PropTypes.bool,
       onTrackDrag: PropTypes.func,
       onTrackMouseDown: PropTypes.func.isRequired,
       percentages: PropTypes.objectOf(PropTypes.number).isRequired,
@@ -28,6 +30,7 @@ export default class Track extends React.Component {
   /**
    * @param {Object} props
    * @param {InputRangeClassNames} props.classNames
+   * @param {Boolean} props.draggableTrack
    * @param {Function} props.onTrackDrag
    * @param {Function} props.onTrackMouseDown
    * @param {number} props.percentages
@@ -105,6 +108,10 @@ export default class Track extends React.Component {
    */
   @autobind
   handleMouseMove(event) {
+    if (!this.props.draggableTrack) {
+      return;
+    }
+
     if (this.trackDragEvent !== null) {
       this.props.onTrackDrag(event, this.trackDragEvent);
     }
@@ -118,7 +125,10 @@ export default class Track extends React.Component {
    */
   @autobind
   handleMouseUp() {
-    // @TODO check for the dragable track prop
+    if (!this.props.draggableTrack) {
+      return;
+    }
+
     this.removeDocumentMouseMoveListener();
     this.removeDocumentMouseUpListener();
     this.trackDragEvent = null;
@@ -138,9 +148,11 @@ export default class Track extends React.Component {
     };
 
     this.props.onTrackMouseDown(event, position);
-    // @TODO check for the dragable track prop
-    this.addDocumentMouseMoveListener();
-    this.addDocumentMouseUpListener();
+
+    if (this.props.draggableTrack) {
+      this.addDocumentMouseMoveListener();
+      this.addDocumentMouseUpListener();
+    }
   }
 
   /**

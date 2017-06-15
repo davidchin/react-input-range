@@ -16,8 +16,8 @@ export default class ExampleApp extends React.Component {
         max: 10,
       },
       value5: {
-        min: 5,
-        max: 10,
+        min: 4,
+        max: 5,
       },
     };
   }
