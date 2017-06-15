@@ -91,6 +91,12 @@ export default class InputRange extends React.Component {
      * @type {?Component}
      */
     this.trackNode = null;
+
+    /**
+     * @private
+     * @type {bool}
+     */
+    this.isSliderDragging = false;
   }
 
   /**
@@ -354,7 +360,7 @@ export default class InputRange extends React.Component {
     }
 
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
-
+    this.isSliderDragging = true;
     requestAnimationFrame(() => this.updatePosition(key, position));
   }
 
@@ -366,7 +372,7 @@ export default class InputRange extends React.Component {
    */
   @autobind
   handleTrackDrag(event, prevEvent) {
-    if (this.props.disabled || !this.props.draggableTrack) {
+    if (this.props.disabled || !this.props.draggableTrack || this.isSliderDragging) {
       return;
     }
 
@@ -384,18 +390,7 @@ export default class InputRange extends React.Component {
     const prevValue = valueTransformer.getValueFromPosition(prevPosition, minValue, maxValue, this.getTrackClientRect());
     const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step);
 
-    if (prevValue > max || prevValue < min) {
-      return;
-    }
-
     const offset = prevStepValue - stepValue;
-
-    const prevStepValueIsMaxOrMin = (prevStepValue === min || prevStepValue === max);
-    const maxIsOneMoreThanMin = max - this.props.step === min;
-
-    if (prevStepValueIsMaxOrMin && !maxIsOneMoreThanMin) {
-      return;
-    }
 
     const transformedValues = {
       min: min - offset,
@@ -494,6 +489,10 @@ export default class InputRange extends React.Component {
 
     if (this.startValue !== this.props.value) {
       this.props.onChangeComplete(this.props.value);
+    }
+
+    if (this.isSliderDragging) {
+      this.isSliderDragging = false;
     }
 
     this.startValue = null;
