@@ -447,4 +447,60 @@ describe('InputRange', () => {
       expect(InputRange.propTypes.value(props, 'value')).toEqual(jasmine.any(Error));
     });
   });
+
+  it('supports rtl', () => {
+    const jsx = (
+      <InputRange
+        direction="rtl"
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
+    const maxSlider = component.find(`Slider [onMouseDown]`).at(1);
+    const track = component.find(`Track [onMouseDown]`).first();
+
+    minSlider.simulate('mouseDown', { clientX: 400 - 40, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 400 - 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 400 - 100, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 5, max: 10 });
+
+    maxSlider.simulate('mouseDown', { clientX: 400 - 200, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 140, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 140, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 5, max: 13 });
+
+    track.simulate('mouseDown', { clientX: 400 - 40, clientY: 50 });
+    expect(component.props().value).toEqual({ min: 2, max: 13 });
+
+    track.simulate('mouseDown', { clientX: 400 - 140, clientY: 50 });
+    expect(component.props().value).toEqual({ min: 7, max: 13 });
+
+    component.detach();
+  });
+
+  it('updates the current value when the user hits one of the arrow keys on rtl', () => {
+    const jsx = (
+      <InputRange
+        direction="rtl"
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx);
+    const slider = component.find(`Slider [onKeyDown]`).first();
+
+    slider.simulate('keyDown', { keyCode: 39 });
+    slider.simulate('keyUp', { keyCode: 39 });
+    expect(component.props().value).toEqual({ min: 1, max: 10 });
+
+    slider.simulate('keyDown', { keyCode: 37 });
+    slider.simulate('keyUp', { keyCode: 37 });
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
+  });
 });
