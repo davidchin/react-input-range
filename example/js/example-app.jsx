@@ -19,6 +19,10 @@ export default class ExampleApp extends React.Component {
         min: 3,
         max: 7,
       },
+      value6: {
+        min: 5,
+        max: 10,
+      },
     };
   }
 
@@ -65,6 +69,13 @@ export default class ExampleApp extends React.Component {
           onChangeComplete={value => console.log(value)}
           value={this.state.value5} />
 
+        <InputRange
+          direction="rtl"
+          maxValue={20}
+          minValue={0}
+          value={this.state.value6}
+          onChange={value => this.setState({ value6: value })}
+          onChangeComplete={value => console.log(value)} />
       </form>
     );
   }

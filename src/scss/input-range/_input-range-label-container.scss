@@ -2,7 +2,17 @@
   left: -50%;
   position: relative;
 
+  .input-range--rtl & {
+    left: auto;
+    right: -50%;
+  }
+
   .input-range__label--max & {
     left: 50%;
+
+    .input-range--rtl & {
+      left: auto;
+      right: 50%;
+    }
   }
 }

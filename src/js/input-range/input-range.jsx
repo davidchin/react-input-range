@@ -26,6 +26,7 @@ export default class InputRange extends React.Component {
       ariaLabelledby: PropTypes.string,
       ariaControls: PropTypes.string,
       classNames: PropTypes.objectOf(PropTypes.string),
+      direction: PropTypes.oneOf(['ltr', 'rtl']).isRequired,
       disabled: PropTypes.bool,
       draggableTrack: PropTypes.bool,
       formatLabel: PropTypes.func,
@@ -48,6 +49,7 @@ export default class InputRange extends React.Component {
   static get defaultProps() {
     return {
       classNames: DEFAULT_CLASS_NAMES,
+      direction: 'ltr',
       disabled: false,
       maxValue: 10,
       minValue: 0,
@@ -116,7 +118,15 @@ export default class InputRange extends React.Component {
    */
   getComponentClassName() {
     if (!this.props.disabled) {
+      if (this.isRTL()) {
+        return `${this.props.classNames.inputRange} ${this.props.classNames.rtlInputRange}`;
+      }
+
       return this.props.classNames.inputRange;
+    }
+
+    if (this.isRTL()) {
+      return `${this.props.classNames.disabledInputRange} ${this.props.classNames.rtlInputRange}`;
     }
 
     return this.props.classNames.disabledInputRange;
@@ -187,6 +197,15 @@ export default class InputRange extends React.Component {
    */
   isMultiValue() {
     return isObject(this.props.value);
+  }
+
+  /**
+   * Return true if the direction is from right to left
+   * @private
+   * @return {boolean}
+   */
+  isRTL() {
+    return this.props.direction === 'rtl';
   }
 
   /**
@@ -359,8 +378,9 @@ export default class InputRange extends React.Component {
       return;
     }
 
-    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
+    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect(), this.isRTL());
     this.isSliderDragging = true;
+
     requestAnimationFrame(() => this.updatePosition(key, position));
   }
 
@@ -415,12 +435,29 @@ export default class InputRange extends React.Component {
 
     switch (event.keyCode) {
     case LEFT_ARROW:
+      event.preventDefault();
+      if (this.isRTL()) {
+        this.incrementValue(key);
+      } else {
+        this.decrementValue(key);
+      }
+      break;
+
+    case RIGHT_ARROW:
+      event.preventDefault();
+      if (this.isRTL()) {
+        this.decrementValue(key);
+      } else {
+        this.incrementValue(key);
+      }
+      break;
+
     case DOWN_ARROW:
       event.preventDefault();
       this.decrementValue(key);
       break;
 
-    case RIGHT_ARROW:
+
     case UP_ARROW:
       event.preventDefault();
       this.incrementValue(key);
@@ -573,7 +610,12 @@ export default class InputRange extends React.Component {
    */
   renderSliders() {
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-    const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
+    const percentages = valueTransformer.getPercentagesFromValues(
+      values,
+      this.props.minValue,
+      this.props.maxValue,
+      this.isRTL(),
+    );
 
     return this.getKeys().map((key) => {
       const value = values[key];
@@ -659,6 +701,7 @@ export default class InputRange extends React.Component {
         <Track
           classNames={this.props.classNames}
           draggableTrack={this.props.draggableTrack}
+          isRTL={this.isRTL()}
           ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
           onTrackDrag={this.handleTrackDrag}
