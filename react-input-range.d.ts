@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-declare interface Range {
+export interface Range {
   max: number;
   min: number;
 }
 
-declare interface InputRangeClassNames {
+export interface InputRangeClassNames {
   activeTrack: string;
   disabledInputRange: string;
   inputRange: string;
@@ -18,7 +18,7 @@ declare interface InputRangeClassNames {
   valueLabel: string;
 }
 
-declare interface InputRangeProps {
+export interface InputRangeProps {
   ariaLabelledby?: string;
   ariaControls?: string;
   classNames?: InputRangeClassNames;
@@ -34,6 +34,5 @@ declare interface InputRangeProps {
   value: Range | number;
 }
 
-declare class InputRange extends React.Component<InputRangeProps, any> {
-
+export default class InputRange extends React.Component<InputRangeProps, any> {
 }
