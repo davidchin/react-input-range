@@ -2,24 +2,24 @@ import React from 'react';
 import InputRange from '../../src/js';
 import { mount, shallow } from 'enzyme';
 
-let container;
-let requestAnimationFrame;
-
-beforeEach(() => {
-  requestAnimationFrame = window.requestAnimationFrame;
-  window.requestAnimationFrame = callback => callback();
-
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  window.requestAnimationFrame = requestAnimationFrame;
-
-  document.body.removeChild(container);
-});
-
 describe('InputRange', () => {
+  let container;
+  let requestAnimationFrame;
+
+  beforeEach(() => {
+    requestAnimationFrame = window.requestAnimationFrame;
+    window.requestAnimationFrame = callback => callback();
+
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    window.requestAnimationFrame = requestAnimationFrame;
+
+    document.body.removeChild(container);
+  });
+
   it('updates the current value when the user tries to drag the slider', () => {
     const jsx = (
       <InputRange
