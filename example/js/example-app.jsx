@@ -52,14 +52,13 @@ export default class ExampleApp extends React.Component {
         <InputRange
           maxValue={20}
           minValue={0}
-          labelSuffix="kg"
+          formatLabel={value => `${value}kg`}
           value={this.state.value4}
           onChange={value => this.setState({ value4: value })}
           onChangeComplete={value => console.log(value)} />
 
         <InputRange
           draggableTrack
-          labelSuffix="kg"
           maxValue={20}
           minValue={0}
           onChange={value => this.setState({ value5: value })}
