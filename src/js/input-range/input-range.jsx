@@ -27,6 +27,7 @@ export default class InputRange extends React.Component {
       ariaControls: PropTypes.string,
       classNames: PropTypes.objectOf(PropTypes.string),
       disabled: PropTypes.bool,
+      draggableTrack: PropTypes.bool,
       formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
@@ -90,6 +91,12 @@ export default class InputRange extends React.Component {
      * @type {?Component}
      */
     this.trackNode = null;
+
+    /**
+     * @private
+     * @type {bool}
+     */
+    this.isSliderDragging = false;
   }
 
   /**
@@ -353,8 +360,44 @@ export default class InputRange extends React.Component {
     }
 
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
-
+    this.isSliderDragging = true;
     requestAnimationFrame(() => this.updatePosition(key, position));
+  }
+
+  /**
+   * Handle any "mousemove" event received by the track
+   * @private
+   * @param {SyntheticEvent} event
+   * @return {void}
+   */
+  @autobind
+  handleTrackDrag(event, prevEvent) {
+    if (this.props.disabled || !this.props.draggableTrack || this.isSliderDragging) {
+      return;
+    }
+
+    const {
+      maxValue,
+      minValue,
+      value: { max, min },
+    } = this.props;
+
+    const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
+    const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
+    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+
+    const prevPosition = valueTransformer.getPositionFromEvent(prevEvent, this.getTrackClientRect());
+    const prevValue = valueTransformer.getValueFromPosition(prevPosition, minValue, maxValue, this.getTrackClientRect());
+    const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step);
+
+    const offset = prevStepValue - stepValue;
+
+    const transformedValues = {
+      min: min - offset,
+      max: max - offset,
+    };
+
+    this.updateValues(transformedValues);
   }
 
   /**
@@ -401,9 +444,20 @@ export default class InputRange extends React.Component {
       return;
     }
 
+    const {
+      maxValue,
+      minValue,
+      value: { max, min },
+    } = this.props;
+
     event.preventDefault();
 
-    this.updatePosition(this.getKeyByPosition(position), position);
+    const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
+    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+
+    if (!this.props.draggableTrack || stepValue > max || stepValue < min) {
+      this.updatePosition(this.getKeyByPosition(position), position);
+    }
   }
 
   /**
@@ -435,6 +489,10 @@ export default class InputRange extends React.Component {
 
     if (this.startValue !== this.props.value) {
       this.props.onChangeComplete(this.props.value);
+    }
+
+    if (this.isSliderDragging) {
+      this.isSliderDragging = false;
     }
 
     this.startValue = null;
@@ -600,8 +658,10 @@ export default class InputRange extends React.Component {
 
         <Track
           classNames={this.props.classNames}
+          draggableTrack={this.props.draggableTrack}
           ref={(trackNode) => { this.trackNode = trackNode; }}
           percentages={percentages}
+          onTrackDrag={this.handleTrackDrag}
           onTrackMouseDown={this.handleTrackMouseDown}>
 
           {this.renderSliders()}

@@ -15,6 +15,10 @@ export default class ExampleApp extends React.Component {
         min: 5,
         max: 10,
       },
+      value5: {
+        min: 3,
+        max: 7,
+      },
     };
   }
 
@@ -52,6 +56,16 @@ export default class ExampleApp extends React.Component {
           value={this.state.value4}
           onChange={value => this.setState({ value4: value })}
           onChangeComplete={value => console.log(value)} />
+
+        <InputRange
+          draggableTrack
+          labelSuffix="kg"
+          maxValue={20}
+          minValue={0}
+          onChange={value => this.setState({ value5: value })}
+          onChangeComplete={value => console.log(value)}
+          value={this.state.value5} />
+
       </form>
     );
   }
