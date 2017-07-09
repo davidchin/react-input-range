@@ -1,3 +1,13 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/davidchin/react-input-range/compare/v1.1.5...v1.2.0) (2017-07-09)
+
+
+### Features
+
+* Add track dragging functionality ([#91](https://github.com/davidchin/react-input-range/issues/91)) ([4a8ca26](https://github.com/davidchin/react-input-range/commit/4a8ca26))
+
+
+
 <a name="1.1.5"></a>
 ## [1.1.5](https://github.com/davidchin/react-input-range/compare/v1.1.4...v1.1.5) (2017-07-09)
 
