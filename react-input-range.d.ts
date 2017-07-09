@@ -23,6 +23,7 @@ export interface InputRangeProps {
   ariaControls?: string;
   classNames?: InputRangeClassNames;
   disabled?: boolean;
+  draggableTrack?: boolean;
   formatLabel?: (value: number, type: string) => string;
   maxValue?: number;
   minValue?: number;
