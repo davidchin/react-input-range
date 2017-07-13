@@ -483,16 +483,16 @@ export default class InputRange extends React.Component {
    */
   @autobind
   handleInteractionEnd() {
+    if (this.isSliderDragging) {
+      this.isSliderDragging = false;
+    }
+
     if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
       return;
     }
 
     if (this.startValue !== this.props.value) {
       this.props.onChangeComplete(this.props.value);
-    }
-
-    if (this.isSliderDragging) {
-      this.isSliderDragging = false;
     }
 
     this.startValue = null;
