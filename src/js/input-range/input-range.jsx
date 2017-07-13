@@ -486,7 +486,7 @@ export default class InputRange extends React.Component {
     if (this.isSliderDragging) {
       this.isSliderDragging = false;
     }
-    
+
     if (!this.props.onChangeComplete || !isDefined(this.startValue)) {
       return;
     }
