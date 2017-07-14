@@ -1,3 +1,13 @@
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/davidchin/react-input-range/compare/v1.2.0...v1.2.1) (2017-07-14)
+
+
+### Bug Fixes
+
+* Always set slider dragging back to false ([#98](https://github.com/davidchin/react-input-range/issues/98)) ([d22fa26](https://github.com/davidchin/react-input-range/commit/d22fa26))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/davidchin/react-input-range/compare/v1.1.5...v1.2.0) (2017-07-09)
 
