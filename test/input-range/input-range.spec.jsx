@@ -255,6 +255,58 @@ describe('InputRange', () => {
     component.detach();
   });
 
+  it('prevents the minimum value from moving past the the maximum value less the minimum range size', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        minRange={2}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })} />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find('Slider [onMouseDown]').first();
+
+    // PhantomeJS has problems, so have to do 2 separate mouse events, one to the limit, then one beyond
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 170, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 170, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 8, max: 10 });
+
+    slider.simulate('mouseDown', { clientX: 170, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 200, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 8, max: 10 });
+
+    component.detach();
+  });
+
+  it('allows a range of zero length', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        minRange={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })} />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find('Slider [onMouseDown]').first();
+
+    // PhantomeJS has problems, so have to do 2 separate mouse events, one to the limit, then one beyond
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 200, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 10, max: 10 });
+
+    slider.simulate('mouseDown', { clientX: 200, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 220, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 220, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 10, max: 10 });
+
+    component.detach();
+  });
+
   it('notifies the parent component when dragging starts', () => {
     const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
     const onChangeStart = jasmine.createSpy('onChangeStart');

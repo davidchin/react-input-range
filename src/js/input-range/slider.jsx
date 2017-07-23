@@ -28,6 +28,7 @@ export default class Slider extends React.Component {
       ariaLabelledby: PropTypes.string,
       ariaControls: PropTypes.string,
       classNames: PropTypes.objectOf(PropTypes.string).isRequired,
+      zIndex: PropTypes.number,
       formatLabel: PropTypes.func,
       maxValue: PropTypes.number,
       minValue: PropTypes.number,
@@ -84,6 +85,7 @@ export default class Slider extends React.Component {
     const style = {
       position: 'absolute',
       left: `${perc}%`,
+      zIndex: this.props.zIndex || 'auto',
     };
 
     return style;
