@@ -4,12 +4,14 @@ import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
 import Label from './label';
+import minimumRangePropType from './min-range-prop-type';
 import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
 import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
+
 
 /**
  * A React component that allows users to input numeric values within a range
@@ -31,6 +33,7 @@ export default class InputRange extends React.Component {
       formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
+      minRange: minimumRangePropType,
       name: PropTypes.string,
       onChangeStart: PropTypes.func,
       onChange: PropTypes.func.isRequired,
@@ -64,6 +67,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.formatLabel]
    * @param {number|Range} [props.maxValue = 10]
    * @param {number|Range} [props.minValue = 0]
+   * @param {number} [props.minRange]
    * @param {string} [props.name]
    * @param {string} props.onChange
    * @param {Function} [props.onChangeComplete]
@@ -197,12 +201,25 @@ export default class InputRange extends React.Component {
    */
   isWithinRange(values) {
     if (this.isMultiValue()) {
-      return values.min >= this.props.minValue &&
-             values.max <= this.props.maxValue &&
-             values.min < values.max;
+      return (
+        values.min >= this.props.minValue &&
+        values.max <= this.props.maxValue &&
+        (!isNaN(this.props.minRange)
+          ? // if minRange has been passed in as a prop, check it
+            values.max - values.min >= this.props.minRange
+          : // otherwise check against the step prop (default 1)
+            values.max - values.min >= Math.abs(this.props.step))
+      );
     }
 
-    return values.max >= this.props.minValue && values.max <= this.props.maxValue;
+    return (
+      values.max >= this.props.minValue &&
+      values.max <= this.props.maxValue &&
+      // either min range not set
+      (isNaN(this.props.minRange) ||
+        // or check min range
+        values.max - this.props.minValue >= this.props.minRange)
+    );
   }
 
   /**
@@ -587,11 +604,20 @@ export default class InputRange extends React.Component {
         minValue = values.min;
       }
 
+      // if the slider is at the very end of the range,
+      // don't want it to get stuck underneath the other slider
+      let zIndex = 0;
+      if ((key === 'min' && value === this.props.maxValue) ||
+          (key === 'max' && value === this.props.minValue)) {
+        zIndex = 1000;
+      }
+
       const slider = (
         <Slider
           ariaLabelledby={this.props.ariaLabelledby}
           ariaControls={this.props.ariaControls}
           classNames={this.props.classNames}
+          zIndex={zIndex}
           formatLabel={this.props.formatLabel}
           key={key}
           maxValue={maxValue}
