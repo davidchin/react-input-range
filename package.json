@@ -3,9 +3,6 @@
   "version": "1.1.0",
   "parentVersion": "0.10.0",
   "description": "React component for inputting numeric values within a range",
-  "publishConfig": {
-    "access": "restricted"
-  },
   "keywords": [
     "react",
     "react-component",
