@@ -2,6 +2,8 @@
  * @module InputRange/Label
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 
 /**
@@ -40,8 +42,8 @@ export default class Label extends React.Component {
  * @property {Function} formatLabel
  */
 Label.propTypes = {
-  children: React.PropTypes.node,
-  className: React.PropTypes.string,
-  containerClassName: React.PropTypes.string,
-  formatLabel: React.PropTypes.func,
+  children: PropTypes.node,
+  className: PropTypes.string,
+  containerClassName: PropTypes.string,
+  formatLabel: PropTypes.func,
 };

@@ -2,6 +2,8 @@
  * @module InputRange/Slider
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { default as DefaultLabel } from './Label';
 import { autobind } from './util';
@@ -193,19 +195,19 @@ export default class Slider extends React.Component {
  * @property {Function} children
  */
 Slider.propTypes = {
-  ariaLabelledby: React.PropTypes.string,
-  ariaControls: React.PropTypes.string,
-  classNames: React.PropTypes.objectOf(React.PropTypes.string),
-  formatLabel: React.PropTypes.func,
-  maxValue: React.PropTypes.number,
-  minValue: React.PropTypes.number,
-  onSliderKeyDown: React.PropTypes.func.isRequired,
-  onSliderMouseMove: React.PropTypes.func.isRequired,
-  percentage: React.PropTypes.number.isRequired,
-  type: React.PropTypes.string.isRequired,
-  value: React.PropTypes.number.isRequired,
-  Label: React.PropTypes.func,
-  children: React.PropTypes.any,
+  ariaLabelledby: PropTypes.string,
+  ariaControls: PropTypes.string,
+  classNames: PropTypes.objectOf(PropTypes.string),
+  formatLabel: PropTypes.func,
+  maxValue: PropTypes.number,
+  minValue: PropTypes.number,
+  onSliderKeyDown: PropTypes.func.isRequired,
+  onSliderMouseMove: PropTypes.func.isRequired,
+  percentage: PropTypes.number.isRequired,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  Label: PropTypes.func,
+  children: PropTypes.any,
 };
 
 /**

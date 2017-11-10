@@ -2,6 +2,8 @@
  * @module InputRange
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { default as DefaultSlider } from './Slider';
 import { default as DefaultTrack } from './Track';
@@ -601,27 +603,27 @@ export default class InputRange extends React.Component {
  * @property {Boolean} showLabel
  */
 InputRange.propTypes = {
-  ariaLabelledby: React.PropTypes.string,
-  ariaControls: React.PropTypes.string,
-  classNames: React.PropTypes.objectOf(React.PropTypes.string),
+  ariaLabelledby: PropTypes.string,
+  ariaControls: PropTypes.string,
+  classNames: PropTypes.objectOf(PropTypes.string),
   defaultValue: maxMinValuePropType,
-  disabled: React.PropTypes.bool,
-  formatLabel: React.PropTypes.func,
-  labelPrefix: React.PropTypes.string,
-  labelSuffix: React.PropTypes.string,
+  disabled: PropTypes.bool,
+  formatLabel: PropTypes.func,
+  labelPrefix: PropTypes.string,
+  labelSuffix: PropTypes.string,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
-  name: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func.isRequired,
-  onChangeComplete: React.PropTypes.func,
-  step: React.PropTypes.number,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onChangeComplete: PropTypes.func,
+  step: PropTypes.number,
   value: maxMinValuePropType,
-  Track: React.PropTypes.func,
-  Slider: React.PropTypes.func,
-  Label: React.PropTypes.func,
-  children: React.PropTypes.any,
-  showLabel: React.PropTypes.bool,
-  renderHiddenInputs: React.PropTypes.bool,
+  Track: PropTypes.func,
+  Slider: PropTypes.func,
+  Label: PropTypes.func,
+  children: PropTypes.any,
+  showLabel: PropTypes.bool,
+  renderHiddenInputs: PropTypes.bool,
 };
 
 /**

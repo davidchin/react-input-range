@@ -2,6 +2,8 @@
  * @module InputRange/Track
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { autobind } from './util';
 
@@ -110,8 +112,8 @@ export default class Track extends React.Component {
  * @property {Function} percentages
  */
 Track.propTypes = {
-  children: React.PropTypes.node,
-  classNames: React.PropTypes.objectOf(React.PropTypes.string),
-  onTrackMouseDown: React.PropTypes.func.isRequired,
-  percentages: React.PropTypes.objectOf(React.PropTypes.number).isRequired,
+  children: PropTypes.node,
+  classNames: PropTypes.objectOf(PropTypes.string),
+  onTrackMouseDown: PropTypes.func.isRequired,
+  percentages: PropTypes.objectOf(PropTypes.number).isRequired,
 };
