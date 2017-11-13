@@ -1,6 +1,6 @@
 {
   "name": "@appearhere/react-input-range",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "parentVersion": "0.10.0",
   "description": "React component for inputting numeric values within a range",
   "keywords": [
@@ -58,6 +58,7 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^1.0.2",
     "lodash": "^3.10.0",
+    "prop-types": "^15.6.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "run-sequence": "^1.1.4",
