@@ -72,8 +72,8 @@
     "webpack-dev-server": "^2.4.2"
   },
   "peerDependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react": "^15.0.0 || ^16.0.0",
+    "react-dom": "^15.0.0 || ^16.0.0"
   },
   "scripts": {
     "prebuild": "npm test && rm -rf lib",
