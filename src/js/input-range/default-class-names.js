@@ -1,8 +1,8 @@
 /**
-* Default CSS class names
-* @ignore
-* @type {InputRangeClassNames}
-*/
+ * Default CSS class names
+ * @ignore
+ * @type {InputRangeClassNames}
+ */
 const DEFAULT_CLASS_NAMES = {
   activeTrack: 'input-range__track input-range__track--active',
   disabledInputRange: 'input-range input-range--disabled',
