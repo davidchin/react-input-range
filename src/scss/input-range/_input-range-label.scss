@@ -14,10 +14,20 @@
 
 .input-range__label--min {
   left: 0;
+
+  .input-range--rtl & {
+    left: auto;
+    right: 0;
+  }
 }
 
 .input-range__label--max {
   right: 0;
+
+  .input-range--rtl & {
+    left: 0;
+    right: auto;
+  }
 }
 
 .input-range__label--value {

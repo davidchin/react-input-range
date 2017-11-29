@@ -21,6 +21,7 @@ export default class Track extends React.Component {
       children: PropTypes.node.isRequired,
       classNames: PropTypes.objectOf(PropTypes.string).isRequired,
       draggableTrack: PropTypes.bool,
+      isRTL: PropTypes.bool.isRequired,
       onTrackDrag: PropTypes.func,
       onTrackMouseDown: PropTypes.func.isRequired,
       percentages: PropTypes.objectOf(PropTypes.number).isRequired,
@@ -60,7 +61,7 @@ export default class Track extends React.Component {
    */
   getActiveTrackStyle() {
     const width = `${(this.props.percentages.max - this.props.percentages.min) * 100}%`;
-    const left = `${this.props.percentages.min * 100}%`;
+    const left = `${this.props.percentages.min * (this.props.isRTL ? -100 : 100)}%`;
 
     return { left, width };
   }
@@ -143,7 +144,7 @@ export default class Track extends React.Component {
     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
     const trackClientRect = this.getClientRect();
     const position = {
-      x: clientX - trackClientRect.left,
+      x: this.props.isRTL ? (trackClientRect.width - (clientX - trackClientRect.left)) : (clientX - trackClientRect.left),
       y: 0,
     };
 

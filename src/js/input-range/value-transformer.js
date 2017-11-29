@@ -70,12 +70,23 @@ export function getPercentageFromValue(value, minValue, maxValue) {
  * @param {Range} values
  * @param {number} minValue
  * @param {number} maxValue
+ * @param {boolean} isRTL
  * @return {Range}
  */
-export function getPercentagesFromValues(values, minValue, maxValue) {
+export function getPercentagesFromValues(values, minValue, maxValue, isRTL = false) {
+  const min = getPercentageFromValue(values.min, minValue, maxValue);
+  const max = getPercentageFromValue(values.max, minValue, maxValue);
+
+  if (isRTL) {
+    return {
+      min: 1 - min,
+      max: 1 - max,
+    };
+  }
+
   return {
-    min: getPercentageFromValue(values.min, minValue, maxValue),
-    max: getPercentageFromValue(values.max, minValue, maxValue),
+    min,
+    max,
   };
 }
 
@@ -120,15 +131,25 @@ export function getPositionsFromValues(values, minValue, maxValue, clientRect) {
  * @ignore
  * @param {Event} event
  * @param {ClientRect} clientRect
+ * @param {boolean} isRTL
  * @return {Point}
  */
-export function getPositionFromEvent(event, clientRect) {
+export function getPositionFromEvent(event, clientRect, isRTL) {
   const length = clientRect.width;
   const { clientX } = event.touches ? event.touches[0] : event;
+  const x = clamp(clientX - clientRect.left, 0, length);
+  const y = 0;
+
+  if (isRTL) {
+    return {
+      x: length - x,
+      y,
+    };
+  }
 
   return {
-    x: clamp(clientX - clientRect.left, 0, length),
-    y: 0,
+    x,
+    y,
   };
 }
 
