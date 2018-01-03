@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this, no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
@@ -97,6 +98,12 @@ export default class InputRange extends React.Component {
      * @type {bool}
      */
     this.isSliderDragging = false;
+
+    /**
+     * @private
+     * @type {?string}
+     */
+    this.lastKeyMoved = null;
   }
 
   /**
@@ -199,7 +206,7 @@ export default class InputRange extends React.Component {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
              values.max <= this.props.maxValue &&
-             values.min < values.max;
+             values.min <= values.max;
     }
 
     return values.max >= this.props.minValue && values.max <= this.props.maxValue;
@@ -227,6 +234,8 @@ export default class InputRange extends React.Component {
     const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     positions[key] = position;
+
+    this.lastKeyMoved = key;
 
     this.updatePositions(positions);
   }
@@ -574,8 +583,9 @@ export default class InputRange extends React.Component {
   renderSliders() {
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
+    const keys = this.lastKeyMoved === 'min' ? this.getKeys().reverse() : this.getKeys();
 
-    return this.getKeys().map((key) => {
+    return keys.map((key) => {
       const value = values[key];
       const percentage = percentages[key];
 
