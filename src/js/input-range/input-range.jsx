@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this, no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
