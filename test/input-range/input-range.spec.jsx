@@ -263,7 +263,7 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
-        />
+      />
     );
     const component = mount(jsx, { attachTo: container });
     const minSlider = component.find(`Slider [onMouseDown]`).at(0);
@@ -284,7 +284,7 @@ describe('InputRange', () => {
         minValue={0}
         value={{ min: 2, max: 10 }}
         onChange={value => component.setProps({ value })}
-        />
+      />
     );
     const component = mount(jsx, { attachTo: container });
     const minSlider = component.find(`Slider [onMouseDown]`).at(0);
