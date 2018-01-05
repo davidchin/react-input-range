@@ -277,7 +277,7 @@ describe('InputRange', () => {
     component.detach();
   });
 
-  it('it prohibits the min value to equal the max value', () => {
+  it('does not allow the min value to equal the max value', () => {
     const jsx = (
       <InputRange
         maxValue={20}
