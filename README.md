@@ -88,6 +88,10 @@ To specify the amount of increment/decrement
 
 ### InputRange#props
 
+#### allowSameValues: boolean
+
+Set to `true` to allow `minValue` and `maxValue` to be the same.
+
 #### ariaLabelledby: string
 
 Set `aria-labelledby` attribute to your component.
