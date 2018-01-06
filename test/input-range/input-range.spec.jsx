@@ -255,6 +255,49 @@ describe('InputRange', () => {
     component.detach();
   });
 
+  it('allows the min value to equal the max value', () => {
+    const jsx = (
+      <InputRange
+        allowSameValues
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
+
+    minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 200, clientY: 50 }));
+
+    expect(component.props().value).toEqual({ min: 10, max: 10 });
+
+    component.detach();
+  });
+
+  it('does not allow the min value to equal the max value', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 2, max: 10 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const minSlider = component.find(`Slider [onMouseDown]`).at(0);
+
+    minSlider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 200, clientY: 50 }));
+
+    expect(component.props().value).toEqual({ min: 2, max: 10 });
+
+    component.detach();
+  });
+
   it('notifies the parent component when dragging starts', () => {
     const onChange = jasmine.createSpy('onChange').and.callFake(value => component.setProps({ value }));
     const onChangeStart = jasmine.createSpy('onChangeStart');

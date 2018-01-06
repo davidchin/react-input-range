@@ -23,6 +23,7 @@ export default class InputRange extends React.Component {
    */
   static get propTypes() {
     return {
+      allowSameValues: PropTypes.bool,
       ariaLabelledby: PropTypes.string,
       ariaControls: PropTypes.string,
       classNames: PropTypes.objectOf(PropTypes.string),
@@ -47,6 +48,7 @@ export default class InputRange extends React.Component {
    */
   static get defaultProps() {
     return {
+      allowSameValues: false,
       classNames: DEFAULT_CLASS_NAMES,
       disabled: false,
       maxValue: 10,
@@ -57,6 +59,7 @@ export default class InputRange extends React.Component {
 
   /**
    * @param {Object} props
+   * @param {boolean} [props.allowSameValues]
    * @param {string} [props.ariaLabelledby]
    * @param {string} [props.ariaControls]
    * @param {InputRangeClassNames} [props.classNames]
@@ -97,6 +100,12 @@ export default class InputRange extends React.Component {
      * @type {bool}
      */
     this.isSliderDragging = false;
+
+    /**
+     * @private
+     * @type {?string}
+     */
+    this.lastKeyMoved = null;
   }
 
   /**
@@ -199,7 +208,9 @@ export default class InputRange extends React.Component {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
              values.max <= this.props.maxValue &&
-             values.min < values.max;
+             this.props.allowSameValues
+              ? values.min <= values.max
+              : values.min < values.max;
     }
 
     return values.max >= this.props.minValue && values.max <= this.props.maxValue;
@@ -227,6 +238,7 @@ export default class InputRange extends React.Component {
     const positions = valueTransformer.getPositionsFromValues(values, this.props.minValue, this.props.maxValue, this.getTrackClientRect());
 
     positions[key] = position;
+    this.lastKeyMoved = key;
 
     this.updatePositions(positions);
   }
@@ -574,8 +586,12 @@ export default class InputRange extends React.Component {
   renderSliders() {
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
+    const keys = this.props.allowSameValues &&
+      this.lastKeyMoved === 'min'
+      ? this.getKeys().reverse()
+      : this.getKeys();
 
-    return this.getKeys().map((key) => {
+    return keys.map((key) => {
       const value = values[key];
       const percentage = percentages[key];
 
