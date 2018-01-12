@@ -139,6 +139,6 @@ export function getPositionFromEvent(event, clientRect) {
  * @param {number} valuePerStep
  * @return {number}
  */
-export function getStepValueFromValue(value, valuePerStep) {
-  return Math.round(value / valuePerStep) * valuePerStep;
+export function getStepValueFromValue(value, valuePerStep, minValue, maxValue) {
+  return clamp(Math.round(value / valuePerStep) * valuePerStep, minValue, maxValue);
 }

@@ -176,6 +176,19 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Return numerical precision of the step value
+   * @private
+   * @return {number}
+   */
+  getStepPrecision() {
+    const step = this.props.step;
+    let e = 1;
+    let p = 0;
+    while (Math.round(step * e) / e !== step) { e *= 10; p += 1; }
+    return p;
+  }
+
+  /**
    * Return true if the difference between the new and the current value is
    * greater or equal to the step amount of the component
    * @private
@@ -184,9 +197,9 @@ export default class InputRange extends React.Component {
    */
   hasStepDifference(values) {
     const currentValues = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
-
-    return length(values.min, currentValues.min) >= this.props.step ||
-           length(values.max, currentValues.max) >= this.props.step;
+    const precision = this.getStepPrecision();
+    return length(values.min, currentValues.min, precision) >= this.props.step ||
+           length(values.max, currentValues.max, precision) >= this.props.step;
   }
 
   /**
@@ -258,8 +271,8 @@ export default class InputRange extends React.Component {
     };
 
     const transformedValues = {
-      min: valueTransformer.getStepValueFromValue(values.min, this.props.step),
-      max: valueTransformer.getStepValueFromValue(values.max, this.props.step),
+      min: valueTransformer.getStepValueFromValue(values.min, this.props.step, this.props.minValue, this.props.maxValue),
+      max: valueTransformer.getStepValueFromValue(values.max, this.props.step, this.props.minValue, this.props.maxValue),
     };
 
     this.updateValues(transformedValues);
@@ -396,11 +409,11 @@ export default class InputRange extends React.Component {
 
     const position = valueTransformer.getPositionFromEvent(event, this.getTrackClientRect());
     const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
-    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
+    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step, this.props.minValue, this.props.maxValue);
 
     const prevPosition = valueTransformer.getPositionFromEvent(prevEvent, this.getTrackClientRect());
     const prevValue = valueTransformer.getValueFromPosition(prevPosition, minValue, maxValue, this.getTrackClientRect());
-    const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step);
+    const prevStepValue = valueTransformer.getStepValueFromValue(prevValue, this.props.step, this.props.minValue, this.props.maxValue);
 
     const offset = prevStepValue - stepValue;
 
@@ -465,8 +478,7 @@ export default class InputRange extends React.Component {
     event.preventDefault();
 
     const value = valueTransformer.getValueFromPosition(position, minValue, maxValue, this.getTrackClientRect());
-    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step);
-
+    const stepValue = valueTransformer.getStepValueFromValue(value, this.props.step, this.props.minValue, this.props.maxValue);
     if (!this.props.draggableTrack || stepValue > max || stepValue < min) {
       this.updatePosition(this.getKeyByPosition(position), position);
     }

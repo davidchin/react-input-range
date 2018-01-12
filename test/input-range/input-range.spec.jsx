@@ -111,6 +111,48 @@ describe('InputRange', () => {
     component.detach();
   });
 
+  it('decimal min/max values that round up allow slider movement from end limits', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20.5}
+        minValue={0}
+        value={{ min: 0, max: 20.5 }}
+        onChange={value => component.setProps({ value })}
+        step={1}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 100, clientY: 50 }));
+    expect(component.props().value).toEqual({ min: 4, max: 20.5 });
+
+    component.detach();
+  });
+
+  it('fractional steps reach the end of the range', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={2}
+        onChange={value => component.setProps({ value })}
+        step={0.1}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: 50, clientY: 50 });
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 400, clientY: 50 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 400, clientY: 50 }));
+    expect(component.props().value).toEqual(20);
+
+    component.detach();
+  });
+
   it('updates the current value when the user hits one of the arrow keys', () => {
     const jsx = (
       <InputRange
