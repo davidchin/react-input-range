@@ -11,6 +11,7 @@
   outline: none;
   position: absolute;
   top: 50%;
+  touch-action: pan-x;
   transition: $input-range-slider-transition;
   width: $input-range-slider-width;
 
