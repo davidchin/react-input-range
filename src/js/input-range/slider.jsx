@@ -240,7 +240,7 @@ export default class Slider extends React.Component {
 
     return (
       <span
-        className={this.props.classNames.sliderContainer}
+        className={`${this.props.classNames.sliderContainer} ${this.props.type}`}
         ref={(node) => { this.node = node; }}
         style={style}>
         <Label
