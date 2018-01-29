@@ -26,6 +26,9 @@ rules:
     - after-props
   react/require-default-props:
     - 0
+  no-param-reassign:
+    - error
+    - props: false
 env:
   es6: true
   browser: true
