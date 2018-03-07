@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import * as valueTransformer from './value-transformer';
 import DEFAULT_CLASS_NAMES from './default-class-names';
-import Label from './label';
+import DefaultLabel from './label';
 import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
-import Slider from './slider';
-import Track from './track';
+import DefaultSlider from './slider';
+import DefaultTrack from './track';
 import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 
@@ -24,19 +24,23 @@ export default class InputRange extends React.Component {
   static get propTypes() {
     return {
       allowSameValues: PropTypes.bool,
-      ariaLabelledby: PropTypes.string,
       ariaControls: PropTypes.string,
+      ariaLabelledby: PropTypes.string,
+      children: PropTypes.any,
       classNames: PropTypes.objectOf(PropTypes.string),
       disabled: PropTypes.bool,
       draggableTrack: PropTypes.bool,
       formatLabel: PropTypes.func,
+      Label: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
       name: PropTypes.string,
-      onChangeStart: PropTypes.func,
       onChange: PropTypes.func.isRequired,
       onChangeComplete: PropTypes.func,
+      onChangeStart: PropTypes.func,
+      Slider: PropTypes.func,
       step: PropTypes.number,
+      Track: PropTypes.func,
       value: valuePropType,
     };
   }
@@ -51,9 +55,12 @@ export default class InputRange extends React.Component {
       allowSameValues: false,
       classNames: DEFAULT_CLASS_NAMES,
       disabled: false,
+      Label: DefaultLabel,
       maxValue: 10,
       minValue: 0,
+      Slider: DefaultSlider,
       step: 1,
+      Track: DefaultTrack,
     };
   }
 
@@ -73,6 +80,9 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.onChangeStart]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
+   * @param {Function} Track
+   * @param {Function} Slider
+   * @param {Function} Label
    */
   constructor(props) {
     super(props);
@@ -584,6 +594,7 @@ export default class InputRange extends React.Component {
    * @return {JSX.Element}
    */
   renderSliders() {
+    const { Label, Slider } = this.props;
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
     const keys = this.props.allowSameValues &&
@@ -610,6 +621,7 @@ export default class InputRange extends React.Component {
           classNames={this.props.classNames}
           formatLabel={this.props.formatLabel}
           key={key}
+          Label={Label}
           maxValue={maxValue}
           minValue={minValue}
           onSliderDrag={this.handleSliderDrag}
@@ -652,6 +664,7 @@ export default class InputRange extends React.Component {
    * @return {JSX.Element}
    */
   render() {
+    const { children, Label, Track } = this.props;
     const componentClassName = this.getComponentClassName();
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
@@ -690,6 +703,7 @@ export default class InputRange extends React.Component {
           {this.props.maxValue}
         </Label>
 
+        {children}
         {this.renderHiddenInputs()}
       </div>
     );

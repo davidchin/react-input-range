@@ -148,9 +148,57 @@ The default increment/decrement of your component is 1. You can change that by s
 
 Set the current value for your component. If only a single number is provided, only a single slider will get rendered. If a range object (min/max) is provided, two sliders will get rendered
 
+### Track: Function
+
+Override the default Track Component
+
+#### Slider: Function
+
+Override the default Slider Component
+
+#### Label: Function
+
+Override the default Label Component
+
+### Customization
+
+The `InputRange` component accepts `Label`, `Slider` and `Track` props that let you override the default components used by this library.
+
+By default, the generated markup looks like this (majority of the props are omitted for clarity):
+
+```jsx
+<InputRange>
+  <Label type="min" />
+  <Track>
+    <Slider>
+      <Label type="value" />
+    </Slider>
+  </Track>
+  <Label type="max" />
+</InputRange>
+```
+
+For example, to only show the "value" label and not "min" and "max", you can do something like this:
+
+```jsx
+// The default components are exported so you can defer to the default behavior
+import {InputRange, Label} from "react-input-range"
+
+function MyLabel(props) {
+  return props.type === "value" ? <Label {...props} /> : null
+}
+
+function MyInputRange(props) {
+  return <InputRange {...props} Label={MyLabel} />
+}
+```
+
+See below and also `react-input-range.d.ts` for more specific definitions of these components.
+
 ### Types
 
 #### InputRangeClassNames
+
 * activeTrack: string
 * disabledInputRange: string
 * inputRange: string
@@ -163,8 +211,41 @@ Set the current value for your component. If only a single number is provided, o
 * valueLabel: string
 
 #### Range
+
 * max: number
 * min: number
+
+#### Label
+
+* children: ReactNode
+* classNames: InputRangeClassNames
+* formatLabel?: (value: ReactNode, type: "min" | "max" | "value") => ReactNode
+* type: "min" | "max" | "value"
+
+#### Slider
+
+* ariaLabelledby?: string
+* ariaControls?: string
+* children?: ReactNode
+* classNames: InputRangeClassNames
+* formatLabel?: (value: ReactNode, type: "min" | "max" | "value") => ReactNode
+* Label: Label
+* maxValue?: number
+* minValue?: number
+* onSliderDrag: Function
+* onSliderKeyDown: Function
+* percentage: number
+* type: string
+* value: number
+
+#### Track
+
+* children: ReactNode
+* classNames: InputRangeClassNames
+* draggableTrack?: bool
+* onTrackDrag?: Function
+* onTrackMouseDown: Function
+* percentages: Range
 
 ## Development
 

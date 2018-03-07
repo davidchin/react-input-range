@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
-import Label from './label';
+import DefaultLabel from './label';
 
 /**
  * @ignore
@@ -17,6 +17,7 @@ export default class Slider extends React.Component {
    * @property {Function} formatLabel
    * @property {Function} maxValue
    * @property {Function} minValue
+   * @property {Function} Label
    * @property {Function} onSliderDrag
    * @property {Function} onSliderKeyDown
    * @property {Function} percentage
@@ -27,8 +28,10 @@ export default class Slider extends React.Component {
     return {
       ariaLabelledby: PropTypes.string,
       ariaControls: PropTypes.string,
+      children: PropTypes.any,
       classNames: PropTypes.objectOf(PropTypes.string).isRequired,
       formatLabel: PropTypes.func,
+      Label: PropTypes.func,
       maxValue: PropTypes.number,
       minValue: PropTypes.number,
       onSliderDrag: PropTypes.func.isRequired,
@@ -36,6 +39,17 @@ export default class Slider extends React.Component {
       percentage: PropTypes.number.isRequired,
       type: PropTypes.string.isRequired,
       value: PropTypes.number.isRequired,
+    };
+  }
+
+  /**
+   * @ignore
+   * @override
+   * @return {Object}
+   */
+  static get defaultProps() {
+    return {
+      Label: DefaultLabel,
     };
   }
 
@@ -236,6 +250,7 @@ export default class Slider extends React.Component {
    * @return {JSX.Element}
    */
   render() {
+    const { children, Label } = this.props;
     const style = this.getStyle();
 
     return (
@@ -262,7 +277,9 @@ export default class Slider extends React.Component {
           onMouseDown={this.handleMouseDown}
           onTouchStart={this.handleTouchStart}
           role="slider"
-          tabIndex="0" />
+          tabIndex="0">
+          {children}
+        </div>
       </span>
     );
   }

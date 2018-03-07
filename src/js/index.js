@@ -1,4 +1,7 @@
 import InputRange from './input-range/input-range';
+import Track from './input-range/track';
+import Slider from './input-range/slider';
+import Label from './input-range/label';
 
 /**
  * @ignore
@@ -44,3 +47,4 @@ import InputRange from './input-range/input-range';
  */
 
 export default InputRange;
+export { Track, Slider, Label };
