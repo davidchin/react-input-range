@@ -32,6 +32,7 @@ export default class InputRange extends React.Component {
       formatLabel: PropTypes.func,
       maxValue: rangePropType,
       minValue: rangePropType,
+      tabIndex: rangePropType,
       name: PropTypes.string,
       onChangeStart: PropTypes.func,
       onChange: PropTypes.func.isRequired,
@@ -53,6 +54,7 @@ export default class InputRange extends React.Component {
       disabled: false,
       maxValue: 10,
       minValue: 0,
+      tabIndex: 0,
       step: 1,
     };
   }
@@ -67,6 +69,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.formatLabel]
    * @param {number|Range} [props.maxValue = 10]
    * @param {number|Range} [props.minValue = 0]
+   * @param {number|Range} [props.tabIndex = 0]
    * @param {string} [props.name]
    * @param {string} props.onChange
    * @param {Function} [props.onChangeComplete]
@@ -612,6 +615,7 @@ export default class InputRange extends React.Component {
           key={key}
           maxValue={maxValue}
           minValue={minValue}
+          tabIndex={this.props.tabIndex}
           onSliderDrag={this.handleSliderDrag}
           onSliderKeyDown={this.handleSliderKeyDown}
           percentage={percentage}
