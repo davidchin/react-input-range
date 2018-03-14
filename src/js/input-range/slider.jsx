@@ -17,6 +17,7 @@ export default class Slider extends React.Component {
    * @property {Function} formatLabel
    * @property {Function} maxValue
    * @property {Function} minValue
+   * @property {Function} tabIndex
    * @property {Function} onSliderDrag
    * @property {Function} onSliderKeyDown
    * @property {Function} percentage
@@ -31,6 +32,7 @@ export default class Slider extends React.Component {
       formatLabel: PropTypes.func,
       maxValue: PropTypes.number,
       minValue: PropTypes.number,
+      tabIndex: PropTypes.number,
       onSliderDrag: PropTypes.func.isRequired,
       onSliderKeyDown: PropTypes.func.isRequired,
       percentage: PropTypes.number.isRequired,
@@ -47,6 +49,7 @@ export default class Slider extends React.Component {
    * @param {Function} [props.formatLabel]
    * @param {number} [props.maxValue]
    * @param {number} [props.minValue]
+   * @param {number} [props.tabIndex]
    * @param {Function} props.onSliderKeyDown
    * @param {Function} props.onSliderDrag
    * @param {number} props.percentage
@@ -262,7 +265,7 @@ export default class Slider extends React.Component {
           onMouseDown={this.handleMouseDown}
           onTouchStart={this.handleTouchStart}
           role="slider"
-          tabIndex="0" />
+          tabIndex={this.props.tabIndex} />
       </span>
     );
   }
