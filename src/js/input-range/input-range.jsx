@@ -97,6 +97,12 @@ export default class InputRange extends React.Component {
 
     /**
      * @private
+     * @type {?Component}
+     */
+    this.sliderNode = null;
+
+    /**
+     * @private
      * @type {bool}
      */
     this.isSliderDragging = false;
@@ -470,6 +476,14 @@ export default class InputRange extends React.Component {
     if (!this.props.draggableTrack || stepValue > max || stepValue < min) {
       this.updatePosition(this.getKeyByPosition(position), position);
     }
+
+    if (!this.props.draggableTrack && !this.isMultiValue() && this.sliderNode) {
+      if (event.type === 'mousedown') {
+        this.sliderNode.handleMouseDown();
+      } else {
+        this.sliderNode.handleTouchStart();
+      }
+    }
   }
 
   /**
@@ -609,6 +623,7 @@ export default class InputRange extends React.Component {
           ariaControls={this.props.ariaControls}
           classNames={this.props.classNames}
           formatLabel={this.props.formatLabel}
+          ref={(sliderNode) => { this.sliderNode = sliderNode; }}
           key={key}
           maxValue={maxValue}
           minValue={minValue}
