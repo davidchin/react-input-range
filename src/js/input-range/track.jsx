@@ -43,6 +43,7 @@ export default class Track extends React.Component {
      * @type {?Component}
      */
     this.node = null;
+    this.activeNode = null;
     this.trackDragEvent = null;
   }
 
@@ -140,14 +141,18 @@ export default class Track extends React.Component {
    */
   @autobind
   handleMouseDown(event) {
-    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-    const trackClientRect = this.getClientRect();
-    const position = {
-      x: clientX - trackClientRect.left,
-      y: 0,
-    };
+    event.preventDefault();
 
-    this.props.onTrackMouseDown(event, position);
+    if (event.target === this.node || event.target === this.activeNode) {
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const trackClientRect = this.getClientRect();
+      const position = {
+        x: clientX - trackClientRect.left,
+        y: 0,
+      };
+
+      this.props.onTrackMouseDown(event, position);
+    }
 
     if (this.props.draggableTrack) {
       this.addDocumentMouseMoveListener();
@@ -161,8 +166,6 @@ export default class Track extends React.Component {
    */
   @autobind
   handleTouchStart(event) {
-    event.preventDefault();
-
     this.handleMouseDown(event);
   }
 
@@ -181,7 +184,8 @@ export default class Track extends React.Component {
         ref={(node) => { this.node = node; }}>
         <div
           style={activeTrackStyle}
-          className={this.props.classNames.activeTrack} />
+          className={this.props.classNames.activeTrack}
+          ref={(activeNode) => { this.activeNode = activeNode; }} />
         {this.props.children}
       </div>
     );
