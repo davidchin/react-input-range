@@ -235,6 +235,42 @@ describe('InputRange', () => {
     component.detach();
   });
 
+  it('restricts min within valid range when the user clicks on the left edge of the min handle', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 0, max: 7 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: -20, clientY: 50 });
+    expect(component.props().value).toEqual({ min: 0, max: 7 });
+
+    component.detach();
+  });
+
+  it('restricts max within valid range when the user clicks on the right edge of max handle', () => {
+    const jsx = (
+      <InputRange
+        maxValue={20}
+        minValue={0}
+        value={{ min: 5, max: 20 }}
+        onChange={value => component.setProps({ value })}
+      />
+    );
+    const component = mount(jsx, { attachTo: container });
+    const slider = component.find(`Slider [onMouseDown]`).first();
+
+    slider.simulate('mouseDown', { clientX: 420, clientY: 50 });
+    expect(component.props().value).toEqual({ min: 5, max: 20 });
+
+    component.detach();
+  });
+
   it('prevents the minimum value from exceeding the maximum value', () => {
     const jsx = (
       <InputRange
