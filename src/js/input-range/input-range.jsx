@@ -406,7 +406,7 @@ export default class InputRange extends React.Component {
 
     const transformedValues = {
       min: min - offset,
-      max: max - offset,
+      max: (typeof max == "undefined") ? stepValue : (max - offset)
     };
 
     this.updateValues(transformedValues);
