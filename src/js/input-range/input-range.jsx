@@ -38,6 +38,7 @@ export default class InputRange extends React.Component {
       onChangeComplete: PropTypes.func,
       step: PropTypes.number,
       value: valuePropType,
+      renderSubLabels: PropTypes.bool,
     };
   }
 
@@ -173,6 +174,22 @@ export default class InputRange extends React.Component {
     }
 
     return ['max'];
+  }
+
+  /**
+   * @private
+   * @return {Object}
+   */
+  getStyle(val) {
+    const { maxValue, minValue } = this.props;
+    const perc = ((val - minValue) / (maxValue - minValue)) * 100;
+    const style = {
+      position: 'absolute',
+      left: `${perc}%`,
+      height: '1rem',
+    };
+
+    return style;
   }
 
   /**
@@ -656,6 +673,23 @@ export default class InputRange extends React.Component {
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
+    let fstLabelVal = 0;
+    let sndLabelVal = 0;
+    let thdLabelVal = 0;
+    let fstLabelStyle = {};
+    let sndLabelStyle = {};
+    let thdLabelStyle = {};
+
+    if (this.props.renderSubLabels) {
+      fstLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 1) + this.props.minValue;
+      sndLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 2) + this.props.minValue;
+      thdLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 3) + this.props.minValue;
+
+      fstLabelStyle = this.getStyle(fstLabelVal);
+      sndLabelStyle = this.getStyle(sndLabelVal);
+      thdLabelStyle = this.getStyle(thdLabelVal);
+    }
+
     return (
       <div
         aria-disabled={this.props.disabled}
@@ -671,6 +705,39 @@ export default class InputRange extends React.Component {
           type="min">
           {this.props.minValue}
         </Label>
+
+        {this.props.renderSubLabels &&
+        <div>
+          <span style={fstLabelStyle}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              type="fst">
+              {fstLabelVal}
+            </Label>
+          </span>
+
+          <span style={sndLabelStyle}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              style={sndLabelStyle}
+              type="snd">
+              {sndLabelVal}
+            </Label>
+          </span>
+
+          <span style={thdLabelStyle}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              style={thdLabelStyle}
+              type="thd">
+              {thdLabelVal}
+            </Label>
+          </span>
+        </div>
+        }
 
         <Track
           classNames={this.props.classNames}
