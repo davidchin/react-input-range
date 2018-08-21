@@ -22,4 +22,5 @@
 
 .input-range__track--active {
   background: $input-range-track-active-background;
+  z-index: 10;
 }

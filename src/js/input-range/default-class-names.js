@@ -13,6 +13,8 @@ const DEFAULT_CLASS_NAMES = {
   fstLabel: 'input-range__label input-range__label--fst',
   sndLabel: 'input-range__label input-range__label--snd',
   thdLabel: 'input-range__label input-range__label--thd',
+  subLabelContainer: 'input-range__label--subLabelContainer',
+  inactiveCircleLabel: 'input-range__label--inactive',
   slider: 'input-range__slider',
   sliderContainer: 'input-range__slider-container',
   track: 'input-range__track input-range__track--background',

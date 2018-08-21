@@ -15,6 +15,10 @@
   position: absolute;
 }
 
+.input-range__label--subLabelContainer {
+  height: 1rem,
+}
+
 .input-range__label--min {
   left: 0;
 }
@@ -26,4 +30,13 @@
 .input-range__label--value {
   position: absolute;
   top: $input-range-label-value-position-top;
+}
+
+.input-range__label--inactive {
+  background-color: #e0e7f1;
+  border-radius: 100%;
+  width: 7px;
+  height: 7px;
+  top: 28%;
+  pointer-events: none;
 }
