@@ -721,7 +721,7 @@ export default class InputRange extends React.Component {
 
         {this.props.renderSubLabels &&
         <div>
-          <span style={fstLabelStyle} className={this.props.classNames.subLabelContainer}>
+          <span style={fstLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
@@ -730,7 +730,7 @@ export default class InputRange extends React.Component {
             </Label>
           </span>
 
-          <span style={sndLabelStyle} className={this.props.classNames.subLabelContainer}>
+          <span style={sndLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
@@ -740,7 +740,7 @@ export default class InputRange extends React.Component {
             </Label>
           </span>
 
-          <span style={thdLabelStyle} className={this.props.classNames.subLabelContainer}>
+          <span style={thdLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
