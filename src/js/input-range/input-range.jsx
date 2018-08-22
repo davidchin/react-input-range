@@ -55,6 +55,7 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      renderSubLabels: false,
     };
   }
 
@@ -74,6 +75,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.onChangeStart]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
+   * @param {boolean} props.renderSubLabels
    */
   constructor(props) {
     super(props);
