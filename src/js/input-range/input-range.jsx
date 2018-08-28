@@ -8,7 +8,7 @@ import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
-import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
+import { captialize, distanceTo, isDefined, isObject, length, isNumber } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 
 /**
@@ -55,6 +55,7 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      renderSubLabels: false,
     };
   }
 
@@ -74,6 +75,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.onChangeStart]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
+   * @param {boolean} props.renderSubLabels
    */
   constructor(props) {
     super(props);
@@ -186,7 +188,6 @@ export default class InputRange extends React.Component {
     const style = {
       position: 'absolute',
       left: `${perc}%`,
-      height: '1rem',
     };
 
     return style;
@@ -690,6 +691,18 @@ export default class InputRange extends React.Component {
       thdLabelStyle = this.getStyle(thdLabelVal);
     }
 
+    const inactiveSeqValues = [];
+    let inactiveSeq = null;
+    if (isNumber(this.props.value)) {
+      for (let i = this.props.value; i < this.props.maxValue; i++) {
+        inactiveSeqValues.push(i);
+      }
+      inactiveSeq = inactiveSeqValues.map((value) => {
+        const style = this.getStyle(value);
+        return <div key={value} style={style} className={this.props.classNames.inactiveCircleLabel} />;
+      });
+    }
+
     return (
       <div
         aria-disabled={this.props.disabled}
@@ -708,7 +721,7 @@ export default class InputRange extends React.Component {
 
         {this.props.renderSubLabels &&
         <div>
-          <span style={fstLabelStyle}>
+          <span style={fstLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
@@ -717,7 +730,7 @@ export default class InputRange extends React.Component {
             </Label>
           </span>
 
-          <span style={sndLabelStyle}>
+          <span style={sndLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
@@ -727,7 +740,7 @@ export default class InputRange extends React.Component {
             </Label>
           </span>
 
-          <span style={thdLabelStyle}>
+          <span style={thdLabelStyle} className={this.props.classNames.sublabel}>
             <Label
               classNames={this.props.classNames}
               formatLabel={this.props.formatLabel}
@@ -749,6 +762,12 @@ export default class InputRange extends React.Component {
 
           {this.renderSliders()}
         </Track>
+
+        {isNumber(this.props.value) &&
+          <div className="InactiveCircleLabels">
+            {inactiveSeq}
+          </div>
+        }
 
         <Label
           classNames={this.props.classNames}
