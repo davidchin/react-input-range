@@ -30,8 +30,9 @@ export default class ExampleApp extends React.Component {
     return (
       <form className="form">
         <InputRange
-          maxValue={20}
+          maxValue={22}
           minValue={0}
+          renderSubLabels
           value={this.state.value}
           onChange={value => this.setState({ value })}
           onChangeComplete={value => console.log(value)} />

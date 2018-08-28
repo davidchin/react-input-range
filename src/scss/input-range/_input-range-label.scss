@@ -2,14 +2,22 @@
   color: $input-range-label-color;
   font-family: $input-range-font-family;
   font-size: $input-range-label-font-size;
+  font-weight: 500;
   transform: translateZ(0);
   white-space: nowrap;
 }
 
 .input-range__label--min,
-.input-range__label--max {
+.input-range__label--max,
+.input-range__label--fst,
+.input-range__label--snd,
+.input-range__label--thd {
   bottom: $input-range-label-position-bottom;
   position: absolute;
+}
+
+.input-range__label--sublabel {
+  height: 1rem,
 }
 
 .input-range__label--min {
@@ -23,4 +31,14 @@
 .input-range__label--value {
   position: absolute;
   top: $input-range-label-value-position-top;
+  display: none;
+}
+
+.input-range__label--inactive {
+  background-color: #e0e7f1;
+  border-radius: 100%;
+  width: 7px;
+  height: 7px;
+  top: 28%;
+  pointer-events: none;
 }

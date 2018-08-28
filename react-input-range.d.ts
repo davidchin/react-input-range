@@ -34,6 +34,7 @@ export interface InputRangeProps {
   onChangeComplete?: (value: Range | number) => void;
   step?: number;
   value: Range | number;
+  renderSubLabels?: boolean;
 }
 
 export default class InputRange extends React.Component<InputRangeProps, any> {

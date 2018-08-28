@@ -8,7 +8,7 @@ import rangePropType from './range-prop-type';
 import valuePropType from './value-prop-type';
 import Slider from './slider';
 import Track from './track';
-import { captialize, distanceTo, isDefined, isObject, length } from '../utils';
+import { captialize, distanceTo, isDefined, isObject, length, isNumber } from '../utils';
 import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from './key-codes';
 
 /**
@@ -38,6 +38,7 @@ export default class InputRange extends React.Component {
       onChangeComplete: PropTypes.func,
       step: PropTypes.number,
       value: valuePropType,
+      renderSubLabels: PropTypes.bool,
     };
   }
 
@@ -54,6 +55,7 @@ export default class InputRange extends React.Component {
       maxValue: 10,
       minValue: 0,
       step: 1,
+      renderSubLabels: false,
     };
   }
 
@@ -73,6 +75,7 @@ export default class InputRange extends React.Component {
    * @param {Function} [props.onChangeStart]
    * @param {number} [props.step = 1]
    * @param {number|Range} props.value
+   * @param {boolean} props.renderSubLabels
    */
   constructor(props) {
     super(props);
@@ -173,6 +176,21 @@ export default class InputRange extends React.Component {
     }
 
     return ['max'];
+  }
+
+  /**
+   * @private
+   * @return {Object}
+   */
+  getStyle(val) {
+    const { maxValue, minValue } = this.props;
+    const perc = ((val - minValue) / (maxValue - minValue)) * 100;
+    const style = {
+      position: 'absolute',
+      left: `${perc}%`,
+    };
+
+    return style;
   }
 
   /**
@@ -656,6 +674,35 @@ export default class InputRange extends React.Component {
     const values = valueTransformer.getValueFromProps(this.props, this.isMultiValue());
     const percentages = valueTransformer.getPercentagesFromValues(values, this.props.minValue, this.props.maxValue);
 
+    let fstLabelVal = 0;
+    let sndLabelVal = 0;
+    let thdLabelVal = 0;
+    let fstLabelStyle = {};
+    let sndLabelStyle = {};
+    let thdLabelStyle = {};
+
+    if (this.props.renderSubLabels) {
+      fstLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 1) + this.props.minValue;
+      sndLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 2) + this.props.minValue;
+      thdLabelVal = ((Math.round((this.props.maxValue - this.props.minValue) / 4)) * 3) + this.props.minValue;
+
+      fstLabelStyle = this.getStyle(fstLabelVal);
+      sndLabelStyle = this.getStyle(sndLabelVal);
+      thdLabelStyle = this.getStyle(thdLabelVal);
+    }
+
+    const inactiveSeqValues = [];
+    let inactiveSeq = null;
+    if (isNumber(this.props.value)) {
+      for (let i = this.props.value; i < this.props.maxValue; i++) {
+        inactiveSeqValues.push(i);
+      }
+      inactiveSeq = inactiveSeqValues.map((value) => {
+        const style = this.getStyle(value);
+        return <div key={value} style={style} className={this.props.classNames.inactiveCircleLabel} />;
+      });
+    }
+
     return (
       <div
         aria-disabled={this.props.disabled}
@@ -672,6 +719,39 @@ export default class InputRange extends React.Component {
           {this.props.minValue}
         </Label>
 
+        {this.props.renderSubLabels &&
+        <div>
+          <span style={fstLabelStyle} className={this.props.classNames.sublabel}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              type="fst">
+              {fstLabelVal}
+            </Label>
+          </span>
+
+          <span style={sndLabelStyle} className={this.props.classNames.sublabel}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              style={sndLabelStyle}
+              type="snd">
+              {sndLabelVal}
+            </Label>
+          </span>
+
+          <span style={thdLabelStyle} className={this.props.classNames.sublabel}>
+            <Label
+              classNames={this.props.classNames}
+              formatLabel={this.props.formatLabel}
+              style={thdLabelStyle}
+              type="thd">
+              {thdLabelVal}
+            </Label>
+          </span>
+        </div>
+        }
+
         <Track
           classNames={this.props.classNames}
           draggableTrack={this.props.draggableTrack}
@@ -682,6 +762,12 @@ export default class InputRange extends React.Component {
 
           {this.renderSliders()}
         </Track>
+
+        {isNumber(this.props.value) &&
+          <div className="InactiveCircleLabels">
+            {inactiveSeq}
+          </div>
+        }
 
         <Label
           classNames={this.props.classNames}
