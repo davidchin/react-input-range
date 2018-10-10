@@ -10,3 +10,24 @@
 .input-range {
   margin-bottom: 160px;
 }
+
+.touch-friendly {
+  .input-range {
+    &__track {
+      height: 30px;
+
+      &--active {
+        background: rgba(#3f51b5, 0.5)
+      }
+    }
+
+    &__slider {
+      width: 40px;
+      height: 40px;
+
+      &-container {
+        top: 5px;
+      }
+    }
+  }
+}

@@ -108,12 +108,17 @@ export default class InputRange extends React.Component {
     this.lastKeyMoved = null;
   }
 
+  componentDidMount() {
+    this.addNodeTouchStartListener();
+  }
+
   /**
    * @ignore
    * @override
    * @return {void}
    */
   componentWillUnmount() {
+    this.removeNodeTouchStartListener();
     this.removeDocumentMouseUpListener();
     this.removeDocumentTouchEndListener();
   }
@@ -321,6 +326,22 @@ export default class InputRange extends React.Component {
   }
 
   /**
+   * Start listening to touchstart events on the node
+   * @private
+   * @return {void}
+   */
+  addNodeTouchStartListener() {
+    // Adding a `onTouchStart` prop to the node doesn't work, as the
+    // event handler will be added as `passive`. The handler needs to
+    // be active, so it is able to call `preventDefault()`. Otherwise
+    // e.g. the page scrolls while dragging slightly vertically.
+    this.node.addEventListener('touchstart', this.handleTouchStart, {
+      passive: false,
+    });
+  }
+
+
+  /**
    * Listen to mouseup event
    * @private
    * @return {void}
@@ -347,6 +368,15 @@ export default class InputRange extends React.Component {
    */
   removeDocumentMouseUpListener() {
     this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * Stop listening to touchstart events on the node
+   * @private
+   * @return {void}
+   */
+  removeNodeTouchStartListener() {
+    this.node.removeEventListener('touchstart', this.handleTouchStart);
   }
 
   /**
@@ -565,6 +595,7 @@ export default class InputRange extends React.Component {
   handleTouchStart(event) {
     this.handleInteractionStart(event);
     this.addDocumentTouchEndListener();
+    event.preventDefault();
   }
 
   /**
@@ -663,8 +694,7 @@ export default class InputRange extends React.Component {
         className={componentClassName}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}
-        onMouseDown={this.handleMouseDown}
-        onTouchStart={this.handleTouchStart}>
+        onMouseDown={this.handleMouseDown}>
         <Label
           classNames={this.props.classNames}
           formatLabel={this.props.formatLabel}
