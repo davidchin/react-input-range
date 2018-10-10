@@ -23,6 +23,7 @@ export default class ExampleApp extends React.Component {
         min: 3,
         max: 7,
       },
+      value7: 4,
     };
   }
 
@@ -77,6 +78,16 @@ export default class ExampleApp extends React.Component {
           onChange={value => this.setState({ value6: value })}
           onChangeComplete={value => console.log(value)}
           value={this.state.value6} />
+
+        <div className="touch-friendly">
+          <InputRange
+            maxValue={20}
+            formatLabel={() => null}
+            minValue={0}
+            value={this.state.value7}
+            onChange={value => this.setState({ value7: value })}
+            onChangeComplete={value => console.log(value)} />
+        </div>
       </form>
     );
   }
