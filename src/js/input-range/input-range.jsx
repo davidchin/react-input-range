@@ -208,9 +208,9 @@ export default class InputRange extends React.Component {
     if (this.isMultiValue()) {
       return values.min >= this.props.minValue &&
         values.max <= this.props.maxValue &&
-        this.props.allowSameValues
-        ? values.min <= values.max
-        : values.min < values.max;
+        (this.props.allowSameValues
+          ? values.min <= values.max
+          : values.min < values.max);
     }
 
     return values.max >= this.props.minValue && values.max <= this.props.maxValue;
