@@ -135,10 +135,11 @@ export function getPositionFromEvent(event, clientRect) {
 /**
  * Convert a value into a step value
  * @ignore
+ * @param {number} minValue
  * @param {number} value
  * @param {number} valuePerStep
  * @return {number}
  */
-export function getStepValueFromValue(value, valuePerStep) {
-  return Math.round(value / valuePerStep) * valuePerStep;
+export function getStepValueFromValue(minValue, value, valuePerStep) {
+  return minValue + (valuePerStep * Math.round((value - minValue) / valuePerStep));
 }
