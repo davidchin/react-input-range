@@ -1,4 +1,4 @@
-export { default as captialize } from './captialize';
+export { default as capitalize } from './capitalize';
 export { default as clamp } from './clamp';
 export { default as distanceTo } from './distance-to';
 export { default as isDefined } from './is-defined';
