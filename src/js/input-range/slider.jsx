@@ -96,7 +96,7 @@ export default class Slider extends React.Component {
    */
   addDocumentMouseMoveListener() {
     this.removeDocumentMouseMoveListener();
-    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.addEventListener('mousemove', this.handleMouseMove, true);
   }
 
   /**
@@ -106,7 +106,7 @@ export default class Slider extends React.Component {
    */
   addDocumentMouseUpListener() {
     this.removeDocumentMouseUpListener();
-    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.addEventListener('mouseup', this.handleMouseUp, true);
   }
 
   /**
@@ -116,7 +116,7 @@ export default class Slider extends React.Component {
    */
   addDocumentTouchMoveListener() {
     this.removeDocumentTouchMoveListener();
-    this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.addEventListener('touchmove', this.handleTouchMove, true);
   }
 
   /**
@@ -126,7 +126,7 @@ export default class Slider extends React.Component {
    */
   addDocumentTouchEndListener() {
     this.removeDocumentTouchEndListener();
-    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.addEventListener('touchend', this.handleTouchEnd, true);
   }
 
   /**
@@ -134,7 +134,7 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   removeDocumentMouseMoveListener() {
-    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove);
+    this.node.ownerDocument.removeEventListener('mousemove', this.handleMouseMove, true);
   }
 
   /**
@@ -142,7 +142,7 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   removeDocumentMouseUpListener() {
-    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp);
+    this.node.ownerDocument.removeEventListener('mouseup', this.handleMouseUp, true);
   }
 
   /**
@@ -150,7 +150,7 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   removeDocumentTouchMoveListener() {
-    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove);
+    this.node.ownerDocument.removeEventListener('touchmove', this.handleTouchMove, true);
   }
 
   /**
@@ -158,7 +158,7 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   removeDocumentTouchEndListener() {
-    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd);
+    this.node.ownerDocument.removeEventListener('touchend', this.handleTouchEnd, true);
   }
 
   /**
@@ -176,7 +176,8 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   @autobind
-  handleMouseUp() {
+  handleMouseUp(event) {
+    event.stopPropagation();
     this.removeDocumentMouseMoveListener();
     this.removeDocumentMouseUpListener();
   }
@@ -188,6 +189,7 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleMouseMove(event) {
+    event.stopPropagation();
     this.props.onSliderDrag(event, this.props.type);
   }
 
@@ -208,6 +210,7 @@ export default class Slider extends React.Component {
    */
   @autobind
   handleTouchMove(event) {
+    event.stopPropagation();
     this.props.onSliderDrag(event, this.props.type);
   }
 
@@ -216,7 +219,8 @@ export default class Slider extends React.Component {
    * @return {void}
    */
   @autobind
-  handleTouchEnd() {
+  handleTouchEnd(event) {
+    event.stopPropagation();
     this.removeDocumentTouchMoveListener();
     this.removeDocumentTouchEndListener();
   }
