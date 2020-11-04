@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidchin/react-input-range.git"
+    "url": "https://github.com/PaulKili/react-input-range.git"
   },
   "main": "lib/js/index.js",
   "types": "react-input-range.d.ts",
